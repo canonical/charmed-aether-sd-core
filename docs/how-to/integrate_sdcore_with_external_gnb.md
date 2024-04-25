@@ -6,7 +6,7 @@ For simplicity in managing deployments, the gNB Name and TAC can be supplied via
 
 - A Kubernetes cluster capable of handling the load from a container per represented gNB
 - [Charmed Aether SD-Core Terraform modules][Charmed Aether SD-Core Terraform modules] Git repository cloned onto the Juju host machine
-- Charmed 5g already deployed using Terraform
+- Charmed Aether SD-Core already deployed using Terraform
 
 You need to have the following information ready:
 
