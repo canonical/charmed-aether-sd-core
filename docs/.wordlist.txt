@@ -52,6 +52,7 @@ icmp
 ICMP
 IMSI
 integrations
+integrator
 IOV
 juju
 Juju
@@ -112,6 +113,7 @@ sub-module
 subnet
 subnets
 systemd
+TAC
 TCP
 Terraform
 Terraform's
