@@ -18,7 +18,7 @@ A machine running Ubuntu 22.04 with the following resources:
 The following IP networks will be used to connect and isolate the network functions:
 
 | Name         | Subnet        | Gateway IP |
-| ------------ | ------------- | ---------- |
+|--------------|---------------|------------|
 | `management` | 10.201.0.0/24 | 10.201.0.1 |
 | `access`     | 10.202.0.0/24 | 10.202.0.1 |
 | `core`       | 10.203.0.0/24 | 10.203.0.1 |
@@ -118,7 +118,7 @@ sudo snap connect multipass:lxd lxd
 To complete this tutorial, you will need seven virtual machines with access to the networks as follows:
 
 | Machine                              | CPUs | RAM | Disk | Networks                       |
-| ------------------------------------ | ---- | --- | ---- | ------------------------------ |
+|--------------------------------------|------|-----|------|--------------------------------|
 | DNS Server                           | 1    | 1g  | 10g  | `management`                   |
 | Control Plane Kubernetes Cluster     | 4    | 8g  | 40g  | `management`                   |
 | User Plane Kubernetes Cluster        | 2    | 4g  | 20g  | `management`, `access`, `core` |
@@ -225,7 +225,7 @@ echo 127.0.0.1 | sudo tee /etc/resolv.conf
 The following IP addresses are used in this tutorial and must be present in the DNS Server that all hosts are using:
 
 | Name                                   | IP Address   | Purpose                                                  |
-| -------------------------------------- | ------------ | -------------------------------------------------------- |
+|----------------------------------------|--------------|----------------------------------------------------------|
 | `juju-controller.mgmt`                 | 10.201.0.104 | Management address for Juju machine                      |
 | `control-plane.mgmt`                   | 10.201.0.101 | Management address for control plane cluster machine     |
 | `user-plane.mgmt`                      | 10.201.0.102 | Management address for user plane cluster machine        |
@@ -727,7 +727,7 @@ scp user-plane-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the SD-Core `user-plane` VM:
 
 | Interface Name | Purpose                                                                                                                                                           |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | enp6s0         | internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
 | enp7s0         | core interface. This maps to the `core` subnet.                                                                                                                   |
 | enp8s0         | access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
@@ -787,7 +787,7 @@ scp gnb-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the `gnbsim` VM:
 
 | Interface Name | Purpose                                                                         |
-| -------------- | ------------------------------------------------------------------------------- |
+|----------------|---------------------------------------------------------------------------------|
 | enp6s0         | internal Kubernetes management interface. This maps to the `management` subnet. |
 | enp7s0         | ran interface. This maps to the `ran` subnet.                                   |
 
@@ -830,6 +830,12 @@ Update MicroK8s DNS to point to our DNS server:
 ```console
 sudo microk8s disable dns
 sudo microk8s enable dns:10.201.0.100
+```
+
+```{note}
+The `microk8s enable` command confirms enabling the DNS before it actually happens.
+Before going forward, please make sure that the DNS is actually running. 
+To do that run `microk8s.kubectl -n kube-system get pods` and make sure that the `coredns` pod is in `Running` status.
 ```
 
 Install Juju and bootstrap the controller to the local MicroK8s install as a LoadBalancer service.
@@ -1051,7 +1057,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the UPF.
 
 | Config Option         | Descriptions                                                                                      |
-| --------------------- | ------------------------------------------------------------------------------------------------- |
+|-----------------------|---------------------------------------------------------------------------------------------------|
 | access-gateway-ip     | The IP address of the gateway that knows how to route traffic from the UPF towards the gNB subnet |
 | access-interface      | The name of the MACVLAN interface on the Kubernetes host cluster to bridge to the `access` subnet |
 | access-ip             | The IP address for the UPF to use on the `access` subnet                                          |
@@ -1156,6 +1162,8 @@ This should produce output similar to the following indicating that the PFCP age
 user-plane  upf-external  LoadBalancer  10.152.183.126  10.201.0.200  8805:31101/UDP
 ```
 
+Log out of the VM.
+
 ## 6. Deploy the gNB Simulator
 
 The following steps build on the Juju controller which was bootstrapped and knows how to manage the gNB Simulator Kubernetes cluster.
@@ -1165,7 +1173,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the simulator.
 
 | Config Option           | Descriptions                                                                                                                                  |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | gnb-interface           | The name of the MACVLAN interface to use on the host                                                                                          |
 | gnb-ip-address          | The IP address to use on the gnb interface                                                                                                    |
 | icmp-packet-destination | The target IP address to ping. If there is no egress to the internet on your core network, any IP that is reachable from the UPF should work. |
@@ -1520,7 +1528,7 @@ url: http://10.201.0.51/cos-lite-grafana
 Grafana can be accessed using both `http` (as returned by the command above) or `https`.
 ```
 
-In your browser, navigate to the URL from the output (`https://10.201.0.51/cos-grafana`).
+In your browser, navigate to the URL from the output (`https://10.201.0.51/cos-lite-grafana`).
 Login using the "admin" username and the admin password provided in the last command.
 Click on "Dashboards" -> "Browse" and select "5G Network Overview".
 
