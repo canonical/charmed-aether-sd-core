@@ -1,5 +1,5 @@
 module "sdcore-control-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-control-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-control-plane-k8s?ref=v1.4"
 
   model_name = "control-plane"
   create_model = false
@@ -15,7 +15,7 @@ module "sdcore-control-plane" {
 }
 
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s?ref=v1.4"
 
   model_name   = "user-plane"
   create_model = false
@@ -34,7 +34,8 @@ module "sdcore-user-plane" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.4"
+  channel = "1.4/beta"
 
   model_name = "gnbsim"
 
@@ -48,13 +49,13 @@ module "gnbsim" {
 }
 
 module "cos-lite" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/external/cos-lite"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/external/cos-lite?ref=v1.4"
 
   model_name               = "cos-lite"
   deploy_cos_configuration = true
   cos_configuration_config = {
     git_repo                 = "https://github.com/canonical/sdcore-cos-configuration"
-    git_branch               = "main"
+    git_branch               = "v1.4"
     grafana_dashboards_path  = "grafana_dashboards/sdcore/"
   }
 }

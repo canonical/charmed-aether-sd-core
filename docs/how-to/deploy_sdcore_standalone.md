@@ -20,6 +20,7 @@ Inside the `modules/sdcore-k8s` directory, create a `terraform.tfvars` file to s
 
 ```console
 git clone https://github.com/canonical/terraform-juju-sdcore-k8s.git
+git checkout v1.4
 cd terraform-juju-sdcore-k8s/modules/sdcore-k8s
 cat << EOF > terraform.tfvars
 model_name = "<YOUR_JUJU_MODEL_NAME>"
@@ -62,4 +63,4 @@ To be effective, every configuration change needs to be applied using the follow
 terraform apply -var-file="terraform.tfvars" -auto-approve
 ```
 
-[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s
+[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/v1.4
