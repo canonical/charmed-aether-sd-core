@@ -18,7 +18,7 @@ A machine running Ubuntu 22.04 with the following resources:
 The following IP networks will be used to connect and isolate the network functions:
 
 | Name         | Subnet        | Gateway IP |
-| ------------ | ------------- | ---------- |
+|--------------|---------------|------------|
 | `management` | 10.201.0.0/24 | 10.201.0.1 |
 | `access`     | 10.202.0.0/24 | 10.202.0.1 |
 | `core`       | 10.203.0.0/24 | 10.203.0.1 |
@@ -118,7 +118,7 @@ sudo snap connect multipass:lxd lxd
 To complete this tutorial, you will need seven virtual machines with access to the networks as follows:
 
 | Machine                              | CPUs | RAM | Disk | Networks                       |
-| ------------------------------------ | ---- | --- | ---- | ------------------------------ |
+|--------------------------------------|------|-----|------|--------------------------------|
 | DNS Server                           | 1    | 1g  | 10g  | `management`                   |
 | Control Plane Kubernetes Cluster     | 4    | 8g  | 40g  | `management`                   |
 | User Plane Kubernetes Cluster        | 2    | 4g  | 20g  | `management`, `access`, `core` |
@@ -225,7 +225,7 @@ echo 127.0.0.1 | sudo tee /etc/resolv.conf
 The following IP addresses are used in this tutorial and must be present in the DNS Server that all hosts are using:
 
 | Name                                   | IP Address   | Purpose                                                  |
-| -------------------------------------- | ------------ | -------------------------------------------------------- |
+|----------------------------------------|--------------|----------------------------------------------------------|
 | `juju-controller.mgmt`                 | 10.201.0.104 | Management address for Juju machine                      |
 | `control-plane.mgmt`                   | 10.201.0.101 | Management address for control plane cluster machine     |
 | `user-plane.mgmt`                      | 10.201.0.102 | Management address for user plane cluster machine        |
@@ -727,10 +727,10 @@ scp user-plane-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the SD-Core `user-plane` VM:
 
 | Interface Name | Purpose                                                                                                                                                           |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| enp6s0         | internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
-| enp7s0         | core interface. This maps to the `core` subnet.                                                                                                                   |
-| enp8s0         | access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| enp6s0         | Internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
+| enp7s0         | Core interface. This maps to the `core` subnet.                                                                                                                   |
+| enp8s0         | Access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
 
 Now we create the MACVLAN bridges for `enp7s0` and `enp8s0`.
 These instructions are put into a file that is executed on reboot so the interfaces will come back:
@@ -787,9 +787,9 @@ scp gnb-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the `gnbsim` VM:
 
 | Interface Name | Purpose                                                                         |
-| -------------- | ------------------------------------------------------------------------------- |
-| enp6s0         | internal Kubernetes management interface. This maps to the `management` subnet. |
-| enp7s0         | ran interface. This maps to the `ran` subnet.                                   |
+|----------------|---------------------------------------------------------------------------------|
+| enp6s0         | Internal Kubernetes management interface. This maps to the `management` subnet. |
+| enp7s0         | Ran interface. This maps to the `ran` subnet.                                   |
 
 Now we create the MACVLAN bridges for `enp7s0`, and label them accordingly:
 
@@ -915,7 +915,7 @@ Create Terraform module:
 ```console
 cat << EOF > main.tf
 module "sdcore-control-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-control-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-control-plane-k8s?ref=v1.4"
 
   model_name   = "control-plane"
   create_model = false
@@ -1051,7 +1051,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the UPF.
 
 | Config Option         | Descriptions                                                                                      |
-| --------------------- | ------------------------------------------------------------------------------------------------- |
+|-----------------------|---------------------------------------------------------------------------------------------------|
 | access-gateway-ip     | The IP address of the gateway that knows how to route traffic from the UPF towards the gNB subnet |
 | access-interface      | The name of the MACVLAN interface on the Kubernetes host cluster to bridge to the `access` subnet |
 | access-ip             | The IP address for the UPF to use on the `access` subnet                                          |
@@ -1084,7 +1084,7 @@ Update the `main.tf` file:
 ```console
 cat << EOF >> main.tf
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s?ref=v1.4"
 
   model_name   = "user-plane"
   create_model = false
@@ -1165,7 +1165,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the simulator.
 
 | Config Option           | Descriptions                                                                                                                                  |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | gnb-interface           | The name of the MACVLAN interface to use on the host                                                                                          |
 | gnb-ip-address          | The IP address to use on the gnb interface                                                                                                    |
 | icmp-packet-destination | The target IP address to ping. If there is no egress to the internet on your core network, any IP that is reachable from the UPF should work. |
@@ -1195,7 +1195,8 @@ Update the `main.tf` file:
 ```console
 cat << EOF >> main.tf
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.4"
+  channel = "1.4/beta"
 
   model_name = "gnbsim"
   
@@ -1375,13 +1376,13 @@ Add `cos-lite` Terraform module to the `main.tf` file used in the previous steps
 ```console
 cat << EOF >> main.tf
 module "cos-lite" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/external/cos-lite"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/external/cos-lite?ref=v1.4"
 
   model_name               = "cos-lite"
   deploy_cos_configuration = true
   cos_configuration_config = {
     git_repo                 = "https://github.com/canonical/sdcore-cos-configuration"
-    git_branch               = "main"
+    git_branch               = "v1.4"
     grafana_dashboards_path  = "grafana_dashboards/sdcore/"
   }
 }
@@ -1644,7 +1645,7 @@ You have learned how to:
 - view the metrics produced by the 5G core
 
 ```{note}
-For your convenience, a complete Terraform module covering the deployments and integrations from this tutorial, is available in [this Git repository](https://github.com/canonical/charmed-aether-sd-core).
+For your convenience, a complete Terraform module covering the deployments and integrations from this tutorial, is available in [this Git repository](https://github.com/canonical/charmed-aether-sd-core/tree/v1.4) in `v1.4` branch.
 All necessary files are in the `examples/terraform/mastering` directory.
 ```
 

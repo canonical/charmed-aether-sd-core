@@ -107,14 +107,15 @@ resource "juju_model" "sdcore" {
 }
 
 module "sdcore-router" {
-  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform?ref=v1.4"
+  channel = "1.4/beta"
 
   model_name = juju_model.sdcore.name
   depends_on = [juju_model.sdcore]
 }
 
 module "sdcore" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-k8s?ref=v1.4"
 
   model_name = juju_model.sdcore.name
   create_model = false
@@ -127,7 +128,8 @@ module "sdcore" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.4"
+  channel = "1.4/beta"
 
   model_name = juju_model.sdcore.name
   depends_on = [module.sdcore-router]
@@ -164,7 +166,7 @@ EOF
 ```
 
 ```{note}
-You can get a ready example by cloning [this Git repository](https://github.com/canonical/charmed-aether-sd-core).
+You can get a ready example by cloning [this Git repository](https://github.com/canonical/charmed-aether-sd-core) and switching to the `v1.4` branch.
 All necessary files are in the `examples/terraform/getting_started` directory.
 ```
 
@@ -196,27 +198,27 @@ for `grafana-agent` to remain in waiting state. Example:
 
 ```console
 ubuntu@host:~$ juju status
-Model    Controller          Cloud/Region        Version  SLA          Timestamp
-sdcore   microk8s-localhost  microk8s/localhost  3.4.0    unsupported  13:40:12+01:00
+Model   Controller          Cloud/Region        Version  SLA          Timestamp
+sdcore  microk8s-localhost  microk8s/localhost  3.4.2    unsupported  10:15:12+02:00
 
-App                       Version  Status   Scale  Charm                         Channel             Rev  Address          Exposed  Message
-amf                                active       1  sdcore-amf-k8s                1.4/edge            57   10.152.183.208   no
-ausf                               active       1  sdcore-ausf-k8s               1.4/edge            40   10.152.183.237   no
-gnbsim                             active       1  sdcore-gnbsim-k8s             1.4/edge            43   10.152.183.167   no
-grafana-agent             0.32.1   waiting      1  grafana-agent-k8s             latest/stable       44   10.152.183.245   no       installing agent
-mongodb                            active       1  mongodb-k8s                   6/beta              36   10.152.183.156   no       Primary
-nms                                active       1  sdcore-nms-k8s                0.2/edge            26   10.152.183.121   no
-nrf                                active       1  sdcore-nrf-k8s                1.4/edge            62   10.152.183.123   no
-nssf                               active       1  sdcore-nssf-k8s               1.4/edge            37   10.152.183.165   no
-pcf                                active       1  sdcore-pcf-k8s                1.4/edge            32   10.152.183.205   no
-router                             active       1  sdcore-router-k8s             1.4/edge            33   10.152.183.49    no
-self-signed-certificates           active       1  self-signed-certificates      1.4/edge            33   10.152.183.153   no
-smf                                active       1  sdcore-smf-k8s                1.4/edge            37   10.152.183.147   no
-traefik                   2.10.4   active       1  traefik-k8s                   latest/stable      148   10.0.0.4         no
-udm                                active       1  sdcore-udm-k8s                1.4/edge            35   10.152.183.168   no
-udr                                active       1  sdcore-udr-k8s                1.4/edge            31   10.152.183.96    no
-upf                                active       1  sdcore-upf-k8s                1.4/edge            64   10.152.183.126   no
-webui                              active       1  sdcore-webui-k8s              1.4/edge            23   10.152.183.128   no
+App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
+amf                                active       1  sdcore-amf-k8s            1.4/beta       160  10.152.183.64   no       
+ausf                               active       1  sdcore-ausf-k8s           1.4/beta       139  10.152.183.140  no       
+gnbsim                             active       1  sdcore-gnbsim-k8s         1.4/beta       108  10.152.183.197  no       
+grafana-agent             0.35.2   waiting      1  grafana-agent-k8s         latest/stable   64  10.152.183.105  no       installing agent
+mongodb                            active       1  mongodb-k8s               6/beta          38  10.152.183.55   no       Primary
+nms                                active       1  sdcore-nms-k8s            1.4/beta       127  10.152.183.220  no       
+nrf                                active       1  sdcore-nrf-k8s            1.4/beta       142  10.152.183.226  no       
+nssf                               active       1  sdcore-nssf-k8s           1.4/beta       116  10.152.183.222  no       
+pcf                                active       1  sdcore-pcf-k8s            1.4/beta       120  10.152.183.94   no       
+router                             active       1  sdcore-router-k8s         1.4/beta       109  10.152.183.203  no       
+self-signed-certificates           active       1  self-signed-certificates  latest/stable   72  10.152.183.210  no       
+smf                                active       1  sdcore-smf-k8s            1.4/beta       134  10.152.183.125  no       
+traefik                   v2.11.0  active       1  traefik-k8s               latest/stable  176  10.0.0.3        no       
+udm                                active       1  sdcore-udm-k8s            1.4/beta       104  10.152.183.111  no       
+udr                                active       1  sdcore-udr-k8s            1.4/beta       114  10.152.183.162  no       
+upf                                active       1  sdcore-upf-k8s            1.4/beta       161  10.152.183.254  no       
+webui                              active       1  sdcore-webui-k8s          1.4/beta        86  10.152.183.53   no
 
 Unit                         Workload  Agent  Address      Ports  Message
 amf/0*                       active    idle   10.1.182.23
@@ -277,7 +279,7 @@ Retrieve the NMS address:
 juju run traefik/0 show-proxied-endpoints
 ```
 
-The output should be `http://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
+The output should be `https://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
 browser.
 
 

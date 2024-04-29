@@ -30,6 +30,7 @@ Inside the `modules/sdcore-control-plane-k8s` directory, create a `control-plane
 
 ```console
 git clone https://github.com/canonical/terraform-juju-sdcore-k8s.git
+git checkout v1.4
 cd terraform-juju-sdcore-k8s/modules/sdcore-control-plane-k8s
 cat << EOF > control-plane.tfvars
 model_name = "control-plane"
@@ -139,6 +140,7 @@ Inside the `modules/sdcore-user-plane-k8s` directory, create a `user-plane.tfvar
 
 ```console
 git clone https://github.com/canonical/terraform-juju-sdcore-k8s.git
+git checkout v1.4
 cd terraform-juju-sdcore-k8s/modules/sdcore-user-plane-k8s
 cat << EOF > user-plane.tfvars
 model_name = "user-plane"
@@ -241,4 +243,4 @@ terraform apply -auto-approve
 
 ``````
 
-[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s
+[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/v1.4
