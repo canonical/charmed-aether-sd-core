@@ -15,7 +15,7 @@ Charmed Aether SD-Core - it will save you many more hours later on. Follow the
 tutorials steps in sequence; they take you on a learning journey through the
 product.
 
-The tutorials has been tested with a variety of users. We make every effort to
+The tutorials have been tested with a variety of users. We make every effort to
 keep them up-to-date and ensure that they are reliable - but if you encounter any
 problems, we want to help you, so please let us know.
 
