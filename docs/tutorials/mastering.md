@@ -832,6 +832,12 @@ sudo microk8s disable dns
 sudo microk8s enable dns:10.201.0.100
 ```
 
+```{note}
+The `microk8s enable` command confirms enabling the DNS before it actually happens.
+Before going forward, please make sure that the DNS is actually running. 
+To do that run `microk8s.kubectl -n kube-system get pods` and make sure that the `coredns` pod is in `Running` status.
+```
+
 Install Juju and bootstrap the controller to the local MicroK8s install as a LoadBalancer service.
 This will expose the Juju controller on the first allocated MetalLB address:
 
@@ -1155,6 +1161,8 @@ This should produce output similar to the following indicating that the PFCP age
 ```console
 user-plane  upf-external  LoadBalancer  10.152.183.126  10.201.0.200  8805:31101/UDP
 ```
+
+Log out of the VM.
 
 ## 6. Deploy the gNB Simulator
 
@@ -1521,7 +1529,7 @@ url: http://10.201.0.51/cos-lite-grafana
 Grafana can be accessed using both `http` (as returned by the command above) or `https`.
 ```
 
-In your browser, navigate to the URL from the output (`https://10.201.0.51/cos-grafana`).
+In your browser, navigate to the URL from the output (`https://10.201.0.51/cos-lite-grafana`).
 Login using the "admin" username and the admin password provided in the last command.
 Click on "Dashboards" -> "Browse" and select "5G Network Overview".
 
