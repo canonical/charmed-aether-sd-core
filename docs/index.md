@@ -1,12 +1,10 @@
 # Charmed Aether SD-Core
 
-Aether SD-Core is a 5G core network, responsible for the 5G Network's control operations: Authentication, IP assignment, Policy management, Quality of Service, Slice management, and more.
+Aether SD-Core is an open source 5G core network distributed by the Linux Foundation as part of its Aether directed fund project. It addresses the need for a cost-effective open source 5G core network, as opposed to traditionally costly mobile networking software. Aether SD-Core supports various functionalities, including user authentication, IP address assignment, data traffic policy management, quality of service assurance, and network slice management.
 
-Charmed Aether SD-Core automates the operations of Aether SD-Core, making it easy to deploy, upgrade and observe.
+A 5G core network consists of multiple micro-services, each with its individual set of configurations and service interfaces. This makes it complex to deploy and operate a 5G network. Charmed Aether SD-Core is an open source 5G core network solution, which is easy to deploy and manage. By leveraging Canonical's [Juju software orchestration framework](https://juju.is/), it brings full automation to Aether SD-Core micro services. It is also fully observable as it offers frictionless integration with [Canonica    l Observability Stack](https://ubuntu.com/observability), which is a combination of open source observability software components deployed and automated as a bundle.
 
-Charmed Aether SD-Core exists because mobile networks are traditionally costly and difficult to operate and that open source alternatives are either too complex or unsecure. The project combines ONF's 5G expertise with Juju model driven operations.
-
-Charmed Aether SD-Core is for private mobile networks operators and all connectivity enthusiasts. Use it in your farm, mine or oil rig, wherever you need 5G connectivity.
+Charmed Aether SD-Core is for private mobile networks. It offers a cost-effective and easy to use core networking solution for any enterprise that needs on-site 5G mobile network connectivity for their devices and personnel. It is also the ideal open source distribution for any technology enthusiast who would like to deploy and test a 5G mobile network for their own connectivity needs. Use it in your farm, mine or oil rig, wherever you need 5G connectivity.
 
 ## In this documentation
 
