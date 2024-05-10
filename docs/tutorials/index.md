@@ -25,4 +25,5 @@ have a frictionless experience with Charmed Aether SD-Core.
 
 getting_started
 mastering
+using_dpdk
 ```
