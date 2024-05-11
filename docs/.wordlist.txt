@@ -18,6 +18,7 @@ CNI
 conf
 config
 configmap
+ConfigMap
 coredns
 Corefile
 CPUs
@@ -27,6 +28,7 @@ DN
 dns
 dnsmasq
 DNS
+DPDK
 enp
 gb
 GCP
@@ -53,6 +55,7 @@ ICMP
 IMSI
 integrations
 integrator
+IOMMU
 IOV
 juju
 Juju
@@ -95,6 +98,7 @@ ONOS
 OPC
 PacketPool
 PCF
+PCI
 pdpe
 PDU
 PFCP
