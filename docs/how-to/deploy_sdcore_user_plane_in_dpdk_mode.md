@@ -8,11 +8,12 @@ This guide covers how to deploy the User Plane Function (UPF) in DPDK mode using
   - host CPU that supports AVX2, RDRAND and PDPE1GB instructions (Intel Haswell, AMD Excavator or equivalent)
   - SR-IOV interfaces for Access and Core networks
   - At least two 1G HugePages available
-  - `driverctl` installed
+  - `driverctl` is installed
   - LoadBalancer with 1 available address for the UPF
   - Multus CNI enabled
 - Juju >= 3.4/stable
 - A Juju controller bootstrapped onto the Kubernetes cluster
+- Terraform is installed
 
 ## Change the driver of the network interfaces to `vfio-pci`
 
@@ -99,12 +100,6 @@ Create a Juju model named `user-plane`:
 
 ```shell
 juju add-model user-plane user-plane-cloud
-```
-
-Install Terraform.
-
-```shell
-sudo snap install terraform --classic
 ```
 
 Deploy `sdcore-user-plane-k8s` Terraform Module.
