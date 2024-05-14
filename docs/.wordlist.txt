@@ -1,6 +1,7 @@
 addon
 addons
 Aether
+AKS
 AMF
 APIs
 AUSF
@@ -11,6 +12,7 @@ bessd
 br
 Bitrate
 bootloader
+Canonical
 Charmhub
 CharmHub
 CIDR
@@ -22,18 +24,23 @@ coredns
 Corefile
 CPUs
 CSR
+deployable
 DHCP
 DN
 dns
 dnsmasq
 DNS
 enp
+EKS
+frictionless
 gb
 GCP
 Gi
 GiB
+GKE
 gnb
 gNB
+gNBs
 gnbsim
 Gnbsim
 gNodeB
@@ -70,6 +77,7 @@ MetalLB
 mgmt
 microk
 MicroK
+Microk8s
 MNC
 Mongo
 multipass
@@ -87,6 +95,7 @@ nms
 NMS
 NRF
 NSSF
+observability
 Observability
 OCI
 ONF

@@ -2,11 +2,9 @@
 
 In these tutorials, we will deploy and run Charmed Aether SD-Core in various configurations.
 
-Charmed Aether SD-Core is a complex piece of software.
-
 These tutorials will introduce you to key concepts, tools, processes and
 operations, starting from your first installation to a cloud deployment.
-Along the way they will give examples of good practice, and pointers to much
+Along the way, they will give examples of good practice, and pointers to much
 more detailed information.
 
 You can expect to spend one to two hours working through the complete
@@ -16,8 +14,9 @@ tutorials steps in sequence; they take you on a learning journey through the
 product.
 
 The tutorials have been tested with a variety of users. We make every effort to
-keep them up-to-date and ensure that they are reliable - but if you encounter any
-problems, we want to help you, so please let us know.
+keep them up-to-date and ensure that they are reliable, but if you encounter any
+problems, please get in touch, as we want to help you complete the tutorials and
+have a frictionless experience with Charmed Aether SD-Core.
 
 ## Table of content
 
