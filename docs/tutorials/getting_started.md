@@ -179,11 +179,7 @@ Initialize Juju Terraform provider:
 terraform init
 ```
 
-<<<<<<< Updated upstream
-Deploy 5G network.
-=======
 Deploy SD-Core by applying your Terraform configuration:
->>>>>>> Stashed changes
 
 ```console
 terraform apply -auto-approve
