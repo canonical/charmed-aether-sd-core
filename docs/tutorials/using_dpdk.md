@@ -17,7 +17,7 @@ A machine running Ubuntu 22.04 with the following resources:
 
 ### Enable HugePages
 
-As a `root` user, update the Grub to enable 2 * 1Gi HugePages in the host machine. Then, the host is gracefully rebooted to activate the settings.
+As a `root` user, update Grub to enable 2 * 1Gi HugePages in the host machine. This is followed by a graceful reboot to activate the settings.
 
 ```shell
 sudo sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX='default_hugepagesz=1G hugepages=2'/" /etc/default/grub
