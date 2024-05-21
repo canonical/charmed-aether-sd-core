@@ -1,5 +1,5 @@
 # Public Clouds
 
-It is not possible to deploy SD-Core on AWS, Microsoft Azure or GCP using their managed Kubernetes services. None of them support the SCTP protocol on load balancers, which prevents the gNodeB from communicating with the AMF.
+Charmed Aether SD-Core is deployable on Kubernetes platforms. MicroK8s is the preferred Kubernetes distribution for SD-Core, and has been tested extensively.
 
-MicroK8s is the preferred Kubernetes distribution for SD-Core.
+Even though SD-Core can be deployed on managed Kubernetes services offered on public cloud platforms (Microsoft AKS, Amazon EKS,and Google GKE), these platforms do not support SCTP traffic on their load balancers, yet SCTP is essential for the traffic between AMF and gNBs. However, on AWS, it is possible to deploy a VM, install MicroK8s, and expose an SCTP load balancer, which then allows for SCTP connection to an external gNB.

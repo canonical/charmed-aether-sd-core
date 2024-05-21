@@ -1,11 +1,14 @@
 # Getting started
 
-In this tutorial, we will deploy and run the SD-Core 5G core network using Juju and Terraform.
-As part of this tutorial, we will also deploy additional components (gNB Simulator - a 5G radio
-and a cellphone simulator, SD-Core Router - a software router facilitating communication between
-the core and the Radio Access Network (RAN)) to simulate usage of this network. Both gNB Simulator
-and SD-Core Router serve only demonstration purposes and shouldn't be part of production
-deployments.
+In this tutorial, we will deploy and run an SD-Core 5G core network using Juju and Terraform.
+As part of this tutorial, we will also deploy additional components:
+
+- gNB Simulator: a 5G radio and a cellphone simulator,
+- SD-Core Router: a software router facilitating communication between the core and the Radio
+ Access Network (RAN) to simulate usage of this network.
+
+Both gNB Simulator and SD-Core Router serve only demonstration purposes and shouldn't be part
+ of production deployments.
 
 To complete this tutorial, you will need a machine which meets the following requirements:
 
@@ -90,7 +93,7 @@ terraform {
   required_providers {
     juju = {
       source  = "juju/juju"
-      version = "~> 0.11.0"
+      version = ">= 0.11.0"
     }
   }
 }
@@ -176,7 +179,7 @@ Initialize Juju Terraform provider:
 terraform init
 ```
 
-Deploy 5G network.
+Deploy SD-Core by applying your Terraform configuration:
 
 ```console
 terraform apply -auto-approve
