@@ -4,8 +4,10 @@ Aether
 AKS
 AMF
 APIs
+allocatable
 AUSF
 AVX
+backend
 balancer
 balancers
 bessd
@@ -17,6 +19,7 @@ Charmhub
 CharmHub
 CIDR
 CNI
+cni
 conf
 config
 configmap
@@ -28,10 +31,11 @@ CSR
 deployable
 DHCP
 DN
+DPDK
 dns
 dnsmasq
 DNS
-DPDK
+driverctl
 enp
 EKS
 frictionless
@@ -64,8 +68,10 @@ integrations
 integrator
 IOMMU
 IOV
+jq
 juju
 Juju
+kB
 K8s
 kubectl
 Kubernetes
@@ -108,6 +114,7 @@ OPC
 PacketPool
 PCF
 PCI
+pci
 pdpe
 PDU
 PFCP
@@ -142,6 +149,9 @@ upf
 UPF
 UPFs
 vCPUs
+VFIO
+vfio
+vfioveth
 VLAN
 VM
 VMs
