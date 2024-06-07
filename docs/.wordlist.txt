@@ -22,7 +22,6 @@ CNI
 cni
 conf
 config
-ConfigMap
 configmap
 ConfigMap
 coredns
