@@ -12,7 +12,7 @@ This guide covers how to deploy the User Plane Function (UPF) as a machine charm
 
 ## Deploy
 
-Get Charmed Aether SD-Core Terraform UPF Machine module by cloning the [Charmed Aether SD-Core UPF module][Charmed Aether SD-Core UPF modules] Git repository. Inside the `terraform` directory, create a `terraform.tfvars` file to set the name of Juju model and machine number for the deployment:
+Get the Charmed Aether SD-Core Terraform UPF Machine module by cloning the [Charmed Aether SD-Core UPF module][Charmed Aether SD-Core UPF module] Git repository. Inside the `terraform` directory, create a `terraform.tfvars` file to set the name of Juju model and machine number for the deployment. You will also need to provide the appropriate network configuration.
 
 ```console
 git clone https://github.com/canonical/sdcore-upf-operator.git
@@ -21,6 +21,10 @@ cd terraform
 cat << EOF > terraform.tfvars
 machine_number = 0
 model_name = "user-plane"
+config = {
+  access-interface-name = "enp4s0"
+  core-interface-name = "enp5s0"
+}
 EOF
 ```
 
@@ -36,5 +40,6 @@ Deploy the machine charm to the machine number specified in the `terraform.tfvar
 terraform apply -var-file="terraform.tfvars" -auto-approve
 ```
 
-[Terraform]: https://www.terraform.io/
+[Charmed Aether SD-Core UPF module]: https://github.com/canonical/sdcore-upf-operator/
 [Juju]: https://juju.is
+[Terraform]: https://www.terraform.io/
