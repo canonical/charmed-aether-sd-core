@@ -22,8 +22,8 @@ cat << EOF > terraform.tfvars
 machine_number = 0
 model_name = "user-plane"
 config = {
-  access-interface-name = "enp4s0"
-  core-interface-name = "enp5s0"
+  access-interface-name = "enp6s0"
+  core-interface-name = "enp7s0"
 }
 EOF
 ```
