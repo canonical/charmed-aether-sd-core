@@ -203,23 +203,23 @@ Model    Controller          Cloud/Region        Version  SLA          Timestamp
 sdcore   microk8s-localhost  microk8s/localhost  3.4.0    unsupported  13:40:12+01:00
 
 App                       Version  Status   Scale  Charm                         Channel             Rev  Address          Exposed  Message
-amf                                active       1  sdcore-amf-k8s                1.4/edge            57   10.152.183.208   no
-ausf                               active       1  sdcore-ausf-k8s               1.4/edge            40   10.152.183.237   no
-gnbsim                             active       1  sdcore-gnbsim-k8s             1.4/edge            43   10.152.183.167   no
+amf                                active       1  sdcore-amf-k8s                1.5/edge            57   10.152.183.208   no
+ausf                               active       1  sdcore-ausf-k8s               1.5/edge            40   10.152.183.237   no
+gnbsim                             active       1  sdcore-gnbsim-k8s             1.5/edge            43   10.152.183.167   no
 grafana-agent             0.32.1   waiting      1  grafana-agent-k8s             latest/stable       44   10.152.183.245   no       installing agent
 mongodb                            active       1  mongodb-k8s                   6/beta              36   10.152.183.156   no       Primary
-nms                                active       1  sdcore-nms-k8s                0.2/edge            26   10.152.183.121   no
-nrf                                active       1  sdcore-nrf-k8s                1.4/edge            62   10.152.183.123   no
-nssf                               active       1  sdcore-nssf-k8s               1.4/edge            37   10.152.183.165   no
-pcf                                active       1  sdcore-pcf-k8s                1.4/edge            32   10.152.183.205   no
-router                             active       1  sdcore-router-k8s             1.4/edge            33   10.152.183.49    no
-self-signed-certificates           active       1  self-signed-certificates      1.4/edge            33   10.152.183.153   no
-smf                                active       1  sdcore-smf-k8s                1.4/edge            37   10.152.183.147   no
+nms                                active       1  sdcore-nms-k8s                1.5/edge            26   10.152.183.121   no
+nrf                                active       1  sdcore-nrf-k8s                1.5/edge            62   10.152.183.123   no
+nssf                               active       1  sdcore-nssf-k8s               1.5/edge            37   10.152.183.165   no
+pcf                                active       1  sdcore-pcf-k8s                1.5/edge            32   10.152.183.205   no
+router                             active       1  sdcore-router-k8s             1.5/edge            33   10.152.183.49    no
+self-signed-certificates           active       1  self-signed-certificates      1.5/edge            33   10.152.183.153   no
+smf                                active       1  sdcore-smf-k8s                1.5/edge            37   10.152.183.147   no
 traefik                   2.10.4   active       1  traefik-k8s                   latest/stable      148   10.0.0.4         no
-udm                                active       1  sdcore-udm-k8s                1.4/edge            35   10.152.183.168   no
-udr                                active       1  sdcore-udr-k8s                1.4/edge            31   10.152.183.96    no
-upf                                active       1  sdcore-upf-k8s                1.4/edge            64   10.152.183.126   no
-webui                              active       1  sdcore-webui-k8s              1.4/edge            23   10.152.183.128   no
+udm                                active       1  sdcore-udm-k8s                1.5/edge            35   10.152.183.168   no
+udr                                active       1  sdcore-udr-k8s                1.5/edge            31   10.152.183.96    no
+upf                                active       1  sdcore-upf-k8s                1.5/edge            64   10.152.183.126   no
+webui                              active       1  sdcore-webui-k8s              1.5/edge            23   10.152.183.128   no
 
 Unit                         Workload  Agent  Address      Ports  Message
 amf/0*                       active    idle   10.1.182.23
