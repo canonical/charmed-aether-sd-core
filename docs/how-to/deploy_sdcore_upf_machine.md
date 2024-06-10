@@ -7,7 +7,7 @@ This guide covers how to deploy the User Plane Function (UPF) as a machine charm
 - A host with a CPU supporting AVX2 and RDRAND instructions (Intel Haswell, AMD Excavator or equivalent)
 - [Juju][Juju] controller bootstrapped to a LXD cluster
 - A machine added to the Juju controller
--  [Terraform][Terraform] installed
+- [Terraform][Terraform] installed
 - Git
 
 ## Deploy
