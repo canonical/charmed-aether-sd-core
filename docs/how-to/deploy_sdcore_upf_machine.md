@@ -16,7 +16,7 @@ Get the Charmed Aether SD-Core Terraform UPF Machine module by cloning the [Char
 
 ```console
 git clone https://github.com/canonical/sdcore-upf-operator.git
-cd terraform
+cd sdcore-upf-operator/terraform/
 
 cat << EOF > terraform.tfvars
 machine_number = 0
