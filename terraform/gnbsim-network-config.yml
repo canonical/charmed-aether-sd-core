@@ -1,0 +1,15 @@
+network:
+  version: 2
+  ethernets:
+    mgmt:
+      match:
+        name: enp5s0
+      dhcp4: true
+    ran:
+      match:
+        name: enp6s0
+      dhcp4: true
+      routes:
+        - to: 10.202.0.0/24
+          via: 10.204.0.1
+          metric: 1
