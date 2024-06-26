@@ -123,6 +123,13 @@ In this step, we enable the MetalLB add on in MicroK8s, and give it a range of t
 sudo microk8s enable metallb:10.201.0.52-10.201.0.53
 ```
 
+Now update MicroK8s DNS to point to our DNS server:
+
+```console
+sudo microk8s disable dns
+sudo microk8s enable dns:10.201.0.1
+```
+
 Export the Kubernetes configuration and copy it to the `juju-controller` VM:
 
 ```console
@@ -151,6 +158,13 @@ sudo microk8s addons repo add community \
     --reference feat/strict-fix-multus
 sudo microk8s enable multus
 sudo usermod -a -G snap_microk8s $(whoami)
+```
+
+Now update MicroK8s DNS to point to our DNS server:
+
+```console
+sudo microk8s disable dns
+sudo microk8s enable dns:10.201.0.1
 ```
 
 Export the Kubernetes configuration and copy it to the `juju-controller` VM:
@@ -206,6 +220,13 @@ sudo microk8s enable multus
 sudo usermod -a -G snap_microk8s $(whoami)
 ```
 
+Now update MicroK8s DNS to point to our DNS server:
+
+```console
+sudo microk8s disable dns
+sudo microk8s enable dns:10.201.0.1
+```
+
 Export the Kubernetes configuration and copy it to the `juju-controller` VM:
 
 ```console
@@ -252,6 +273,19 @@ sudo microk8s enable hostpath-storage
 sudo microk8s enable metallb:10.201.0.50-10.201.0.51
 sudo usermod -a -G snap_microk8s $(whoami)
 newgrp snap_microk8s
+```
+
+Now update MicroK8s DNS to point to our DNS server:
+
+```console
+sudo microk8s disable dns
+sudo microk8s enable dns:10.201.0.1
+```
+
+```{note}
+The `microk8s enable` command confirms enabling the DNS before it actually happens.
+Before going forward, please make sure that the DNS is actually running.
+To do that run `microk8s.kubectl -n kube-system get pods` and make sure that the `coredns` pod is in `Running` status.
 ```
 
 Install Juju and bootstrap the controller to the local MicroK8s install as a LoadBalancer service.
