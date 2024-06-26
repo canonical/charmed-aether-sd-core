@@ -164,11 +164,11 @@ In this guide, the following network interfaces are available on the SD-Core `us
 
 | Interface Name | Purpose                                                                                                                                                           |
 |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| enp6s0         | internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
-| enp7s0         | core interface. This maps to the `core` subnet.                                                                                                                   |
-| enp8s0         | access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
+| enp5s0         | internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
+| enp6s0         | core interface. This maps to the `core` subnet.                                                                                                                   |
+| enp7s0         | access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
 
-Now we create the MACVLAN bridges for `enp7s0` and `enp8s0`.
+Now we create the MACVLAN bridges for `enp6s0` and `enp7s0`.
 These instructions are put into a file that is executed on reboot so the interfaces will come back:
 
 ```console
@@ -217,10 +217,10 @@ In this guide, the following network interfaces are available on the `gnbsim` VM
 
 | Interface Name | Purpose                                                                         |
 |----------------|---------------------------------------------------------------------------------|
-| enp6s0         | internal Kubernetes management interface. This maps to the `management` subnet. |
-| enp7s0         | ran interface. This maps to the `ran` subnet.                                   |
+| enp5s0         | internal Kubernetes management interface. This maps to the `management` subnet. |
+| enp6s0         | ran interface. This maps to the `ran` subnet.                                   |
 
-Now we create the MACVLAN bridges for `enp7s0`, and label them accordingly:
+Now we create the MACVLAN bridges for `enp6s0`, and label them accordingly:
 
 ```console
 cat << EOF | sudo tee /etc/rc.local
