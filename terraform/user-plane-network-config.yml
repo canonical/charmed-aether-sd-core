@@ -9,6 +9,8 @@ network:
       match:
         name: enp6s0
       dhcp4: true
+      dhcp4-overrides:
+        use-routes: false
       routes:
         - to: 10.202.0.0/24
           via: 10.204.0.1
@@ -17,6 +19,8 @@ network:
       match:
         name: enp7s0
       dhcp4: true
+      dhcp4-overrides:
+        use-routes: false
       routes:
         - to: 10.204.0.0/24
           via: 10.202.0.1

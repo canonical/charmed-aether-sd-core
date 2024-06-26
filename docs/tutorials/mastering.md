@@ -175,9 +175,9 @@ These instructions are put into a file that is executed on reboot so the interfa
 cat << EOF | sudo tee /etc/rc.local
 #!/bin/bash
 
-sudo ip link add access link enp8s0 type macvlan mode bridge
+sudo ip link add access link enp7s0 type macvlan mode bridge
 sudo ip link set dev access up
-sudo ip link add core link enp7s0 type macvlan mode bridge
+sudo ip link add core link enp6s0 type macvlan mode bridge
 sudo ip link set dev core up
 EOF
 sudo chmod +x /etc/rc.local
@@ -226,7 +226,7 @@ Now we create the MACVLAN bridges for `enp7s0`, and label them accordingly:
 cat << EOF | sudo tee /etc/rc.local
 #!/bin/bash
 
-sudo ip link add ran link enp7s0 type macvlan mode bridge
+sudo ip link add ran link enp6s0 type macvlan mode bridge
 sudo ip link set dev ran up
 EOF
 sudo chmod +x /etc/rc.local
