@@ -362,7 +362,7 @@ terraform apply -auto-approve
 Monitor the status of the deployment:
 
 ```console
-watch -n 1 -c juju status --color --relations
+juju status --watch 1s --relations
 ```
 
 The deployment is ready when all the charms are in the `Active/Idle` state.
@@ -510,7 +510,7 @@ terraform apply -auto-approve
 Monitor the status of the deployment:
 
 ```console
-watch -n 1 -c juju status --color --relations
+juju status --watch 1s --relations
 ```
 
 The deployment is ready when the UPF application is in the `Active/Idle` state.
@@ -617,7 +617,7 @@ terraform apply -auto-approve
 Monitor the status of the deployment:
 
 ```console
-watch -n 1 -c juju status --color --relations
+juju status --watch 1s --relations
 ```
 
 The deployment is ready when the `gnbsim` application is in the `Active/Idle` state.
@@ -768,7 +768,7 @@ Monitor the status of the deployment:
 
 ```console
 juju switch cos-lite
-watch -n 1 -c juju status --color --relations
+juju status --watch 1s --relations
 ```
 
 The deployment is ready when all the charms are in the `Active/Idle` state.
