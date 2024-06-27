@@ -25,6 +25,10 @@ resource "lxd_network" "sdcore-mgmt" {
     "ipv6.address" = "none"
     "dns.mode" = "managed"
     "dns.domain" = "mgmt"
+    "raw.dnsmasq" = <<-EOF
+        host-record=amf.mgmt,10.201.0.52
+        host-record=upf.mgmt,10.201.0.200
+    EOF
   }
 }
 
@@ -71,7 +75,7 @@ resource "tls_private_key" "juju-key" {
 
 resource "lxd_instance" "control-plane" {
   name  = "control-plane"
-  image = "ubuntu:22.04"
+  image = "ubuntu:24.04"
   type = "virtual-machine"
 
   config = {
@@ -138,7 +142,7 @@ resource "lxd_instance_file" "control-plane-privkey" {
 
 resource "lxd_instance" "juju-controller" {
   name  = "juju-controller"
-  image = "ubuntu:22.04"
+  image = "ubuntu:24.04"
   type = "virtual-machine"
 
   config = {
@@ -205,7 +209,7 @@ resource "lxd_instance_file" "juju-controller-privkey" {
 
 resource "lxd_instance" "gnbsim" {
   name  = "gnbsim"
-  image = "ubuntu:22.04"
+  image = "ubuntu:24.04"
   type = "virtual-machine"
 
   config = {
@@ -284,7 +288,7 @@ resource "lxd_instance_file" "gnbsim-privkey" {
 
 resource "lxd_instance" "user-plane" {
   name  = "user-plane"
-  image = "ubuntu:22.04"
+  image = "ubuntu:24.04"
   type = "virtual-machine"
 
   config = {
