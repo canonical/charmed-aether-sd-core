@@ -57,7 +57,7 @@ To complete this tutorial, you will need four virtual machines with access to th
 | Juju Controller + Kubernetes Cluster | 4    | 6g  | 40g  | `management`                   |
 | gNB Simulator Kubernetes Cluster     | 2    | 3g  | 20g  | `management`, `ran`            |
 
-The complete infrastructure can be created with terraform using the following commands:
+The complete infrastructure can be created with Terraform using the following commands:
 
 ```console
 git clone https://github.com/canonical/charmed-aether-sd-core.git
@@ -66,7 +66,7 @@ terraform init
 terraform apply -auto-approve
 ```
 
-The current version of the terraform module has some race conditions, if the deployment fail, a retry will
+The current version of the Terraform module has some race conditions, if the deployment fail, a retry will
 usually fix the issue.
 
 ### Checkpoint 1: Are the VM's ready ?
