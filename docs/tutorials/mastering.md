@@ -304,6 +304,7 @@ Add the Kubernetes clusters representing the user plane, control plane, and gNB 
 This is done by using the Kubernetes configuration file generated when setting up the clusters above.
 
 ```console
+cd /home/ubuntu
 export KUBECONFIG=control-plane-cluster.yaml
 juju add-k8s control-plane-cluster --controller sdcore
 export KUBECONFIG=user-plane-cluster.yaml
