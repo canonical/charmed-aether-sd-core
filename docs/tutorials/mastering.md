@@ -105,7 +105,7 @@ This section covers installation of necessary tools on the VMs which are going t
 Login to the `control-plane` VM:
 
 ```console
-lxc exec control-plane --user 1000 -- bash
+lxc exec control-plane --user 1000 -- bash -l
 ```
 
 Install MicroK8s:
@@ -144,7 +144,7 @@ Log out of the VM.
 Log in to the `user-plane` VM:
 
 ```console
-lxc exec user-plane --user 1000 -- bash
+lxc exec user-plane --user 1000 -- bash -l
 ```
 
 Install MicroK8s, configure MetalLB to expose 1 IP address for the UPF (`10.201.0.200`) and enable the Multus plugin:
@@ -205,7 +205,7 @@ Log out of the VM.
 Log in to the `gnbsim` VM:
 
 ```console
-lxc exec gnbsim --user 1000 -- bash
+lxc exec gnbsim --user 1000 -- bash -l
 ```
 
 Install MicroK8s and add the Multus plugin:
@@ -261,7 +261,7 @@ Log out of the VM.
 Log in to the `juju-controller` VM:
 
 ```console
-lxc exec juju-controller --user 1000 -- bash
+lxc exec juju-controller --user 1000 -- bash -l
 ```
 
 Begin by installing MicroK8s to hold the Juju controller.
@@ -427,6 +427,17 @@ control-plane    traefik       LoadBalancer  10.152.183.28   10.201.0.53   80:32
 
 Note both IPs - in this case `10.201.0.52` for the AMF and `10.201.0.53` for Traefik.
 We will need them shortly.
+
+```{note}
+If the IP for the AMF is not `10.201.0.52`, you will need to update the DNS entry. In the host,
+edit the `main.tf` file. Find the following line and set it to the right IP address, like so:
+
+`host-record=amf.mgmt,10.201.0.53`
+
+Then, run the following command on the host:
+
+`terraform apply -auto-approve`
+```
 
 Log out of the `control-plane` VM.
 
@@ -642,7 +653,7 @@ Update Juju Terraform provider:
 terraform init
 ```
 
-Deploy SD-Core User Plane:
+Deploy the gNB simulator:
 
 ```console
 terraform apply -auto-approve
