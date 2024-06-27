@@ -66,8 +66,10 @@ terraform init
 terraform apply -auto-approve
 ```
 
+```note
 The current version of the Terraform module has some race conditions, if the deployment fail, a retry will
 usually fix the issue.
+```
 
 ### Checkpoint 1: Are the VM's ready ?
 
