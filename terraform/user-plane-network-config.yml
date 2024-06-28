@@ -1,0 +1,27 @@
+network:
+  version: 2
+  ethernets:
+    mgmt:
+      match:
+        name: enp5s0
+      dhcp4: true
+    core:
+      match:
+        name: enp6s0
+      dhcp4: true
+      dhcp4-overrides:
+        use-routes: false
+      routes:
+        - to: 10.202.0.0/24
+          via: 10.204.0.1
+          metric: 1
+    access:
+      match:
+        name: enp7s0
+      dhcp4: true
+      dhcp4-overrides:
+        use-routes: false
+      routes:
+        - to: 10.204.0.0/24
+          via: 10.202.0.1
+          metric: 1
