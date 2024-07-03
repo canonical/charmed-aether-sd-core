@@ -38,7 +38,7 @@ Initialize LXD:
 lxd init --auto
 ```
 
-### Install Terraform 
+### Install Terraform
 
 Install Terraform:
 
