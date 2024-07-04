@@ -2,7 +2,7 @@
 
 In this tutorial, we will deploy User Plane Function (UPF) in DPDK mode using the [sdcore-user-plane-k8s] Terraform Module in a VM.
 
-This builds upon the Mastering tutorial. Follow that tutorial until the "Prepare SD-Core User Plane VM", then come back here.
+This builds upon the [Mastering](mastering.md) tutorial. Follow that tutorial until the "Prepare SD-Core User Plane VM", then come back here.
 
 ## 1. Prepare the SD-Core User Plane VM for DPDK
 
@@ -272,7 +272,8 @@ sudo microk8s.config > /tmp/user-plane-cluster.yaml
 scp /tmp/user-plane-cluster.yaml juju-controller.mgmt:
 ```
 
-Log out of the VM and go back to the Mastering tutorial, continuing at the `Prepare gNB Simulator VM`. When you reach step 5 (`Deploy SD-Core User Plane`), come back here instead.
+Log out of the VM and go back to the Mastering tutorial, continuing at the [Prepare gNB Simulator VM](mastering.md/#prepare-gnb-simulator-vm).
+When you reach step 5 (`Deploy SD-Core User Plane`), come back here instead.
 
 ## 2. Deploy User Plane Function (UPF) in DPDK mode
 
@@ -354,7 +355,7 @@ You should see the following output:
 unit-upf-0: 16:18:59 INFO unit.upf/0.juju-log Container bessd configured for DPDK
 ```
 
-Go back to the Mastering tutorial and continue from step 6: `Deploy the gNB Simulator`.
+Go back to the Mastering tutorial and continue from step: [6. Deploy the gNB Simulator](mastering.md/#6-deploy-the-gnb-simulator).
 
 [SR-IOV Network Device Plugin]: https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
 [sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/main/modules/sdcore-user-plane-k8s

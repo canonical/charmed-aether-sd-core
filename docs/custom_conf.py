@@ -163,4 +163,5 @@ custom_tags = []
 ### Additional configuration
 ############################################################
 
+myst_heading_anchors = 3
 ## Add any configuration that is not covered by the common conf.py file.
