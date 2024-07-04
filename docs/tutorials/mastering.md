@@ -50,12 +50,12 @@ sudo snap install terraform --classic
 
 To complete this tutorial, you will need four virtual machines with access to the networks as follows:
 
-| Machine                              | CPUs | RAM | Disk | Networks                       |
-|--------------------------------------|------|-----|------|--------------------------------|
-| Control Plane Kubernetes Cluster     | 4    | 8g  | 40g  | `management`                   |
-| User Plane Kubernetes Cluster        | 2    | 8g  | 20g  | `management`, `access`, `core` |
-| Juju Controller + Kubernetes Cluster | 4    | 6g  | 40g  | `management`                   |
-| gNB Simulator Kubernetes Cluster     | 2    | 3g  | 20g  | `management`, `ran`            |
+| Machine                              | CPUs | RAM  | Disk | Networks                       |
+|--------------------------------------|------|------|------|--------------------------------|
+| Control Plane Kubernetes Cluster     | 4    | 8g   | 40g  | `management`                   |
+| User Plane Kubernetes Cluster        | 4    | 12g  | 20g  | `management`, `access`, `core` |
+| Juju Controller + Kubernetes Cluster | 4    | 6g   | 40g  | `management`                   |
+| gNB Simulator Kubernetes Cluster     | 2    | 3g   | 20g  | `management`, `ran`            |
 
 The complete infrastructure can be created with Terraform using the following commands:
 
