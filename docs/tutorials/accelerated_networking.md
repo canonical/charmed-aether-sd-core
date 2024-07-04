@@ -56,7 +56,7 @@ List the network interfaces to take note of the MAC addresses of the `enp6s0` an
 In this example, the `core` interface named `enp6s0` has the MAC address `00:16:3e:87:67:eb` and the `access` interface named `enp7s0` has the MAC address `00:16:3e:31:d7:e0`.
 
 ```shell
-ubuntu@user-plane:/$ ip link
+ip link
 ```
 
 ```shell
@@ -107,7 +107,10 @@ sudo /etc/rc.local
 Get the PCI addresses of the access and core interfaces.
 
 ```shell
-$ sudo lshw -c network -businfo
+sudo lshw -c network -businfo
+```
+
+```shell
 Bus info          Device      Class          Description
 ========================================================
 pci@0000:05:00.0              network        Virtio network device
@@ -230,7 +233,7 @@ kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-ne
 
 #### Checkpoint 6: Check the allocatable resources in the Kubernetes node
 
-Make sure that there are 2*1Gi HugePages, 1* `intel_sriov_vfio_access` and 1* `intel_sriov_vfio_core` are available by running the following command:
+Make sure that there are 2 `1Gi HugePages`, 1 `intel_sriov_vfio_access` and 1 `intel_sriov_vfio_core` are available by running the following command:
 
 ```shell
 sudo snap install jq
@@ -273,12 +276,6 @@ Log out of the VM and go back to the Mastering tutorial, continuing at the `Prep
 
 ## 2. Deploy User Plane Function (UPF) in DPDK mode
 
-Log in to the `juju-controller` VM:
-
-```shell
-lxc exec user-plane --user 1000 -- bash -l
-```
-
 Create a Juju model named `user-plane`:
 
 ```shell
@@ -291,7 +288,7 @@ Please replace the `access-interface-mac-address` and `core-interface-mac-addres
 
 ```shell
 cd terraform
-cat << EOF > main.tf
+cat << EOF >> main.tf
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s"
 
@@ -345,28 +342,6 @@ It is normal for `grafana-agent` to remain in waiting state.
 
 ### Checkpoint 7: Is UPF running in DPDK mode ?
 
-You should be able to see the UPF in the `Active/Idle` state by running the following command:
-
-```shell
-juju switch user-plane
-juju status
-```
-
-This should produce output similar to the following:
-
-```
-Model       Controller        Cloud/Region      Version  SLA          Timestamp
-user-plane  my-k8s-localhost  my-k8s/localhost  3.4.2    unsupported  14:25:39+03:00
-
-App            Version  Status   Scale  Charm              Channel        Rev  Address         Exposed  Message
-grafana-agent  0.35.2   waiting      1  grafana-agent-k8s  latest/stable   64  10.152.183.158  no       installing agent
-upf                     active       1  sdcore-upf-k8s     1.5/edge       205  10.152.183.221  no       
-
-Unit              Workload  Agent  Address      Ports  Message
-grafana-agent/0*  blocked   idle   10.1.36.254         grafana-cloud-config: off, logging-consumer: off
-upf/0*            active    idle   10.1.36.193         
-```
-
 Verify that DPDK BESSD is configured in DPDK mode by using the Juju debug log:
 
 ```shell
@@ -383,5 +358,4 @@ Go back to the Mastering tutorial and continue from step 6: `Deploy the gNB Simu
 
 [SR-IOV Network Device Plugin]: https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
 [sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/main/modules/sdcore-user-plane-k8s
-[Multipass]: https://multipass.run/
 [LXD]: https://ubuntu.com/lxd
