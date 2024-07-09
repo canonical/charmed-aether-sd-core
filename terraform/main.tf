@@ -297,8 +297,8 @@ resource "lxd_instance" "user-plane" {
   }
 
   limits = {
-    cpu = 2
-    memory = "8GB"
+    cpu = 4
+    memory = "12GB"
   }
 
   device {
