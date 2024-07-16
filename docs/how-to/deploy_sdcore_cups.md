@@ -29,9 +29,9 @@ Get Charmed Aether SD-Core Terraform modules by cloning the [Charmed Aether SD-C
 Inside the `modules/sdcore-control-plane-k8s` directory, create a `control-plane.tfvars` file to set the name of Juju model for the deployment:
 
 ```console
-git clone https://github.com/canonical/terraform-juju-sdcore-k8s.git
+git clone https://github.com/canonical/terraform-juju-sdcore.git
 git checkout v1.4
-cd terraform-juju-sdcore-k8s/modules/sdcore-control-plane-k8s
+cd terraform-juju-sdcore/modules/sdcore-control-plane-k8s
 cat << EOF > control-plane.tfvars
 model_name = "control-plane"
 create_model = false
@@ -64,7 +64,7 @@ The AMF charm allows establishing the N2-plane connectivity through the `fiveg_n
 `````{tab-item} Option 1: Integration within the same Juju model
 
 It is assumed that the `fiveg-n2` requirer application is already deployed in the Juju model.
-To create a `fiveg_n2` integration between the AMF and another application within the same Juju model, add the following section to the `main.tf` file in the `terraform-juju-sdcore-k8s/modules/sdcore-control-plane-k8s` directory:
+To create a `fiveg_n2` integration between the AMF and another application within the same Juju model, add the following section to the `main.tf` file in the `terraform-juju-sdcore/modules/sdcore-control-plane-k8s` directory:
 
 ```console
 resource "juju_integration" "fiveg-n2" {
@@ -139,9 +139,9 @@ Get Charmed Aether SD-Core Terraform modules by cloning the [Charmed Aether SD-C
 Inside the `modules/sdcore-user-plane-k8s` directory, create a `user-plane.tfvars` file to set the name of Juju model for the deployment:
 
 ```console
-git clone https://github.com/canonical/terraform-juju-sdcore-k8s.git
+git clone https://github.com/canonical/terraform-juju-sdcore.git
 git checkout v1.4
-cd terraform-juju-sdcore-k8s/modules/sdcore-user-plane-k8s
+cd terraform-juju-sdcore/modules/sdcore-user-plane-k8s
 cat << EOF > user-plane.tfvars
 model_name = "user-plane"
 create_model = false
@@ -180,7 +180,7 @@ The UPF charm allows establishing the N4-plane connectivity through the `fiveg_n
 `````{tab-item} Option 1: Integration within the same Juju model
 
 It is assumed that the `fiveg_n4` requirer application is already deployed in the Juju model.
-To create a `fiveg_n4` integration between the UPF and another application within the same Juju model, add the following section to the `main.tf` file in the `terraform-juju-sdcore-k8s/modules/sdcore-user-plane-k8s` directory:
+To create a `fiveg_n4` integration between the UPF and another application within the same Juju model, add the following section to the `main.tf` file in the `terraform-juju-sdcore/modules/sdcore-user-plane-k8s` directory:
 
 ```console
 resource "juju_integration" "fiveg-n4" {
@@ -243,4 +243,4 @@ terraform apply -auto-approve
 
 ``````
 
-[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/v1.4
+[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore/tree/v1.4

@@ -14,7 +14,7 @@ module "sdcore-router" {
 }
 
 module "sdcore" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-k8s?ref=v1.4"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s?ref=v1.4"
 
   model_name = juju_model.sdcore.name
   create_model = false

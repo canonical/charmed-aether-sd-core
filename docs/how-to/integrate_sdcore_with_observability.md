@@ -101,4 +101,4 @@ Click on "Dashboards" -> "Browse" and select "5G Network Overview".
 :align: center
 ```
 
-[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/v1.4
+[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore/tree/v1.4

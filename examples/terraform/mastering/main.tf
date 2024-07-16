@@ -1,5 +1,5 @@
 module "sdcore-control-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-control-plane-k8s?ref=v1.4"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s?ref=v1.4"
 
   model_name = "control-plane"
   create_model = false
@@ -15,7 +15,7 @@ module "sdcore-control-plane" {
 }
 
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s?ref=v1.4"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s?ref=v1.4"
 
   model_name   = "user-plane"
   create_model = false
@@ -49,7 +49,7 @@ module "gnbsim" {
 }
 
 module "cos-lite" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/external/cos-lite?ref=v1.4"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite?ref=v1.4"
 
   model_name               = "cos-lite"
   deploy_cos_configuration = true
