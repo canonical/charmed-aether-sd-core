@@ -235,7 +235,7 @@ resource "lxd_instance" "gnbsim" {
 
   device {
     type = "nic"
-    name = "mgmt"
+    name = "eth0"
 
     properties = {
       network = "sdcore-mgmt"
@@ -245,7 +245,7 @@ resource "lxd_instance" "gnbsim" {
 
   device {
     type = "nic"
-    name = "ran"
+    name = "eth1"
 
     properties = {
       network = "sdcore-ran"
