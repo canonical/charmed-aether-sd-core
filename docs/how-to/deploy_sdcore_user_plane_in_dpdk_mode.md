@@ -115,7 +115,7 @@ mkdir terraform
 cd terraform
 cat << EOF > main.tf
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
   model_name   = "user-plane"
   create_model = false

@@ -291,7 +291,7 @@ Please replace the `access-interface-mac-address` and `core-interface-mac-addres
 cd terraform
 cat << EOF >> main.tf
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-user-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
   model_name   = "user-plane"
   create_model = false
@@ -358,5 +358,5 @@ unit-upf-0: 16:18:59 INFO unit.upf/0.juju-log Container bessd configured for DPD
 Go back to the Mastering tutorial and continue from step: [6. Deploy the gNB Simulator](mastering.md/#6-deploy-the-gnb-simulator).
 
 [SR-IOV Network Device Plugin]: https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
-[sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore-k8s/tree/main/modules/sdcore-user-plane-k8s
+[sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-user-plane-k8s
 [LXD]: https://ubuntu.com/lxd
