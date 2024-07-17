@@ -57,4 +57,4 @@ resource "juju_integration" "nms-gnb01" {
 }
 ```
 
-[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s
+[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore
