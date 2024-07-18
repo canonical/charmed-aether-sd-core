@@ -282,7 +282,7 @@ resource "lxd_instance_file" "gnbsim-privkey" {
   mode = "0600"
 
   depends_on = [
-    lxd_instance.control-plane
+    lxd_instance.gnbsim
   ]
 }
 
@@ -373,6 +373,6 @@ resource "lxd_instance_file" "user-plane-privkey" {
   mode = "0600"
 
   depends_on = [
-    lxd_instance.control-plane
+    lxd_instance.user-plane
   ]
 }
