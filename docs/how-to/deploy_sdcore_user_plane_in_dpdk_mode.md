@@ -1,13 +1,13 @@
 # Deploy SD-Core User Plane in DPDK mode
 
 This guide covers how to deploy the User Plane Function (UPF) in DPDK mode using Terraform modules.
-Navigate between the tabs in each section of this guide to find the steps suitable for your setup (Kubernetes charm of Machine charm).
-
-## Requirements
+Navigate between the tabs below to find the steps suitable for your setup (Kubernetes charm of Machine charm).
 
 ``````{tab-set}
 
 `````{tab-item} Kubernetes Charm
+
+## Requirements
 
 - A Kubernetes cluster which meets or exceeds below requirements:
   - CPU supporting AVX2 and RDRAND and PDPE1GB instructions (Intel Haswell, AMD Excavator or equivalent)
@@ -22,31 +22,7 @@ Navigate between the tabs in each section of this guide to find the steps suitab
 - A Juju controller bootstrapped onto the Kubernetes cluster
 - Terraform 
 
-`````
-
-`````{tab-item} Machine Charm
-
-- A UPF host which meets or exceeds below requirements:
-  - Ubuntu 24.04
-  - CPU supporting AVX2 and RDRAND and PDPE1GB instructions (Intel Haswell, AMD Excavator or equivalent)
-  - 4 cores
-  - At least two 1G HugePages available
-  - 3 network interfaces
-  - `driverctl` installed
-- Juju host
-  - Juju>=3.4
-  - Cloud of type `manual` created
-- Terraform
-
-`````
-
-``````
-
 ## Configure UPF host
-
-``````{tab-set}
-
-`````{tab-item} Kubernetes Charm
 
 ### Change the driver of the network interfaces to `vfio-pci`
 
@@ -127,52 +103,7 @@ sudo wget -O /opt/cni/bin/vfioveth https://raw.githubusercontent.com/opencord/om
 sudo chmod +x /opt/cni/bin/vfioveth
 ```
 
-`````
-
-`````{tab-item} Machine Charm
-
-### Change the driver of the network interfaces to `vfio-pci`
-
-As `root` user on the UPF host, load the `vfio-pci` driver:
-
-```shell
-echo "vfio-pci" > /etc/modules-load.d/vfio-pci.conf
-modprobe vfio-pci
-```
-
-```{note}
-Using `vfio-pci`, by default, needs IOMMU to be enabled. In the environments which do not support
-IOMMU, `vfio-pci` needs to be loaded with additional module parameter:
-`echo "options vfio enable_unsafe_noiommu_mode=1" > /etc/modprobe.d/vfio-noiommu.conf`
-```
-
-Get PCI address of `access` and `core` interfaces:
-
-```shell
-$ sudo lshw -c network -businfo
-Bus info          Device           Class      Description
-=========================================================
-pci@0000:05:00.0  enp5s0           network    Virtio 1.0 network device
-pci@0000:06:00.0  enp6s0           network    Virtio 1.0 network device # access interface
-pci@0000:07:00.0  enp7s0           network    Virtio 1.0 network device # core interface
-```
-
-Bind `access` and `core` interfaces to the `vfio-pci` driver:
-
-```shell
-sudo driverctl set-override 0000:06:00.0 vfio-pci
-sudo driverctl set-override 0000:07:00.0 vfio-pci
-````
-
-`````
-
-``````
-
 ## Deploy SD-Core UPF Operator
-
-``````{tab-set}
-
-`````{tab-item} Kubernetes Charm
 
 Create a Juju model named `user-plane`:
 
@@ -229,6 +160,57 @@ terraform apply -auto-approve
 `````
 
 `````{tab-item} Machine Charm
+
+## Requirements
+
+- A UPF host which meets or exceeds below requirements:
+  - Ubuntu 24.04
+  - CPU supporting AVX2 and RDRAND and PDPE1GB instructions (Intel Haswell, AMD Excavator or equivalent)
+  - 4 cores
+  - At least two 1G HugePages available
+  - 3 network interfaces
+  - `driverctl` installed
+- Juju host
+  - Juju>=3.4
+  - Cloud of type `manual` created
+- Terraform
+
+## Configure UPF host
+
+### Change the driver of the network interfaces to `vfio-pci`
+
+As `root` user on the UPF host, load the `vfio-pci` driver:
+
+```shell
+echo "vfio-pci" > /etc/modules-load.d/vfio-pci.conf
+modprobe vfio-pci
+```
+
+```{note}
+Using `vfio-pci`, by default, needs IOMMU to be enabled. In the environments which do not support
+IOMMU, `vfio-pci` needs to be loaded with additional module parameter:
+`echo "options vfio enable_unsafe_noiommu_mode=1" > /etc/modprobe.d/vfio-noiommu.conf`
+```
+
+Get PCI address of `access` and `core` interfaces:
+
+```shell
+$ sudo lshw -c network -businfo
+Bus info          Device           Class      Description
+=========================================================
+pci@0000:05:00.0  enp5s0           network    Virtio 1.0 network device
+pci@0000:06:00.0  enp6s0           network    Virtio 1.0 network device # access interface
+pci@0000:07:00.0  enp7s0           network    Virtio 1.0 network device # core interface
+```
+
+Bind `access` and `core` interfaces to the `vfio-pci` driver:
+
+```shell
+sudo driverctl set-override 0000:06:00.0 vfio-pci
+sudo driverctl set-override 0000:07:00.0 vfio-pci
+```
+
+## Deploy SD-Core UPF Operator
 
 Create a Juju model named `user-plane`:
 
