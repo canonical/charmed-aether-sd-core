@@ -219,7 +219,6 @@ traefik                   2.10.4   active       1  traefik-k8s                  
 udm                                active       1  sdcore-udm-k8s                1.5/edge            35   10.152.183.168   no
 udr                                active       1  sdcore-udr-k8s                1.5/edge            31   10.152.183.96    no
 upf                                active       1  sdcore-upf-k8s                1.5/edge            64   10.152.183.126   no
-webui                              active       1  sdcore-webui-k8s              1.5/edge            23   10.152.183.128   no
 
 Unit                         Workload  Agent  Address      Ports  Message
 amf/0*                       active    idle   10.1.182.23
@@ -238,7 +237,6 @@ traefik/0*                   active    idle   10.1.182.40
 udm/0*                       active    idle   10.1.182.52
 udr/0*                       active    idle   10.1.182.39
 upf/0*                       active    idle   10.1.182.60
-webui/0*                     active    idle   10.1.182.33
 ```
 
 ## 6. Configure the ingress

@@ -18,4 +18,3 @@ Configuration options and specific charm usage instructions are available on eac
 | SD-Core UDM K8s            | {bdg-link-primary-line}`CharmHub  <https://charmhub.io/sdcore-udm-k8s>`              | 
 | SD-Core UDR K8s            | {bdg-link-primary-line}`CharmHub  <https://charmhub.io/sdcore-udr-k8s>`              | 
 | SD-Core UPF K8s            | {bdg-link-primary-line}`CharmHub  <https://charmhub.io/sdcore-upf-k8s>`              |
-| SD-Core Webui K8s          | {bdg-link-primary-line}`CharmHub  <https://charmhub.io/sdcore-webui-k8s>`            | 
