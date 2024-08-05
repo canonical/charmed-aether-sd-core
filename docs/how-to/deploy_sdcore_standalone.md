@@ -19,8 +19,8 @@ Get Charmed Aether SD-Core Terraform modules by cloning the [Charmed Aether SD-C
 Inside the `modules/sdcore-k8s` directory, create a `terraform.tfvars` file to set the name of Juju model for the deployment:
 
 ```console
-git clone https://github.com/canonical/terraform-juju-sdcore-k8s.git
-cd terraform-juju-sdcore-k8s/modules/sdcore-k8s
+git clone https://github.com/canonical/terraform-juju-sdcore.git
+cd terraform-juju-sdcore/modules/sdcore-k8s
 cat << EOF > terraform.tfvars
 model_name = "<YOUR_JUJU_MODEL_NAME>"
 EOF
@@ -62,4 +62,4 @@ To be effective, every configuration change needs to be applied using the follow
 terraform apply -var-file="terraform.tfvars" -auto-approve
 ```
 
-[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore-k8s
+[Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore
