@@ -4,9 +4,9 @@ This guide covers how to deploy the User Plane Function (UPF) as a machine charm
 
 ## Requirements
 
-- A host with a CPU supporting AVX2 and RDRAND instructions (Intel Haswell, AMD Excavator or equivalent)
-- [Juju][Juju] controller bootstrapped to a LXD cluster
-- A machine added to the Juju controller
+- [Juju][Juju] controller bootstrapped on a separate machine
+- A machine added to the Juju controller, with the following requirements:
+  - A host with a CPU supporting AVX2 and RDRAND instructions (Intel Haswell, AMD Excavator or equivalent)
 - [Terraform][Terraform] installed
 - Git
 
@@ -22,8 +22,18 @@ cat << EOF > terraform.tfvars
 machine_number = 0
 model_name = "user-plane"
 config = {
+  upf-mode = "af_packet"
+  dnn = "internet"
+  enable-hw-checksum = true
   access-interface-name = "enp6s0"
+  access-ip = "192.168.252.3/24"
+  access-gateway-ip = "192.168.252.1"
+  access-interface-mtu-size = 1500
   core-interface-name = "enp7s0"
+  core-ip = "192.168.250.3/24"
+  core-gateway-ip = "192.168.250.1"
+  core-interface-mtu-size = 1500
+  gnb-subnet = "192.168.251.0/24"
 }
 EOF
 ```
