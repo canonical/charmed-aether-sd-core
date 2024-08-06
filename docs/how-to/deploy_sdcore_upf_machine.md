@@ -4,8 +4,9 @@ This guide covers how to deploy the User Plane Function (UPF) as a machine charm
 
 ## Requirements
 
-- [Juju][Juju] controller bootstrapped on a separate machine
-- A machine added to the Juju controller, with the following requirements:
+- [Juju][Juju] controller bootstrapped for a manual cloud
+- A model named "user-plane" added to the Juju controller
+- A machine added to the "user-plane" model, with the following requirements:
   - A host with a CPU supporting AVX2 and RDRAND instructions (Intel Haswell, AMD Excavator or equivalent)
 - [Terraform][Terraform] installed
 - Git
