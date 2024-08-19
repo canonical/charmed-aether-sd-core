@@ -89,6 +89,7 @@ MicroK
 Microk8s
 MNC
 Mongo
+MTU
 multipass
 Multus
 N3
