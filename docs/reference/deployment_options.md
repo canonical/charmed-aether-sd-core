@@ -40,7 +40,9 @@ The User Plane Function (UPF) is available in two different charms:
     
 ````{tab-item} Kubernetes
 
-The [UPF Kubernetes Charm](https://charmhub.io/sdcore-upf-k8s) can be deployed on a Kubernetes cluster. Network Configuration is done using Multus. Unless the charm is deployed in DPDK mode, the charm will not modify the host network configuration. To deploy the Kubernetes charm, follow this [guide](/how-to/deploy_sdcore_cups/).
+The [UPF Kubernetes Charm](https://charmhub.io/sdcore-upf-k8s) can be deployed on a Kubernetes cluster. The charm itself will not modify the host network configuration. Depending on the mode however users may need to modify the host network configuration prior to deploying the charm. To deploy the Kubernetes charm follow the guide matching the right mode:
+- [AF_PACKET](/how-to/deploy_sdcore_cups)
+- [DPDK](/how-to/deploy_sdcore_user_plane_in_dpdk_mode)
 
 ````
 
