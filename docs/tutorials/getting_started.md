@@ -93,7 +93,7 @@ terraform {
   required_providers {
     juju = {
       source  = "juju/juju"
-      version = ">= 0.11.0"
+      version = ">= 0.12.0"
     }
   }
 }
@@ -194,57 +194,65 @@ juju switch sdcore
 watch -n 1 -c juju status --color --relations
 ```
 
-The deployment is ready when all the charms are in the `Active/Idle` state. It is normal
-for `grafana-agent` to remain in waiting state. Example:
+The deployment is ready when all the charms are in the `Active/Idle` state.<br>
+It is normal for `grafana-agent` to remain in waiting state.<br>
+It is also expected that `traefik` goes to the error state (related Traefik [bug](https://github.com/canonical/traefik-k8s-operator/issues/361)).
+
+Example:
 
 ```console
 ubuntu@host:~$ juju status
-Model    Controller          Cloud/Region        Version  SLA          Timestamp
-sdcore   microk8s-localhost  microk8s/localhost  3.4.0    unsupported  13:40:12+01:00
+Model      Controller                  Cloud/Region                Version  SLA          Timestamp
+sdcore  microk8s-localhost  microk8s-classic/localhost  3.4.5    unsupported  08:08:50Z
 
-App                       Version  Status   Scale  Charm                         Channel             Rev  Address          Exposed  Message
-amf                                active       1  sdcore-amf-k8s                1.5/edge            57   10.152.183.208   no
-ausf                               active       1  sdcore-ausf-k8s               1.5/edge            40   10.152.183.237   no
-gnbsim                             active       1  sdcore-gnbsim-k8s             1.5/edge            43   10.152.183.167   no
-grafana-agent             0.32.1   waiting      1  grafana-agent-k8s             latest/stable       44   10.152.183.245   no       installing agent
-mongodb                            active       1  mongodb-k8s                   6/beta              36   10.152.183.156   no       Primary
-nms                                active       1  sdcore-nms-k8s                1.5/edge            26   10.152.183.121   no
-nrf                                active       1  sdcore-nrf-k8s                1.5/edge            62   10.152.183.123   no
-nssf                               active       1  sdcore-nssf-k8s               1.5/edge            37   10.152.183.165   no
-pcf                                active       1  sdcore-pcf-k8s                1.5/edge            32   10.152.183.205   no
-router                             active       1  sdcore-router-k8s             1.5/edge            33   10.152.183.49    no
-self-signed-certificates           active       1  self-signed-certificates      1.5/edge            33   10.152.183.153   no
-smf                                active       1  sdcore-smf-k8s                1.5/edge            37   10.152.183.147   no
-traefik                   2.10.4   active       1  traefik-k8s                   latest/stable      148   10.0.0.4         no
-udm                                active       1  sdcore-udm-k8s                1.5/edge            35   10.152.183.168   no
-udr                                active       1  sdcore-udr-k8s                1.5/edge            31   10.152.183.96    no
-upf                                active       1  sdcore-upf-k8s                1.5/edge            64   10.152.183.126   no
+App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
+amf                       1.4.4    active       1  sdcore-amf-k8s            1.5/edge       707  10.152.183.176  no       
+ausf                      1.4.2    active       1  sdcore-ausf-k8s           1.5/edge       520  10.152.183.65   no       
+grafana-agent             0.32.1   waiting      1  grafana-agent-k8s         latest/stable   45  10.152.183.221  no       installing agent
+mongodb                            active       1  mongodb-k8s               6/beta          38  10.152.183.92   no       Primary
+nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/edge       580  10.152.183.141  no       
+nrf                       1.4.1    active       1  sdcore-nrf-k8s            1.5/edge       580  10.152.183.130  no       
+nssf                      1.4.1    active       1  sdcore-nssf-k8s           1.5/edge       462  10.152.183.62   no       
+pcf                       1.4.3    active       1  sdcore-pcf-k8s            1.5/edge       512  10.152.183.144  no       
+router                             active       1  sdcore-router-k8s         1.5/edge       341  10.152.183.218  no       
+self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.33   no       
+smf                       1.5.2    active       1  sdcore-smf-k8s            1.5/edge       590  10.152.183.64   no       
+traefik                   v2.11.0  waiting      1  traefik-k8s               latest/stable  194  10.152.183.198  no       installing agent
+udm                       1.4.3    active       1  sdcore-udm-k8s            1.5/edge       489  10.152.183.31   no       
+udr                       1.4.1    active       1  sdcore-udr-k8s            1.5/edge       486  10.152.183.82   no       
+upf                       1.4.0    active       1  sdcore-upf-k8s            1.5/edge       591  10.152.183.164  no       
 
 Unit                         Workload  Agent  Address      Ports  Message
-amf/0*                       active    idle   10.1.182.23
-ausf/0*                      active    idle   10.1.182.18
-gnbsim/0*                    active    idle   10.1.182.50
-grafana-agent/0*             blocked   idle   10.1.182.51         logging-consumer: off, grafana-cloud-config: off
-mongodb/0*                   active    idle   10.1.182.35         Primary
-nms/0*                       active    idle   10.1.182.2
-nrf/0*                       active    idle   10.1.182.53
-nssf/0*                      active    idle   10.1.182.48
-pcf/0*                       active    idle   10.1.182.46
-router/0*                    active    idle   10.1.182.57
-self-signed-certificates/0*  active    idle   10.1.182.56
-smf/0*                       active    idle   10.1.182.27
-traefik/0*                   active    idle   10.1.182.40
-udm/0*                       active    idle   10.1.182.52
-udr/0*                       active    idle   10.1.182.39
-upf/0*                       active    idle   10.1.182.60
+amf/0*                       active    idle   10.1.10.181         
+ausf/0*                      active    idle   10.1.10.186         
+grafana-agent/0*             blocked   idle   10.1.10.133         grafana-cloud-config: off, logging-consumer: off
+mongodb/0*                   active    idle   10.1.10.155         Primary
+nms/0*                       active    idle   10.1.10.174         
+nrf/0*                       active    idle   10.1.10.151         
+nssf/0*                      active    idle   10.1.10.136         
+pcf/0*                       active    idle   10.1.10.146         
+router/0*                    active    idle   10.1.10.145         
+self-signed-certificates/0*  active    idle   10.1.10.141         
+smf/0*                       active    idle   10.1.10.154         
+traefik/0*                   error     idle   10.1.10.160         hook failed: "ingress-relation-changed"
+udm/0*                       active    idle   10.1.10.187         
+udr/0*                       active    idle   10.1.10.176         
+upf/0*                       active    idle   10.1.10.169
 ```
 
 ## 6. Configure the ingress
 
-Get the IP address of the Traefik application:
+Get the external IP address of Traefik's `traefik-lb` LoadBalancer service:
 
 ```console
-juju status traefik
+microk8s.kubectl -n sdcore get svc | grep "traefik-lb"
+```
+
+The output should look similar to below:
+
+```console
+ubuntu@host:~/terraform$ microk8s.kubectl -n private5g get svc | grep "traefik-lb"
+traefik-lb                           LoadBalancer   10.152.183.142   10.0.0.4      80:32435/TCP,443:32483/TCP    11m
 ```
 
 In this tutorial, the IP is `10.0.0.4`. Please note it, as we will need it in the next step.
@@ -272,6 +280,14 @@ Apply new configuration:
 terraform apply -auto-approve
 ```
 
+Resolve Traefik error in Juju:
+
+```console
+juju resolve traefik/0
+```
+
+## 7. Configure the 5G core network through the Network Management System
+
 Retrieve the NMS address:
 
 ```console
@@ -281,14 +297,11 @@ juju run traefik/0 show-proxied-endpoints
 The output should be `http://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
 browser.
 
-
-## 7. Configure the 5G core network through the Network Management System
-
 In the Network Management System (NMS), create a network slice with the following attributes:
 
 - Name: `default`
-- MCC: `208`
-- MNC: `93`
+- MCC: `001`
+- MNC: `01`
 - UPF: `upf-external.sdcore.svc.cluster.local:8805`
 - gNodeB: `sdcore-gnbsim-gnbsim`
 
@@ -300,7 +313,7 @@ You should see the following network slice created:
 ```
 
 Create a subscriber with the following attributes:
-- IMSI: `208930100007487`
+- IMSI: `001010100007487`
 - OPC: `981d464c7c52eb6e5036234984ad0bcf`
 - Key: `5122250214c33e723a5dd523fc145fc0`
 - Sequence Number: `16f3b3f70fc2`

@@ -425,7 +425,7 @@ This will show output similar to the following:
 
 ```console
 control-plane    amf-external  LoadBalancer  10.152.183.179  10.201.0.52   38412:30408/SCTP
-control-plane    traefik       LoadBalancer  10.152.183.28   10.201.0.53   80:32349/TCP,443:31925/TCP
+control-plane    traefik-lb    LoadBalancer  10.152.183.28   10.201.0.53   80:32349/TCP,443:31925/TCP
 ```
 
 Note both IPs - in this case `10.201.0.52` for the AMF and `10.201.0.53` for Traefik.
@@ -729,8 +729,8 @@ Navigate to this address in your browser.
 In the Network Management System (NMS), create a network slice with the following attributes:
 
 - Name: `Tutorial`
-- MCC: `208`
-- MNC: `93`
+- MCC: `001`
+- MNC: `01`
 - UPF: `upf.mgmt:8805`
 - gNodeB: `gnbsim-gnbsim-gnbsim (tac:1)`
 
@@ -746,7 +746,7 @@ We will now add a subscriber with the IMSI that was provided to the gNB simulato
 Navigate to Subscribers and click on Create.
 Fill in the following:
 
-- IMSI: `208930100007487`
+- IMSI: `001010100007487`
 - OPC: `981d464c7c52eb6e5036234984ad0bcf`
 - Key: `5122250214c33e723a5dd523fc145fc0`
 - Sequence Number: `16f3b3f70fc2`
@@ -986,7 +986,7 @@ We can do the same for the user plane transport to see it starts on the RAN netw
 To follow the UE itself, we can filter by the IMSI.
 
 ```console
-juju debug-log | grep imsi-208930100007487
+juju debug-log | grep imsi-001010100007487
 ```
 
 ### Control Plane Logs
