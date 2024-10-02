@@ -22,4 +22,4 @@ Save the password in a safe place.
 ## Create and list backups
 
 `mongodb-k8s` is now ready to
-[create and list backups](https://charmhub.io/mongodb-k8s/docs/h-create-and-list-backups?channel=6/beta).
+[create and list backups](https://charmhub.io/mongodb-k8s/docs/h-create-backup?channel=6/beta).
