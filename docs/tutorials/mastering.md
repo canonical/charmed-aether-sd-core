@@ -781,25 +781,6 @@ module "cos-lite" {
 EOF
 ```
 
-Expose the Software as a Service offers for the COS:
-
-```console
-cat << EOF >> main.tf
-resource "juju_offer" "prometheus-remote-write" {
-  model            = module.cos-lite.model_name
-  application_name = module.cos-lite.prometheus_app_name
-  endpoint         = "receive-remote-write"
-}
-
-resource "juju_offer" "loki-logging" {
-  model            = module.cos-lite.model_name
-  application_name = module.cos-lite.loki_app_name
-  endpoint         = "logging"
-}
-
-EOF
-```
-
 Update Juju Terraform provider:
 
 ```console
@@ -836,7 +817,7 @@ resource "juju_integration" "control-plane-prometheus" {
   }
 
   application {
-    offer_url = juju_offer.prometheus-remote-write.url
+    offer_url = module.cos-lite.prometheus_remote_write_offer_url
   }
 }
 
@@ -849,7 +830,7 @@ resource "juju_integration" "control-plane-loki" {
   }
 
   application {
-    offer_url = juju_offer.loki-logging.url
+    offer_url = module.cos-lite.loki_logging_offer_url
   }
 }
 
@@ -862,7 +843,7 @@ resource "juju_integration" "user-plane-prometheus" {
   }
 
   application {
-    offer_url = juju_offer.prometheus-remote-write.url
+    offer_url = module.cos-lite.prometheus_remote_write_offer_url
   }
 }
 
@@ -875,7 +856,7 @@ resource "juju_integration" "user-plane-loki" {
   }
 
   application {
-    offer_url = juju_offer.loki-logging.url
+    offer_url = module.cos-lite.loki_logging_offer_url
   }
 }
 
