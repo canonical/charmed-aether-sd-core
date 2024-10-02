@@ -27,7 +27,7 @@ juju deploy mongodb-k8s --channel 6/beta
 
 ## Follow the restore procedure
 
-Use this [procedure](https://charmhub.io/mongodb-k8s/docs/h-migrate-cluster?channel=6/beta)
+Use this [procedure](https://charmhub.io/mongodb-k8s/docs/h-restore-backup?channel=6/beta)
 to restore the backup.
 
 ## Redeploy the bundle
