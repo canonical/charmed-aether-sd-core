@@ -119,7 +119,7 @@ module "sdcore-router" {
 module "sdcore" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
-  model_name = juju_model.sdcore.name
+  model_name   = juju_model.sdcore.name
   create_model = false
 
   traefik_config = {
@@ -145,8 +145,7 @@ resource "juju_integration" "gnbsim-amf" {
   }
 
   application {
-    name     = module.sdcore.amf_app_name
-    endpoint = module.sdcore.fiveg_n2_endpoint
+    offer_url = module.sdcore.amf_fiveg_n2_offer_url
   }
 }
 
