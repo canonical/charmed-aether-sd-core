@@ -1,104 +1,131 @@
 # Integrate SD-Core with Canonical Observability Stack
 
-[Charmed Aether SD-Core Terraform modules][Charmed Aether SD-Core Terraform modules] come with built-in support for the Canonical Observability Stack (COS).
-By default, COS deployment and integration is disabled.
-This guide covers two ways of integrating SD-Core with COS:
-1. [Integrating SD-Core with COS at the deployment stage](#option-1)
-2. [Integrating COS with an existing SD-Core deployment](#option-2)
+One of the key aspects considered while developing Charmed Aether SD-Core was making it easily observable.
+To achieve this, each [Charmed Aether SD-Core Terraform module][Charmed Aether SD-Core Terraform modules] includes Grafana Agent application, which allows for integration with the Canonical Observability Stack (COS).
 
-(option-1)=
-## Integrating SD-Core with COS at the deployment stage
+This how-to guide outlines the process of integrating Charmed Aether SD-Core with COS.
 
-This option allows deploying COS and integrating it with SD-Core as a Day 1 operation. 
+Steps described in this guide can be performed as both Day 1 and Day 2 operations.
 
-### Pre-requisites
+```{note}
+Deploying Canonical Observability Stack will increase the resources consumption on the K8s cluster. 
+Make sure your Kubernetes cluster is capable of handling the load from both Charmed Aether SD-Core and COS before proceeding.  
+```
 
-- A Kubernetes cluster capable of handling the load from both SD-Core and COS
-- [Charmed Aether SD-Core Terraform modules][Charmed Aether SD-Core Terraform modules] Git repository cloned onto the Juju host machine
+## 1. Add COS to the solution Terraform module
 
-### Including COS integration in the SD-Core deployment
-
-Inside the directory of a desired SD-Core Terraform module, create `variables.tfvars` file and add following line(s) to it:
+Update your solution Terraform module (here it's named `main.tf`):
 
 ```console
-deploy_cos = true
-cos_model_name = "YOUR_CUSTOM_COS_MODEL_NAME" (Optional. Defaults to `cos-lite`.)
-cos_configuration_config = {} (Optional. Allows customization of the `COS Configuration` application.)
+cat << EOF > main.tf
+module "cos" {
+  source                   = git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite
+  model_name               = "cos-lite"
+  deploy_cos_configuration = true
+  cos_configuration_config = {
+    git_repo                = "https://github.com/canonical/sdcore-cos-configuration"
+    git_branch              = "main"
+    grafana_dashboards_path = "grafana_dashboards/sdcore/"
+  }
+}
+
+resource "juju_integration" "prometheus-remote-write" {
+  model = "YOUR_CHARMED_AETHER_SD_CORE_MODEL_NAME"
+
+  application {
+    name     = module.sdcore.grafana_agent_app_name
+    endpoint = module.sdcore.send_remote_write_endpoint
+  }
+
+  application {
+    offer_url = module.cos.prometheus_remote_write_offer_url
+  }
+}
+
+resource "juju_integration" "loki-logging" {
+  model = "YOUR_CHARMED_AETHER_SD_CORE_MODEL_NAME"
+
+  application {
+    name     = module.sdcore.grafana_agent_app_name
+    endpoint = module.sdcore.logging_consumer_endpoint
+  }
+
+  application {
+    offer_url = module.cos.loki_logging_offer_url
+  }
+}
+
+EOF
 ```
 
 ```{note}
-If you have already created the `.tfvars` file, to customize the deployment of SD-Core, you should edit the existing file rather than create a new one.
+In this guide it is assumed, that the Terraform module responsible for deploying Charmed Aether SD-Core is named `sdcore`.
+If you use different name, please make sure it's reflected in COS integrations.
 ```
 
-Proceed with the deployment.
+## 2. Apply the changes
 
-(option-2)=
-## Integrating COS with an existing SD-Core deployment
-
-This option allows deploying COS and integrating it with SD-Core as a Day 2 operation.
-
-### Pre-requisites
-
-- A Kubernetes cluster capable of handling the load from both SD-Core and COS
-- Any [Charmed Aether SD-Core Terraform module][Charmed Aether SD-Core Terraform modules] deployed
-
-### Adding COS to an existing SD-Core deployment
-
-Go to a directory from which SD-Core was deployed (the one containing Terraform's `.tfstate` file).
-Edit the `.tfvars` and add following line(s) to it:
+Fetch COS module:
 
 ```console
-deploy_cos = true
-cos_model_name = "<YOUR_CUSTOM_COS_MODEL_NAME>" (Optional. Defaults to `cos-lite`.)
-cos_configuration_config = {} (Optional. Allows customization of the `COS Configuration` application.)
+terraform init
 ```
 
-Apply the changes:
+Apply new configuration:
 
 ```console
-terraform apply -var-file="<YOUR_TFVARS_FILE>" -auto-approve
+terraform apply -auto-approve
 ```
 
-Monitor the status of the deployment:
+## 3. Example of a complete solution Terraform module including Charmed Aether SD-Core integrated with COS
 
 ```console
-juju switch <YOUR_CUSTOM_COS_MODEL_NAME>
-watch -n 1 -c juju status --color --relations
-```
+resource "juju_model" "sdcore" {
+  name  = "sdcore"
+}
 
-The deployment is ready when all the charms are in the `Active/Idle` state.
+module "sdcore" {
+  source                   = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-k8s"
+  model_name               = juju_model.sdcore.name
+  create_model             = false
+}
 
-## Accessing the 5G Network Overview Grafana dashboard
+module "cos" {
+  source                   = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite"
+  model_name               = "cos-lite"
+  deploy_cos_configuration = true
+  cos_configuration_config = {
+    git_repo                = "https://github.com/canonical/sdcore-cos-configuration"
+    git_branch              = "main"
+    grafana_dashboards_path = "grafana_dashboards/sdcore/"
+  }
+}
 
-Retrieve the Grafana URL and admin password:
+resource "juju_integration" "prometheus-remote-write" {
+  model = juju_model.sdcore.name
 
-```console
-juju switch cos-lite
-juju run grafana/leader get-admin-password
-```
+  application {
+    name     = module.sdcore.grafana_agent_app_name
+    endpoint = module.sdcore.send_remote_write_endpoint
+  }
 
-You should see the output similar to the following:
+  application {
+    offer_url = module.cos.prometheus_remote_write_offer_url
+  }
+}
 
-```console
-Running operation 1 with 1 task
-  - task 2 on unit-grafana-0
+resource "juju_integration" "loki-logging" {
+  model = juju_model.sdcore.name
 
-Waiting for task 2...
-admin-password: c72uEq8FyGRo
-url: http://10.201.0.51/cos-lite-grafana
-```
+  application {
+    name     = module.sdcore.grafana_agent_app_name
+    endpoint = module.sdcore.logging_consumer_endpoint
+  }
 
-```{note}
-Grafana can be accessed using both `http` (as returned by the command above) or `https`.
-```
-
-In your browser, navigate to the URL from the output (`https://10.201.0.51/cos-grafana`).
-Login using the "admin" username and the admin password provided in the last command.
-Click on "Dashboards" -> "Browse" and select "5G Network Overview".
-
-```{image} ../images/grafana_5g_dashboard_sim_after.png
-:alt: Grafana dashboard
-:align: center
+  application {
+    offer_url = module.cos.loki_logging_offer_url
+  }
+}
 ```
 
 [Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore
