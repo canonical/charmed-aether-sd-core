@@ -19,7 +19,7 @@ Update your solution Terraform module (here it's named `main.tf`):
 ```console
 cat << EOF > main.tf
 module "cos" {
-  source                   = git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite
+  source                   = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite"
   model_name               = "cos-lite"
   deploy_cos_configuration = true
   cos_configuration_config = {
