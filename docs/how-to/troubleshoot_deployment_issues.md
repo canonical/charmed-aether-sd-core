@@ -146,7 +146,7 @@ Controller           Model      User   Access     Cloud/Region        Models  No
 microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
 ```
 
-### B. 3. Charmed Aether SD-Core charms stuck at the Waiting/Blocked/Error status
+### B. 3. Charmed Aether SD-Core charms stuck at the Waiting/Blocked status
 
 After deploying the Charmed Aether SD-Core, the applications are deployed to target Juju model. 
 
