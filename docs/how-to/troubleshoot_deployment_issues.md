@@ -1,70 +1,12 @@
-# Troubleshoot the deployment issues
+# Troubleshoot deployment issues
 
 This guide provides step-by-step troubleshooting actions to remediate deployment issues. We hope you don't need this guide. If you encounter an issue and aren't able to address it via this guide, please raise an issue [here][Bug Report].
 
-## 1. Terraform failed to deploy the Charmed Aether SD-Core because of configuration mismatch
+## 1. Terraform failed to deploy the Charmed Aether SD-Core because of selecting an existing Juju model
 
 ### Symptoms
 
-Terraform may fail to deploy the Charmed Aether SD-Core modules. When the `terraform apply -auto-approve` command is run, the deployment fails with the wrong integration endpoints or the wrong object attributes etc. as following:
-
-```console
-$ terraform apply -auto-approve 
-│ Error: Unsupported attribute
-│   on main.tf line 54, in resource "juju_integration" "cu-nms":
-│   54:     endpoint = module.sdcore.fiveg_identity_endpoint
-│     ├────────────────
-│     │ module.sdcore is a object
-│ 
-│ This object does not have an attribute named "fiveg_identity_endpoint".
-```
-
-### Recommended Actions
-
-[Validate the Terraform modules][Validate Terraform Configuration]:
-
-```shell
-$ terraform validate
-Success! The configuration is valid.
-```
-
-The command should not fail. If it does, please open a [bug report][Bug Report] and attach the validation results.
-
-## 2. Charmed Aether SD-Core charms stuck at the Waiting/Error status
-
-### Symptoms
-
-After deploying the Charmed Aether SD-Core, check the applications' status:
-
-```shell
-$ juju status
-```
-
-In the command output, all the charms except the `grafana-agent` should be in the Active/Idle state. If any application's status is `Waiting` or `Error`, please apply the recommended actions.
-
-### Recommended Actions
-
-If any application hangs in `Waiting`, `Error` or `Blocked` within the details that defined in the below table, please open a [bug report][Bug Report].
-
-| Charm Status | How much time passed                             | Reason                 | Recommended Action    |
-|--------------|--------------------------------------------------|------------------------|-----------------------|
-| Waiting      | Time is exceeded according the followed tutorial |                        | File a bug report     | 
-| Error        |                                                  | Any reason             | File a bug report     |
-| Blocked      |                                                  | Waiting for a relation | File a bug report     |
-
-Get the application logs:
-
-```shell
-$ microk8s.kubectl logs -f <pod_name> -n <model_name>
-```
-
-Attach the logs to the bug report.
-
-## 3. Terraform failed to deploy the Charmed Aether SD-Core because of selecting an existing Juju model
-
-### Symptoms
-
-Terraform may fail to deploy the Charmed Aether SD-Core modules because of the provided model name already exists in the Juju controller. When the `terraform apply -auto-approve` command is run, the deployment fails with the client error which express that the Juju model could not be created as following:
+The `terraform apply -auto-approve` command fails with a client error which express that the Juju model could not be created:
 
 ```console
 Plan: 72 to add, 0 to change, 0 to destroy.
@@ -80,7 +22,7 @@ juju_model.private5g: Creating...
 
 ### Recommended Actions
 
-Check all the existing Juju models:
+Validate whether a Juju model already exists with the same name:
 
 ```shell
 $ juju models
@@ -89,17 +31,16 @@ controller: microk8s-localhost
 Model       Cloud/Region        Type        Status      Units  Access  Last connection
 controller  microk8s/localhost  kubernetes  available   1       admin  just now
 private5g*  microk8s/localhost  kubernetes  destroying  -       admin  6 minutes ago
-private5g2  microk8s/localhost  kubernetes  destroying  -       admin  1 minute ago
 sdcore      microk8s/localhost  kubernetes  available   19      admin  2024-10-04
 ```
 
-According to [Customize the model name using variables][Deploy SD-Core K8s with Terraform], provide a model name which does not exist in the Juju controller.
+Choose a model name that does not already exist in the Juju controller. Read [this guide][Deploy SD-Core K8s with Terraform] for more information.
 
-## 4. Juju failed to deploy Charmed Aether SD-Core as Juju controller is not reachable
+## 2. Juju failed to deploy Charmed Aether SD-Core as Juju controller is not reachable
 
 ### Symptoms
 
-While Juju is performing the deployment, the Juju controller may be unavailable which fails the deployment with the error `timeout to Juju Terraform provider` as following.
+The `terraform apply -auto-approve` command fails with a dial tcp i/o timeout error:
 
 ```console
 $ terraform apply --auto-approve
@@ -115,7 +56,7 @@ $ terraform apply --auto-approve
 
 ### Recommended Actions
 
-Make sure that the Juju controller is available:
+Validate that the Juju controller is available:
 
 ```shell
 $ juju controllers
@@ -125,25 +66,17 @@ Controller           Model      User   Access     Cloud/Region        Models  No
 microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
 ```
 
-If it does not output the controller details, please follow the guide [manage Juju controllers][Manage Juju Controller] to create an accessible Juju controller.
+If it does not output the controller details, please follow [this guide][Manage Juju Controller] to create an accessible Juju controller.
 
-## 5. Charmed Aether SD-Core charms stuck at the Waiting/Blocked status
+## 3. Charmed Aether SD-Core charms stuck at the Waiting/Blocked status
 
 ### Symptoms
 
-After deploying the Charmed Aether SD-Core, check the applications' status:
-
-```shell
-$ juju status
-```
-
-All the charms except the `grafana-agent` should be in the Active/Idle state.
-
-If any application hangs in `Waiting` or `Blocked` status, check the table below to see the recommended actions.
+After deploying Charmed Aether SD-Core, charms hang in `Waiting` or `Blocked` status.
 
 ### Recommended Actions
 
-If any situation fits to your case in the table below, then perform the recommended actions by utilizing the [Charmed Aether SD-Core Documentation][Charmed Aether SD-Core Documentation].
+If any situation in the table below fits to your case, then perform the recommended actions by utilizing [this guide][Charmed Aether SD-Core Documentation].
 
 | Charm Status | How much time passed                           | Reason                                                                | Recommended Actions                                                   |
 |--------------|------------------------------------------------|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
