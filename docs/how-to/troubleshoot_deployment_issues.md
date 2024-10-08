@@ -1,15 +1,12 @@
 # Troubleshoot the deployment issues
 
-This guide provides the steps to troubleshoot the unsuccessful Charmed Aether SD-Core deployments for different failure cases.
+This guide provides step-by-step troubleshooting actions to remediate deployment issues. We hope you don't need this guide. If you encounter an issue and aren't able to address it via this guide, please raise an issue [here][Bug Report].
 
-## A. Create a Bug Report
+## 1. Terraform failed to deploy the Charmed Aether SD-Core because of configuration mismatch
 
-If you hit one of the following situations during the deployment, raise the issue by filling a [bug report][Bug Report].
+### Symptoms
 
-### A. 1. Terraform failed to deploy the Charmed Aether SD-Core because of configuration mismatch
-
-Terraform may fail to deploy the Charmed Aether SD-Core modules because of wrong configuration issues. These errors are generally caused by the mistakes in module designs or oversights during version changes.
-When the `terraform apply -auto-approve` command is run, deployment fails with wrong integration endpoints or wrong object attributes etc. as following:
+Terraform may fail to deploy the Charmed Aether SD-Core modules. When the `terraform apply -auto-approve` command is run, deployment fails with wrong integration endpoints or wrong object attributes etc. as following:
 
 ```console
 $ terraform apply -auto-approve 
@@ -24,44 +21,51 @@ $ terraform apply -auto-approve
 │ This object does not have an attribute named "fiveg_identity_endpoint".
 ```
 
-#### Recommended Actions
+### Recommended Actions
 
-[Validate the Terraform modules][Validate Terraform Configuration] by running `terraform validate` to analyze the dependencies between resources in your infrastructure configuration to determine the order to perform your operations.
+[Validate the Terraform modules][Validate Terraform Configuration]:
 
-This command outputs the consistency result of the Terraform modules as success or error.
+```shell
+$ terraform validate
+Success! The configuration is valid.
+```
 
-Fixing the module may require advanced knowledge. If you hit a case that described above, create a [bug report][Bug Report]
+The command should not fail. If it does, please open a [bug report][Bug Report].
 
-### A. 2. Charmed Aether SD-Core charms stuck at the Waiting/Error status
+## 2. Charmed Aether SD-Core charms stuck at the Waiting/Error status
 
-After deploying the Charmed Aether SD-Core, the applications are deployed to target Juju model. 
+### Symptoms
 
-If any application hangs in Waiting or Error status, raise the issue as this situation can be caused by a bug in the charm or the workload.
+After deploying the Charmed Aether SD-Core, check the applications' status:
+
+```shell
+$ juju status
+```
+
+All the charms except the `grana-agent` should be in the Active/Idle state. If any application's status is `Waiting` or `Error`, please apply the recommended actions.
+
+### Recommended Actions
+
+if any application hangs in `Waiting` or `Error` status, please open a [bug report][Bug Report].
 
 | Charm Status | How much time passed                             | Reason                | Recommended Action                                                    |
 |--------------|--------------------------------------------------|-----------------------|-----------------------------------------------------------------------|
 | Waiting      | Time is exceeded according the followed tutorial |                       | File a bug report                                                     | 
 | Error        |                                                  | Any reason            | File a bug report                                                     |
 
-#### Recommended Actions
-
-Get the application container's logs by running the below command:
+Get the application container's logs:
 
 ```shell
 $ microk8s.kubectl logs -f <pod_name> -c <container_name> -c <model_name>
 ```
 
-File a [bug report][Bug Report] by attaching the logs and providing other required details.
+Attach the logs to the bug report by providing other required details.
 
-## B. Fix the environment/configuration related problems
+## 3. Terraform failed to deploy the Charmed Aether SD-Core because of selecting an existing Juju model
 
-The issues which are described below can be fixed by performing the recommended actions.
+### Symptoms
 
-### B. 1. Terraform failed to deploy the Charmed Aether SD-Core because of selecting an existing Juju model
-
-Charmed Aether SD-Core creates a Juju model and deploys the resources in it. The Juju model has a default name, and it is allowed to be modified by configuration options. 
-Terraform may fail to deploy the Charmed Aether SD-Core modules because of the provided model name already exists in the Juju controller.
-When the `terraform apply -auto-approve` command is run, deployment fails with client error which express that Juju model could not be created as following:
+Terraform may fail to deploy the Charmed Aether SD-Core modules because of the provided model name already exists in the Juju controller. When the `terraform apply -auto-approve` command is run, deployment fails with client error which express that Juju model could not be created as following:
 
 ```console
 Plan: 72 to add, 0 to change, 0 to destroy.
@@ -80,7 +84,7 @@ juju_model.private5g: Creating...
 
 ### Recommended Actions
 
-Check all the existing Juju models by running the following command:
+Check all the existing Juju models:
 
 ```shell
 $ juju models
@@ -109,13 +113,11 @@ Deploy the applications by customizing the model name attribute:
 terraform apply -var-file="terraform.tfvars" -auto-approve 
 ```
 
-### B. 2. Juju failed to deploy Charmed Aether SD-Core as Juju controller is not reachable
+## 4. Juju failed to deploy Charmed Aether SD-Core as Juju controller is not reachable
 
-Terraform Juju Provider uses the Juju to deploy the charms and set up the integrations indicated through the Terraform modules. 
+### Symptoms
 
-While Juju is performing the deployment, an environmental issue such as a network problem may happen which makes the controller unreachable.
-
-For the situation that the Juju controller is not available, the deployment fails with the error `timeout to Juju Terraform provider` as following.
+While Juju is performing the deployment, the Juju controller may be unavailable which causes to fail the deployment with the error `timeout to Juju Terraform provider` as following.
 
 ```console
 $ terraform apply --auto-approve
@@ -134,9 +136,9 @@ $ terraform apply --auto-approve
 │ Connection error, please check the controller_addresses property set on the provider
 ```
 
-#### Recommended Actions
+### Recommended Actions
 
-Make sure that Juju controller is available. If the following command does not output desired Juju controller, follow the guide [manage Juju controllers][Manage Juju Controller] to create a Juju controller.
+Make sure that Juju controller is available:
 
 ```shell
 $ juju controllers
@@ -146,12 +148,27 @@ Controller           Model      User   Access     Cloud/Region        Models  No
 microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
 ```
 
-### B. 3. Charmed Aether SD-Core charms stuck at the Waiting/Blocked status
+This command should output the controller details.
 
-After deploying the Charmed Aether SD-Core, the applications are deployed to target Juju model. 
+If it does not output the controller details, please follow the guide [manage Juju controllers][Manage Juju Controller] to create a Juju controller.
 
-If any application hangs in Waiting or Blocked status, check the below table. If any situation fits to your case then perform the recommended action by utilizing the 
-[Charmed Aether SD-Core Documentation][Charmed Aether SD-Core Documentation].
+## 5. Charmed Aether SD-Core charms stuck at the Waiting/Blocked status
+
+### Symptoms
+
+After deploying the Charmed Aether SD-Core, check the applications' status:
+
+```shell
+$ juju status
+```
+
+All the charms except the `grana-agent` should be in the Active/Idle state.
+
+If any application hangs in `Waiting` or `Blocked` status, check the table below. 
+
+### Recommended Actions
+
+If any situation fits to your case in the below table, then perform the recommended action by utilizing the [Charmed Aether SD-Core Documentation][Charmed Aether SD-Core Documentation].
 
 | Charm Status | How much time passed | Reason                                                                | Recommended Actions                                                   |
 |--------------|----------------------|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
@@ -159,7 +176,7 @@ If any application hangs in Waiting or Blocked status, check the below table. If
 | Blocked      |                      | Multus is not installed or enabled                                    | Install and enable Multus                                             |
 | Blocked      |                      | CPU is not compatible                                                 | Use CPU which is Intel 4ᵗʰ generation or newer, or AMD Ryzen or newer |
 | Blocked      |                      | Not enough HugePages available                                        | Set at least two 1G HugePages in the host                             |
-| Blocked      |                      | Waiting for a relation                                                | Find the missing interface and relate                                 |
+| Blocked      |                      | Waiting for a relation                                                | Find the missing interface and set up the relation                    |
 | Blocked      |                      | Invalid configuration                                                 | Provide valid configuration options                                   |
 | Blocked      |                      | MetalLB is not enabled                                                | Enable MetalLB                                                        |
 
