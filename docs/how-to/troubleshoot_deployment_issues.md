@@ -6,7 +6,7 @@ This guide provides step-by-step troubleshooting actions to remediate deployment
 
 ### Symptoms
 
-Terraform may fail to deploy the Charmed Aether SD-Core modules. When the `terraform apply -auto-approve` command is run, deployment fails with wrong integration endpoints or wrong object attributes etc. as following:
+Terraform may fail to deploy the Charmed Aether SD-Core modules. When the `terraform apply -auto-approve` command is run, the deployment fails with the wrong integration endpoints or the wrong object attributes etc. as following:
 
 ```console
 $ terraform apply -auto-approve 
@@ -42,7 +42,7 @@ After deploying the Charmed Aether SD-Core, check the applications' status:
 $ juju status
 ```
 
-All the charms except the `grana-agent` should be in the Active/Idle state. If any application's status is `Waiting` or `Error`, please apply the recommended actions.
+In the command output, all the charms except the `grana-agent` should be in the Active/Idle state. If any application's status is `Waiting` or `Error`, please apply the recommended actions.
 
 ### Recommended Actions
 
@@ -65,7 +65,7 @@ Attach the logs to the bug report by providing other required details.
 
 ### Symptoms
 
-Terraform may fail to deploy the Charmed Aether SD-Core modules because of the provided model name already exists in the Juju controller. When the `terraform apply -auto-approve` command is run, deployment fails with client error which express that Juju model could not be created as following:
+Terraform may fail to deploy the Charmed Aether SD-Core modules because of the provided model name already exists in the Juju controller. When the `terraform apply -auto-approve` command is run, the deployment fails with the client error which express that the Juju model could not be created as following:
 
 ```console
 Plan: 72 to add, 0 to change, 0 to destroy.
@@ -117,7 +117,7 @@ terraform apply -var-file="terraform.tfvars" -auto-approve
 
 ### Symptoms
 
-While Juju is performing the deployment, the Juju controller may be unavailable which causes to fail the deployment with the error `timeout to Juju Terraform provider` as following.
+While Juju is performing the deployment, the Juju controller may be unavailable which fails the deployment with the error `timeout to Juju Terraform provider` as following.
 
 ```console
 $ terraform apply --auto-approve
@@ -138,7 +138,7 @@ $ terraform apply --auto-approve
 
 ### Recommended Actions
 
-Make sure that Juju controller is available:
+Make sure that the Juju controller is available:
 
 ```shell
 $ juju controllers
@@ -147,8 +147,6 @@ Use --refresh option with this command to see the latest information.
 Controller           Model      User   Access     Cloud/Region        Models  Nodes  HA  Version
 microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
 ```
-
-This command should output the controller details.
 
 If it does not output the controller details, please follow the guide [manage Juju controllers][Manage Juju Controller] to create a Juju controller.
 
@@ -164,11 +162,11 @@ $ juju status
 
 All the charms except the `grana-agent` should be in the Active/Idle state.
 
-If any application hangs in `Waiting` or `Blocked` status, check the table below. 
+If any application hangs in `Waiting` or `Blocked` status, check the table below to see the recommended actions.
 
 ### Recommended Actions
 
-If any situation fits to your case in the below table, then perform the recommended action by utilizing the [Charmed Aether SD-Core Documentation][Charmed Aether SD-Core Documentation].
+If any situation fits to your case in the table below, then perform the recommended actions by utilizing the [Charmed Aether SD-Core Documentation][Charmed Aether SD-Core Documentation].
 
 | Charm Status | How much time passed | Reason                                                                | Recommended Actions                                                   |
 |--------------|----------------------|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
