@@ -90,12 +90,8 @@ If any situation in the table below fits to your case, then perform the recommen
 
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
 
-[Validate Terraform Configuration]: https://developer.hashicorp.com/terraform/tutorials/configuration-language/troubleshooting-workflow#validate-your-configuration
-
 [Deploy SD-Core K8s with Terraform]: https://github.com/canonical/terraform-juju-sdcore/blob/main/modules/sdcore-k8s/README.md#deploying-sdcore-k8s-with-terraform
 
 [Manage Juju Controller]: https://juju.is/docs/juju/manage-controllers
-
-[Traefik Pod Goes to Error State]: https://github.com/canonical/traefik-k8s-operator/issues/361
 
 [Charmed Aether SD-Core Documentation]: https://github.com/canonical/charmed-aether-sd-core/tree/main/docs
