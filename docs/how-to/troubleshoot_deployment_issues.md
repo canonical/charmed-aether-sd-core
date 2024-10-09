@@ -68,30 +68,8 @@ microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9    
 
 If it does not output the controller details, please follow [this guide][Manage Juju Controller] to create an accessible Juju controller.
 
-## 3. Charmed Aether SD-Core charms stuck at the Waiting/Blocked status
-
-### Symptoms
-
-After deploying Charmed Aether SD-Core, charms hang in `Waiting` or `Blocked` status.
-
-### Recommended Actions
-
-If any situation in the table below fits to your case, then perform the recommended actions by utilizing [this guide][Charmed Aether SD-Core Documentation].
-
-| Charm Status | How much time passed                           | Reason                                                                | Recommended Actions                                                   |
-|--------------|------------------------------------------------|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
-| Waiting      | Within the time specified in the documentation | Waiting for a relation data, configuration or service to be available | Wait more                                                             |
-| Blocked      |                                                | Multus is not installed or enabled                                    | Install and enable Multus                                             |
-| Blocked      |                                                | CPU is not compatible                                                 | Use CPU which is Intel 4ᵗʰ generation or newer, or AMD Ryzen or newer |
-| Blocked      |                                                | Not enough HugePages available                                        | Make sure at least two 1G HugePages are available in the host         |
-| Blocked      |                                                | Invalid configuration                                                 | Provide valid configuration options                                   |
-| Blocked      |                                                | MetalLB is not enabled                                                | Enable MetalLB                                                        |
-
-
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
 
 [Deploy SD-Core K8s with Terraform]: https://github.com/canonical/terraform-juju-sdcore/blob/main/modules/sdcore-k8s/README.md#deploying-sdcore-k8s-with-terraform
 
 [Manage Juju Controller]: https://juju.is/docs/juju/manage-controllers
-
-[Charmed Aether SD-Core Documentation]: https://github.com/canonical/charmed-aether-sd-core/tree/main/docs
