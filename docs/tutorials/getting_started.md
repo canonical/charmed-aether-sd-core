@@ -76,7 +76,7 @@ From your terminal, install Terraform.
 sudo snap install terraform --classic
 ```
 
-## 4. Create Terraform module
+## 4. Deploy Charmed Aether SD-Core
 
 On the host machine create a new directory called `terraform`:
 
@@ -88,7 +88,7 @@ Inside newly created `terraform` directory create a `terraform.tf` file:
 
 ```console
 cd terraform
-cat << EOF > terraform.tf
+cat << EOF > versions.tf
 terraform {
   required_providers {
     juju = {
@@ -100,8 +100,7 @@ terraform {
 EOF
 ```
 
-Create a Terraform module containing the SD-Core 5G core network, 5G radio and a cellphone
-simulator and a router:
+Create a Terraform module containing the SD-Core 5G core network and a router:
 
 ```console
 cat << EOF > main.tf
@@ -112,57 +111,21 @@ resource "juju_model" "sdcore" {
 module "sdcore-router" {
   source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform"
 
-  model_name = juju_model.sdcore.name
+  model      = juju_model.sdcore.name
   depends_on = [juju_model.sdcore]
 }
 
 module "sdcore" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
-  model_name = juju_model.sdcore.name
-  create_model = false
-
+  model        = juju_model.sdcore.name
+  depends_on = [module.sdcore-router]
+  
   traefik_config = {
     routing_mode = "subdomain"
   }
-
-  depends_on = [module.sdcore-router]
 }
 
-module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
-
-  model_name = juju_model.sdcore.name
-  depends_on = [module.sdcore-router]
-}
-
-resource "juju_integration" "gnbsim-amf" {
-  model = juju_model.sdcore.name
-
-  application {
-    name     = module.gnbsim.app_name
-    endpoint = module.gnbsim.fiveg_n2_endpoint
-  }
-
-  application {
-    name     = module.sdcore.amf_app_name
-    endpoint = module.sdcore.fiveg_n2_endpoint
-  }
-}
-
-resource "juju_integration" "gnbsim-nms" {
-  model = juju_model.sdcore.name
-
-  application {
-    name     = module.gnbsim.app_name
-    endpoint = module.gnbsim.fiveg_gnb_identity_endpoint
-  }
-
-  application {
-    name     = module.sdcore.nms_app_name
-    endpoint = module.sdcore.fiveg_gnb_identity_endpoint
-  }
-}
 EOF
 ```
 
@@ -170,8 +133,6 @@ EOF
 You can get a ready example by cloning [this Git repository](https://github.com/canonical/charmed-aether-sd-core).
 All necessary files are in the `examples/terraform/getting_started` directory.
 ```
-
-## 5. Deploy SD-Core
 
 Initialize Juju Terraform provider:
 
@@ -240,7 +201,7 @@ udr/0*                       active    idle   10.1.10.176
 upf/0*                       active    idle   10.1.10.169
 ```
 
-## 6. Configure the ingress
+## 5. Configure the ingress
 
 Get the external IP address of Traefik's `traefik-lb` LoadBalancer service:
 
@@ -286,11 +247,105 @@ Resolve Traefik error in Juju:
 juju resolve traefik/0
 ```
 
+## 6. Deploy the gNodeB and a cellphone simulator
+
+Inside the `terraform` directory create a new module:
+
+```console
+cat << EOF > ran.tf
+resource "juju_model" "ran-simulator" {
+  name = "ran"
+}
+
+module "gnbsim" {
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+
+  model      = juju_model.ran-simulator.name
+  depends_on = [module.sdcore-router]
+}
+
+resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
+  model            = juju_model.ran-simulator.name
+  application_name = module.gnbsim.app_name
+  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
+}
+
+resource "juju_integration" "gnbsim-amf" {
+  model = juju_model.ran-simulator.name
+
+  application {
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_n2
+  }
+
+  application {
+    offer_url = module.sdcore.amf_fiveg_n2_offer_url
+  }
+}
+
+resource "juju_integration" "gnbsim-nms" {
+  model = juju_model.sdcore.name
+
+  application {
+    name     = module.sdcore.nms_app_name
+    endpoint = module.sdcore.fiveg_gnb_identity_endpoint
+  }
+
+  application {
+    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
+  }
+}
+
+EOF
+```
+
+Initialize Juju Terraform provider:
+
+```console
+terraform init
+```
+
+Apply new configuration:
+
+```console
+terraform apply -auto-approve
+```
+
+Monitor the status of the deployment:
+
+```console
+juju switch ran
+watch -n 1 -c juju status --color --relations
+```
+
+The deployment is ready when the `gnbsim` application is in the `Active/Idle` state.<br>
+
+Example:
+
+```console
+ubuntu@host:~/terraform $ juju status
+Model  Controller          Cloud/Region        Version  SLA          Timestamp
+ran    microk8s-localhost  microk8s/localhost  3.4.3    unsupported  12:18:26+02:00
+
+SAAS  Status  Store  URL
+amf   active  local  admin/sdcore.amf
+
+App     Version  Status  Scale  Charm              Channel   Rev  Address         Exposed  Message
+gnbsim  1.4.3    active      1  sdcore-gnbsim-k8s  1.5/edge  557  10.152.183.209  no       
+
+Unit       Workload  Agent  Address       Ports  Message
+gnbsim/0*  active    idle   10.1.194.238         
+
+Offer   Application  Charm              Rev  Connected  Endpoint            Interface           Role
+gnbsim  gnbsim       sdcore-gnbsim-k8s  557  1/1        fiveg_gnb_identity  fiveg_gnb_identity  provider
+```
+
 ## 7. Configure the 5G core network through the Network Management System
 
 Retrieve the NMS address:
 
 ```console
+juju switch sdcore
 juju run traefik/0 show-proxied-endpoints
 ```
 
@@ -332,6 +387,7 @@ You should see the following subscriber created:
 Run the simulation:
 
 ```console
+juju switch ran
 juju run gnbsim/leader start-simulation
 ```
 
@@ -343,7 +399,7 @@ Running operation 1 with 1 task
   - task 2 on unit-gnbsim-0
 
 Waiting for task 2...
-info: run juju debug-log to get more information.
+info: 5/5 profiles passed
 success: "true"
 ```
 
