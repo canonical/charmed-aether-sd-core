@@ -54,6 +54,7 @@ Grafana
 GTP
 hardcoded
 Haswell
+healthcheck
 hostname
 http
 hugepages
@@ -95,6 +96,7 @@ Multus
 N3
 N4
 N6
+namespace
 netplan
 newgrp
 Nameserver

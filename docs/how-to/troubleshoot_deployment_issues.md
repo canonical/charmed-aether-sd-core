@@ -2,11 +2,11 @@
 
 This guide provides step-by-step troubleshooting actions to remediate deployment issues. We hope you don't need this guide. If you encounter an issue and aren't able to address it via this guide, please raise an issue [here][Bug Report].
 
-## 1. Terraform failed to deploy the Charmed Aether SD-Core because of selecting an existing Juju model
+## 1. Terraform failed to deploy the Charmed Aether SD-Core with `Unable to create model` error
 
 ### Symptoms
 
-The `terraform apply -auto-approve` command fails with a client error which express that the Juju model could not be created:
+The `terraform apply -auto-approve` command fails with an error indicating that the Juju model could not be created:
 
 ```console
 Plan: 72 to add, 0 to change, 0 to destroy.
@@ -34,13 +34,13 @@ private5g*  microk8s/localhost  kubernetes  destroying  -       admin  6 minutes
 sdcore      microk8s/localhost  kubernetes  available   19      admin  2024-10-04
 ```
 
-Choose a model name that does not already exist in the Juju controller. Read [this guide][Deploy SD-Core K8s with Terraform] for more information.
+Choose a model name that does not exist in the Juju controller. Read [this guide][Configure SD-Core K8s Deployment] for more information.
 
-## 2. Juju failed to deploy Charmed Aether SD-Core as Juju controller is not reachable
+## 2. Terraform failed to deploy Charmed Aether SD-Core with `Connection error, please check the controller_addresses property set on the provider` error
 
 ### Symptoms
 
-The `terraform apply -auto-approve` command fails with a dial tcp i/o timeout error:
+The `terraform apply -auto-approve` command fails with an error indicating that the Juju controller couldn't be connected to:
 
 ```console
 $ terraform apply --auto-approve
@@ -56,7 +56,9 @@ $ terraform apply --auto-approve
 
 ### Recommended Actions
 
-Validate that the Juju controller is available:
+Validate that the Juju controller is running.
+
+First, list the available Juju controllers:
 
 ```shell
 $ juju controllers
@@ -66,10 +68,50 @@ Controller           Model      User   Access     Cloud/Region        Models  No
 microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
 ```
 
-If it does not output the controller details, please follow [this guide][Manage Juju Controller] to create an accessible Juju controller.
+If your controller does not show up in the list, please follow [this guide][Bootstrap a Juju Controller] to create a Juju controller.
+
+If you controller exists, get your controller's `api-endpoints` address.
+
+```shell
+$ juju show-controller <your-controller-name>
+microk8s-localhost:
+  details:
+    controller-uuid: ced7016b-3a63-4133-8988-cf33068c3cdf
+    api-endpoints: ['10.152.183.251:17070']
+    cloud: microk8s
+    region: localhost
+    agent-version: 3.4.5
+```
+
+Perform a healthcheck on your Juju controller using `api-endpoints` address which is `10.152.183.251:17070` in this guide:
+
+```shell
+$ curl -ik https://<api-endpoints>/health
+HTTP/1.1 200 OK
+Date: Thu, 10 Oct 2024 12:39:00 GMT
+Content-Length: 8
+Content-Type: text/plain; charset=utf-8
+
+running
+```
+
+Expect to get`running` in your healthcheck output. Otherwise, access to the `controller api-server` container and examine the logs.
+
+```{note}
+Your controller namespace will be in the format of `controller-<your-controller-name>`.
+```
+
+Access the `api-server` container and read the logs.
+
+```shell
+$ microk8s.kubectl exec -it  controller-0 -n <your-controller-namespace> -c api-server -- bash
+juju@controller-0:/var/lib/juju$ ls /var/log/
+alternatives.log  apt  bootstrap.log  btmp  dpkg.log  faillog  juju  lastlog  wtmp
+```
+
+If the logs do not help to fix the issue, remove your controller and create a new accessible Juju controller using [this guide][Manage Juju Controller].
 
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
-
-[Deploy SD-Core K8s with Terraform]: https://github.com/canonical/terraform-juju-sdcore/blob/main/modules/sdcore-k8s/README.md#deploying-sdcore-k8s-with-terraform
-
+[Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#configure
 [Manage Juju Controller]: https://juju.is/docs/juju/manage-controllers
+[Bootstrap a Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller
