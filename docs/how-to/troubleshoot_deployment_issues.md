@@ -70,7 +70,7 @@ microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9    
 
 If your controller does not show up in the list, please follow [this guide][Bootstrap a Juju Controller] to create a Juju controller.
 
-If you controller exists, get your controller's `api-endpoints` address.
+If the controller is listed, get your controller's `api-endpoints` address.
 
 ```shell
 $ juju show-controller <your-controller-name>
@@ -83,7 +83,7 @@ microk8s-localhost:
     agent-version: 3.4.5
 ```
 
-Perform a healthcheck on your Juju controller using `api-endpoints` address which is `10.152.183.251:17070` in this guide:
+Perform a healthcheck using your Juju controller's `api-endpoints` address which is `10.152.183.251:17070` in this guide:
 
 ```shell
 $ curl -ik https://<api-endpoints>/health
@@ -95,13 +95,7 @@ Content-Type: text/plain; charset=utf-8
 running
 ```
 
-Expect to get`running` in your healthcheck output. Otherwise, access to the `controller api-server` container and examine the logs.
-
-```{note}
-Your controller namespace will be in the format of `controller-<your-controller-name>`.
-```
-
-Access the `api-server` container and read the logs.
+If the healthcheck returns `running` check the firewall rules in your environment. Otherwise, access to the controller `api-server` container and check the logs:
 
 ```shell
 $ microk8s.kubectl exec -it  controller-0 -n <your-controller-namespace> -c api-server -- bash
@@ -109,9 +103,13 @@ juju@controller-0:/var/lib/juju$ ls /var/log/
 alternatives.log  apt  bootstrap.log  btmp  dpkg.log  faillog  juju  lastlog  wtmp
 ```
 
+```{note}
+Your controller namespace will be in the format of `controller-<your-controller-name>`.
+```
+
 If the logs do not help to fix the issue, remove your controller and create a new accessible Juju controller using [this guide][Manage Juju Controller].
 
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
-[Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#configure
+[Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#deploy
 [Manage Juju Controller]: https://juju.is/docs/juju/manage-controllers
 [Bootstrap a Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller
