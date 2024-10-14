@@ -293,8 +293,7 @@ cat << EOF >> main.tf
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
-  model_name   = "user-plane"
-  create_model = false
+  model = "user-plane"
 
   upf_config = {
     cni-type               = "vfioveth"
@@ -309,12 +308,6 @@ module "sdcore-user-plane" {
     enable-hw-checksum           = "false"
     gnb-subnet = "10.204.0.0/24"
   }
-}
-
-resource "juju_offer" "upf-fiveg-n4" {
-  model            = "user-plane"
-  application_name = module.sdcore-user-plane.upf_app_name
-  endpoint         = module.sdcore-user-plane.fiveg_n4_endpoint
 }
 
 EOF

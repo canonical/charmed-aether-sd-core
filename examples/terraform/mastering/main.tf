@@ -1,24 +1,30 @@
+data "juju_model" "control-plane" {
+  name = "control-plane"
+}
+
 module "sdcore-control-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s"
 
-  model_name = "control-plane"
-  create_model = false
+  model = data.juju_model.control-plane.name
 
   amf_config = {
     external-amf-ip       = "10.201.0.52"
     external-amf-hostname = "amf.mgmt"
   }
   traefik_config = {
-    routing_mode = "subdomain"
+    routing_mode      = "subdomain"
     external_hostname = "10.201.0.53.nip.io"
   }
+}
+
+data "juju_model" "user-plane" {
+  name = "user-plane"
 }
 
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
-  model_name   = "user-plane"
-  create_model = false
+  model = data.juju_model.user-plane.name
 
   upf_config = {
     cni-type              = "macvlan"
@@ -33,10 +39,14 @@ module "sdcore-user-plane" {
   }
 }
 
+data "juju_model" "gnbsim" {
+  name = "gnbsim"
+}
+
 module "gnbsim" {
   source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
 
-  model_name = "gnbsim"
+  model = data.juju_model.gnbsim.name
 
   config = {
     gnb-interface           = "ran"
@@ -44,6 +54,51 @@ module "gnbsim" {
     icmp-packet-destination = "8.8.8.8"
     upf-gateway             = "10.204.0.1"
     upf-subnet              = "10.202.0.0/24"
+  }
+}
+
+resource "juju_integration" "gnbsim-amf" {
+  model = data.juju_model.gnbsim.name
+
+  application {
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_n2
+  }
+
+  application {
+    offer_url = module.sdcore-control-plane.amf_fiveg_n2_offer_url
+  }
+}
+
+resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
+  model            = data.juju_model.gnbsim.name
+  application_name = module.gnbsim.app_name
+  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
+}
+
+resource "juju_integration" "nms-gnbsim" {
+  model = data.juju_model.control-plane.name
+
+  application {
+    name     = module.sdcore-control-plane.nms_app_name
+    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
+  }
+
+  application {
+    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
+  }
+}
+
+resource "juju_integration" "nms-upf" {
+  model = data.juju_model.control-plane.name
+
+  application {
+    name     = module.sdcore-control-plane.nms_app_name
+    endpoint = module.sdcore-control-plane.fiveg_n4_endpoint
+  }
+
+  application {
+    offer_url = module.sdcore-user-plane.upf_fiveg_n4_offer_url
   }
 }
 
@@ -59,77 +114,8 @@ module "cos-lite" {
   }
 }
 
-resource "juju_offer" "amf-fiveg-n2" {
-  model            = "control-plane"
-  application_name = module.sdcore-control-plane.amf_app_name
-  endpoint         = module.sdcore-control-plane.fiveg_n2_endpoint
-}
-
-resource "juju_offer" "upf-fiveg-n4" {
-  model            = "user-plane"
-  application_name = module.sdcore-user-plane.upf_app_name
-  endpoint         = module.sdcore-user-plane.fiveg_n4_endpoint
-}
-
-resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = "gnbsim"
-  application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.fiveg_gnb_identity_endpoint
-}
-
-resource "juju_offer" "prometheus-remote-write" {
-  model            = module.cos-lite.model_name
-  application_name = module.cos-lite.prometheus_app_name
-  endpoint         = "receive-remote-write"
-}
-
-resource "juju_offer" "loki-logging" {
-  model            = module.cos-lite.model_name
-  application_name = module.cos-lite.loki_app_name
-  endpoint         = "logging"
-}
-
-resource "juju_integration" "gnbsim-amf" {
-  model = "gnbsim"
-
-  application {
-    name     = module.gnbsim.app_name
-    endpoint = module.gnbsim.fiveg_n2_endpoint
-  }
-
-  application {
-    offer_url = juju_offer.amf-fiveg-n2.url
-  }
-}
-
-resource "juju_integration" "nms-gnbsim" {
-  model = "control-plane"
-
-  application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
-  }
-
-  application {
-    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
-  }
-}
-
-resource "juju_integration" "nms-upf" {
-  model = "control-plane"
-
-  application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_n4_endpoint
-  }
-
-  application {
-    offer_url = juju_offer.upf-fiveg-n4.url
-  }
-}
-
 resource "juju_integration" "control-plane-prometheus" {
-  model = "control-plane"
+  model = data.juju_model.control-plane.name
 
   application {
     name     = module.sdcore-control-plane.grafana_agent_app_name
@@ -137,12 +123,12 @@ resource "juju_integration" "control-plane-prometheus" {
   }
 
   application {
-    offer_url = juju_offer.prometheus-remote-write.url
+    offer_url = module.cos-lite.prometheus_remote_write_offer_url
   }
 }
 
 resource "juju_integration" "control-plane-loki" {
-  model = "control-plane"
+  model = data.juju_model.control-plane.name
 
   application {
     name     = module.sdcore-control-plane.grafana_agent_app_name
@@ -150,12 +136,12 @@ resource "juju_integration" "control-plane-loki" {
   }
 
   application {
-    offer_url = juju_offer.loki-logging.url
+    offer_url = module.cos-lite.loki_logging_offer_url
   }
 }
 
 resource "juju_integration" "user-plane-prometheus" {
-  model = "user-plane"
+  model = data.juju_model.user-plane.name
 
   application {
     name     = module.sdcore-user-plane.grafana_agent_app_name
@@ -163,12 +149,12 @@ resource "juju_integration" "user-plane-prometheus" {
   }
 
   application {
-    offer_url = juju_offer.prometheus-remote-write.url
+    offer_url = module.cos-lite.prometheus_remote_write_offer_url
   }
 }
 
 resource "juju_integration" "user-plane-loki" {
-  model = "user-plane"
+  model = data.juju_model.user-plane.name
 
   application {
     name     = module.sdcore-user-plane.grafana_agent_app_name
@@ -176,6 +162,6 @@ resource "juju_integration" "user-plane-loki" {
   }
 
   application {
-    offer_url = juju_offer.loki-logging.url
+    offer_url = module.cos-lite.loki_logging_offer_url
   }
 }
