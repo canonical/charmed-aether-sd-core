@@ -72,7 +72,7 @@ If your controller does not show up in the list, please follow [this guide][Boot
 
 Otherwise, follow [this guide][Remove Juju Controller] to remove your broken Juju controller.
 
-After removal of controller, please make sure that controller namespace is not found in your MicroK8s cluster:
+Once the controller is removed, please make sure that the controller namespace is not found in your MicroK8s cluster:
 
 ```shell
 $ kubectl get ns controller-<your-controller-name>
@@ -80,14 +80,14 @@ NAME                            STATUS   AGE
 controller-<your-controller-name>   Active   20d
 ```
 
-If your controller namespace appears as `active` in the command output, remove the namespace manually:
+If your controller namespace appears as `Active` in the command output, remove the namespace manually:
 
 ```shell
 $ kubectl delete ns controller-<your-controller-name>
 namespace "controller-<your-controller-name>" deleted
 ```
 
-Then, please follow [this guide][Bootstrap Juju Controller] to create a new Juju controller.
+After successful removal of the controller namespace, please follow [this guide][Bootstrap Juju Controller] to create a new Juju controller.
 
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
 [Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#deploy
