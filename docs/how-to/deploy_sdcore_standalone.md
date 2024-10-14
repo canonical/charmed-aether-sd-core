@@ -22,7 +22,7 @@ Inside the `modules/sdcore-k8s` directory, create a `terraform.tfvars` file to s
 git clone https://github.com/canonical/terraform-juju-sdcore.git
 cd terraform-juju-sdcore/modules/sdcore-k8s
 cat << EOF > terraform.tfvars
-model_name = "<YOUR_JUJU_MODEL_NAME>"
+model = "<YOUR_JUJU_MODEL_NAME>"
 EOF
 ```
 

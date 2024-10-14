@@ -126,8 +126,7 @@ cat << EOF > main.tf
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
-  model_name   = "user-plane"
-  create_model = false
+  model = "user-plane"
 
   upf_config = {
     cni-type              = "vfioveth"
@@ -239,8 +238,7 @@ cat << EOF > main.tf
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane"
 
-  model_name     = "user-plane"
-  create_model   = false
+  model          = "user-plane"
   machine_number = 0
 
   upf_config = {

@@ -15,7 +15,7 @@ module "sdcore-router" {
 module "sdcore" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
-  model        = juju_model.sdcore.name
+  model      = juju_model.sdcore.name
   depends_on = [module.sdcore-router]
 
   traefik_config = {

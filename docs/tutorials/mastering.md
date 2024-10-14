@@ -345,12 +345,12 @@ Inside newly created `terraform` folder create a `terraform.tf` file:
 
 ```console
 cd terraform
-cat << EOF > terraform.tf
+cat << EOF > versions.tf
 terraform {
   required_providers {
     juju = {
       source  = "juju/juju"
-      version = ">= 0.11.0"
+      version = ">= 0.12.0"
     }
   }
 }
@@ -361,11 +361,14 @@ Create Terraform module:
 
 ```console
 cat << EOF > main.tf
+data "juju_model" "control-plane" {
+  name = "control-plane"
+}
+
 module "sdcore-control-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s"
 
-  model_name   = "control-plane"
-  create_model = false
+  model = data.juju_model.control-plane.name
 
   amf_config = {
     external-amf-hostname = "amf.mgmt"
@@ -373,12 +376,6 @@ module "sdcore-control-plane" {
   traefik_config = {
     routing_mode = "subdomain"
   }
-}
-
-resource "juju_offer" "amf-fiveg-n2" {
-  model            = "control-plane"
-  application_name = module.sdcore-control-plane.amf_app_name
-  endpoint         = module.sdcore-control-plane.fiveg_n2_endpoint
 }
 
 EOF
@@ -402,8 +399,9 @@ Monitor the status of the deployment:
 juju status --watch 1s --relations
 ```
 
-The deployment is ready when all the charms are in the `Active/Idle` state.
-It is normal for `grafana-agent` to remain in waiting state.
+The deployment is ready when all the charms are in the `Active/Idle` state.<br>
+It is normal for `grafana-agent` to remain in waiting state.<br>
+It is also expected that `traefik` goes to the error state (related Traefik [bug](https://github.com/canonical/traefik-k8s-operator/issues/361)).
 
 Once the deployment is ready, we will proceed to the configuration part.
 
@@ -515,11 +513,14 @@ Update the `main.tf` file:
 
 ```console
 cat << EOF >> main.tf
+data "juju_model" "user-plane" {
+  name = "user-plane"
+}
+
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
-  model_name   = "user-plane"
-  create_model = false
+  model = data.juju_model.user-plane.name
 
   upf_config = {
     cni-type              = "macvlan" 
@@ -532,12 +533,6 @@ module "sdcore-user-plane" {
     external-upf-hostname = "upf.mgmt"
     gnb-subnet            = "10.204.0.0/24"
   }
-}
-
-resource "juju_offer" "upf-fiveg-n4" {
-  model            = "user-plane"
-  application_name = module.sdcore-user-plane.upf_app_name
-  endpoint         = module.sdcore-user-plane.fiveg_n4_endpoint
 }
 
 EOF
@@ -614,10 +609,14 @@ Update the `main.tf` file:
 
 ```console
 cat << EOF >> main.tf
+data "juju_model" "gnbsim" {
+  name = "gnbsim"
+}
+
 module "gnbsim" {
   source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
 
-  model_name = "gnbsim"
+  model = data.juju_model.gnbsim.name
   
   config = {
     gnb-interface           = "ran"
@@ -629,22 +628,22 @@ module "gnbsim" {
 }
 
 resource "juju_integration" "gnbsim-amf" {
-  model = "gnbsim"
+  model = data.juju_model.gnbsim.name
 
   application {
     name     = module.gnbsim.app_name
-    endpoint = module.gnbsim.fiveg_n2_endpoint
+    endpoint = module.gnbsim.requires.fiveg_n2
   }
 
   application {
-    offer_url = juju_offer.amf-fiveg-n2.url
+    offer_url = module.sdcore-control-plane.amf_fiveg_n2_offer_url
   }
 }
 
 resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = "gnbsim"
+  model            = data.juju_model.gnbsim.name
   application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.fiveg_gnb_identity_endpoint
+  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
 }
 
 EOF
@@ -682,7 +681,7 @@ Add required integrations to the `main.tf` file used in the previous steps:
 ```console
 cat << EOF >> main.tf
 resource "juju_integration" "nms-gnbsim" {
-  model = "control-plane"
+  model = data.juju_model.control-plane.name
 
   application {
     name     = module.sdcore-control-plane.nms_app_name
@@ -695,7 +694,7 @@ resource "juju_integration" "nms-gnbsim" {
 }
 
 resource "juju_integration" "nms-upf" {
-  model = "control-plane"
+  model = data.juju_model.control-plane.name
 
   application {
     name     = module.sdcore-control-plane.nms_app_name
@@ -703,7 +702,7 @@ resource "juju_integration" "nms-upf" {
   }
 
   application {
-    offer_url = juju_offer.upf-fiveg-n4.url
+    offer_url = module.sdcore-user-plane.upf_fiveg_n4_offer_url
   }
 }
 
@@ -809,7 +808,7 @@ Once the COS deployment is ready, add integrations between SD-Core and COS appli
 ```console
 cat << EOF >> main.tf
 resource "juju_integration" "control-plane-prometheus" {
-  model = "control-plane"
+  model = data.juju_model.control-plane.name
 
   application {
     name     = module.sdcore-control-plane.grafana_agent_app_name
@@ -822,7 +821,7 @@ resource "juju_integration" "control-plane-prometheus" {
 }
 
 resource "juju_integration" "control-plane-loki" {
-  model = "control-plane"
+  model = data.juju_model.control-plane.name
 
   application {
     name     = module.sdcore-control-plane.grafana_agent_app_name
@@ -835,7 +834,7 @@ resource "juju_integration" "control-plane-loki" {
 }
 
 resource "juju_integration" "user-plane-prometheus" {
-  model = "user-plane"
+  model = data.juju_model.user-plane.name
 
   application {
     name     = module.sdcore-user-plane.grafana_agent_app_name
@@ -848,7 +847,7 @@ resource "juju_integration" "user-plane-prometheus" {
 }
 
 resource "juju_integration" "user-plane-loki" {
-  model = "user-plane"
+  model = data.juju_model.user-plane.name
 
   application {
     name     = module.sdcore-user-plane.grafana_agent_app_name
@@ -930,7 +929,7 @@ Running operation 1 with 1 task
   - task 2 on unit-gnbsim-0
 
 Waiting for task 2...
-info: run juju debug-log to get more information.
+info: 5/5 profiles passed
 success: "true"
 ```
 
