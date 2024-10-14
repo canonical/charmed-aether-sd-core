@@ -68,7 +68,7 @@ Controller           Model      User   Access     Cloud/Region        Models  No
 microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
 ```
 
-If your controller does not show up in the list, please follow [this guide][Bootstrap a Juju Controller] to create a Juju controller.
+If your controller does not show up in the list, please follow [this guide][Bootstrap Juju Controller] to create a Juju controller.
 
 Otherwise, follow [this guide][Remove Juju Controller] to remove your broken Juju controller.
 
@@ -87,9 +87,9 @@ $ kubectl delete ns controller-<your-controller-name>
 namespace "controller-<your-controller-name>" deleted
 ```
 
-Then, please follow [this guide][Bootstrap a Juju Controller] to create a new Juju controller.
+Then, please follow [this guide][Bootstrap Juju Controller] to create a new Juju controller.
 
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
 [Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#deploy
 [Remove Juju Controller]: https://juju.is/docs/juju/manage-controllers#heading--remove-a-controller
-[Bootstrap a Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller
+[Bootstrap Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller
