@@ -56,7 +56,7 @@ $ terraform apply --auto-approve
 
 ### Recommended Actions
 
-Validate that the Juju controller is running.
+Validate that the Juju controller exists.
 
 First, list the available Juju controllers:
 
@@ -70,46 +70,26 @@ microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9    
 
 If your controller does not show up in the list, please follow [this guide][Bootstrap a Juju Controller] to create a Juju controller.
 
-If the controller is listed, get your controller's `api-endpoints` address.
+Otherwise, follow [this guide][Remove Juju Controller] to remove your broken Juju controller.
+
+After removal of controller, please make sure that controller namespace is not found in your MicroK8s cluster:
 
 ```shell
-$ juju show-controller <your-controller-name>
-microk8s-localhost:
-  details:
-    controller-uuid: ced7016b-3a63-4133-8988-cf33068c3cdf
-    api-endpoints: ['10.152.183.251:17070']
-    cloud: microk8s
-    region: localhost
-    agent-version: 3.4.5
+$ kubectl get ns controller-<your-controller-name>
+NAME                            STATUS   AGE
+controller-<your-controller-name>   Active   20d
 ```
 
-Perform a healthcheck using your Juju controller's `api-endpoints` address which is `10.152.183.251:17070` in this guide:
+If your controller namespace appears as `active` in the command output, remove the namespace manually:
 
 ```shell
-$ curl -ik https://<api-endpoints>/health
-HTTP/1.1 200 OK
-Date: Thu, 10 Oct 2024 12:39:00 GMT
-Content-Length: 8
-Content-Type: text/plain; charset=utf-8
-
-running
+$ kubectl delete ns controller-<your-controller-name>
+namespace "controller-<your-controller-name>" deleted
 ```
 
-If the healthcheck returns `running` check the firewall rules in your environment. Otherwise, access to the controller `api-server` container and check the logs:
-
-```shell
-$ microk8s.kubectl exec -it  controller-0 -n <your-controller-namespace> -c api-server -- bash
-juju@controller-0:/var/lib/juju$ ls /var/log/
-alternatives.log  apt  bootstrap.log  btmp  dpkg.log  faillog  juju  lastlog  wtmp
-```
-
-```{note}
-Your controller namespace will be in the format of `controller-<your-controller-name>`.
-```
-
-If the logs do not help to fix the issue, remove your controller and create a new accessible Juju controller using [this guide][Manage Juju Controller].
+Then, please follow [this guide][Bootstrap a Juju Controller] to create a new Juju controller.
 
 [Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
 [Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#deploy
-[Manage Juju Controller]: https://juju.is/docs/juju/manage-controllers
+[Remove Juju Controller]: https://juju.is/docs/juju/manage-controllers#heading--remove-a-controller
 [Bootstrap a Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller
