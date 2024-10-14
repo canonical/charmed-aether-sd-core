@@ -89,7 +89,7 @@ namespace "controller-<your-controller-name>" deleted
 
 After successful removal of the controller namespace, please follow [this guide][Bootstrap Juju Controller] to create a new Juju controller.
 
-[Bug Report]: https://github.com/canonical/charmed-aether-sd-core/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml
+[Bug Report]: https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fcanonical%2Fcharmed-aether-sd-core%2Fissues%2Fnew%3Fassignees%3D%26amp%3Blabels%3Dbug%26amp%3Bprojects%3D%26amp%3Btemplate%3Dbug_report.yml
 [Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#deploy
-[Remove Juju Controller]: https://juju.is/docs/juju/manage-controllers#heading--remove-a-controller
+[Remove Juju Controller]: https://juju.is/docs/juju/manage-controllers#heading--destroy-a-controller
 [Bootstrap Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller

@@ -2,7 +2,7 @@
 
 ## Chiseled container images built frequently
 
-Each charm in Charmed Aether SD-Core is distributed by Canonical as a ROCK container image. These images are built using [Rockcraft](https://canonical-rockcraft.readthedocs-hosted.com/en/latest/), a tool to build secure, stable, and OCI-compliant container images.
+Each charm in Charmed Aether SD-Core is distributed by Canonical as a ROCK container image. These images are built using [Rockcraft]( https://documentation.ubuntu.com/rockcraft/en/latest/), a tool to build secure, stable, and OCI-compliant container images.
 
 Each image is chiseled to contain only the bare minimum to run the application. This means that the images are small, and contain only the necessary dependencies to run the application. This reduces the attack surface of the application and makes it easier to maintain.
 
