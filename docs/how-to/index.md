@@ -32,4 +32,5 @@ restore_sdcore
 :maxdepth: 1
 
 troubleshoot_deployment_issues
+troubleshoot_user_plane_issues
 ```
