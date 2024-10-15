@@ -352,4 +352,4 @@ Go back to the Mastering tutorial and continue from step: [6. Deploy the gNB Sim
 
 [SR-IOV Network Device Plugin]: https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
 [sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-user-plane-k8s
-[LXD]: https://ubuntu.com/lxd
+[LXD]: https://canonical.com/lxd

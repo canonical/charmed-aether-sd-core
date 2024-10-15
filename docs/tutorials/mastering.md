@@ -2,7 +2,7 @@
 
 In this tutorial, we will deploy and run the SD-Core 5G core network following Control and User Plane Separation (CUPS) principles.
 The radio and cell phone simulator will also be deployed on an isolated cluster.
-This tutorial uses [LXD](https://ubuntu.com/lxd) with Terraform to deploy the required infrastructure.
+This tutorial uses [LXD](https://canonical.com/lxd) with Terraform to deploy the required infrastructure.
 
 ## 1. Prepare the Host machine
 

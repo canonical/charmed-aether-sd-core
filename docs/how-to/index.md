@@ -24,3 +24,12 @@ integrate_sdcore_with_observability
 backup_sdcore
 restore_sdcore
 ```
+
+
+## Troubleshooting
+
+```{toctree}
+:maxdepth: 1
+
+troubleshoot_deployment_issues
+```
