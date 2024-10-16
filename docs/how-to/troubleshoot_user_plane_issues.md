@@ -175,9 +175,9 @@ Then, trace the packets coming back from the data network:
 1. Start at the `coreQ0FastPI` node
 2. Packets should go through the `coreNAT` node
 3. Packets should then go through the `gtpuEncap` node
-3. Packets should make their way to the `accessRoutes` node
-4. From the `accessRoutes` node, they should go to the `accessDstMAC*` node
-5. Packets will go out of the UPF by going through `accessQ0FastPO`
+4. Packets should make their way to the `accessRoutes` node
+5. From the `accessRoutes` node, they should go to the `accessDstMAC*` node
+6. Packets will go out of the UPF by going through `accessQ0FastPO`
 
 Using this process might help you figure out where the issue is. In case you
 require additional help, this will be useful information to share on our [Matrix
