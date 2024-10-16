@@ -3,7 +3,7 @@
 This guide provides step-by-step troubleshooting actions to identify user plane
 issues. It assumes that a UE (User Equipḿent) was able to connect to the network
 and establish a PDU session, meaning that the UE received an IP address. It also
-assume that the UE already tried using the connection unsuccessfully.
+assumes that the UE already tried using the connection unsuccessfully.
 
 If you encounter an issue and aren't able to address it via this guide, please
 raise an issue [here][Bug Report].
