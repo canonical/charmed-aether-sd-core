@@ -146,7 +146,7 @@ kubectl port-forward -n <model_name> --address 0.0.0.0 pod/upf-0 5000
 Connect to the server from your browser on port 5000. The URL should be
 similar to `http://<k8s-node-ip>:5000`.
 
-You should a graph similar to this on the page:
+You should see a graph similar to this on the page:
 
 ```{image} ../images/bess_http_server.png
 :alt: BESS node gates
