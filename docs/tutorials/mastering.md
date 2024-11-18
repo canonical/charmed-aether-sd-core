@@ -113,7 +113,7 @@ lxc exec control-plane --user 1000 -- bash -l
 Install MicroK8s:
 
 ```console
-sudo snap install microk8s --channel=1.29-strict/stable
+sudo snap install microk8s --channel=1.31-strict/stable
 sudo microk8s enable hostpath-storage
 sudo usermod -a -G snap_microk8s $(whoami)
 ```
@@ -152,7 +152,7 @@ lxc exec user-plane --user 1000 -- bash -l
 Install MicroK8s, configure MetalLB to expose 1 IP address for the UPF (`10.201.0.200`) and enable the Multus plugin:
 
 ```console
-sudo snap install microk8s --channel=1.29-strict/stable
+sudo snap install microk8s --channel=1.31-strict/stable
 sudo microk8s enable hostpath-storage
 sudo microk8s enable metallb:10.201.0.200/32
 sudo microk8s addons repo add community \
@@ -213,7 +213,7 @@ lxc exec gnbsim --user 1000 -- bash -l
 Install MicroK8s and add the Multus plugin:
 
 ```console
-sudo snap install microk8s --channel=1.29-strict/stable
+sudo snap install microk8s --channel=1.31-strict/stable
 sudo microk8s enable hostpath-storage
 sudo microk8s addons repo add community \
     https://github.com/canonical/microk8s-community-addons \
@@ -270,7 +270,7 @@ Begin by installing MicroK8s to hold the Juju controller.
 Configure MetalLB to expose one IP address for the controller (`10.201.0.50`) and one for the Canonical Observability Stack (`10.201.0.51)`:
 
 ```console
-sudo snap install microk8s --channel=1.29-strict/stable
+sudo snap install microk8s --channel=1.31-strict/stable
 sudo microk8s enable hostpath-storage
 sudo microk8s enable metallb:10.201.0.50-10.201.0.51
 sudo usermod -a -G snap_microk8s $(whoami)

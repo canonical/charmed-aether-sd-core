@@ -22,7 +22,7 @@ To complete this tutorial, you will need a machine which meets the following req
 From your terminal, install MicroK8s:
 
 ```console
-sudo snap install microk8s --channel=1.27-strict/stable
+sudo snap install microk8s --channel=1.31-strict/stable
 ```
 
 Add your user to the `snap_microk8s` group:
