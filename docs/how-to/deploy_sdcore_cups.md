@@ -4,7 +4,7 @@ This guide covers how to install a SD-Core 5G core network with Control Plane an
 
 ## Requirements
 
-- Juju >= 3.4
+- Juju >= 3.5
 - A Juju controller has been bootstrapped, and is externally reachable
 - A Control Plane Kubernetes cluster configured with
   - 1 available IP address for the Access and Mobility Management Function (AMF)

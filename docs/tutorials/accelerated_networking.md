@@ -175,7 +175,7 @@ crw-rw-rw- 1 root root  10, 196 Aug 17 21:51 vfio
 Install the Microk8s and enable the `hostpath-storage`, `multus` and  `metallb` plugins.
 
 ```shell
-sudo snap install microk8s --channel=1.29/stable --classic
+sudo snap install microk8s --channel=1.31/stable --classic
 sudo microk8s enable hostpath-storage
 sudo microk8s addons repo add community https://github.com/canonical/microk8s-community-addons --reference feat/strict-fix-multus
 sudo microk8s enable multus

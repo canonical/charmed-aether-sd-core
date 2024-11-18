@@ -65,7 +65,7 @@ $ juju controllers
 Use --refresh option with this command to see the latest information.
 
 Controller           Model      User   Access     Cloud/Region        Models  Nodes  HA  Version
-microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.4.5  
+microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.5.4  
 ```
 
 If your controller does not show up in the list, please follow [this guide][Bootstrap Juju Controller] to create a Juju controller.
@@ -91,5 +91,5 @@ After successful removal of the controller namespace, please follow [this guide]
 
 [Bug Report]: https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fcanonical%2Fcharmed-aether-sd-core%2Fissues%2Fnew%3Fassignees%3D%26amp%3Blabels%3Dbug%26amp%3Bprojects%3D%26amp%3Btemplate%3Dbug_report.yml
 [Configure SD-Core K8s Deployment]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/deploy_sdcore_standalone/#deploy
-[Remove Juju Controller]: https://juju.is/docs/juju/manage-controllers#destroy-a-controller
+[Remove Juju Controller]: https://juju.is/docs/juju/manage-controllers#remove-a-controller
 [Bootstrap Juju Controller]: https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/tutorials/getting_started/#bootstrap-a-juju-controller

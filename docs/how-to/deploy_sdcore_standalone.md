@@ -6,7 +6,7 @@ This guide covers how to install a standalone SD-Core 5G core network, suitable 
 
 You will need a Kubernetes cluster installed and configured with Multus.
 
-- Juju >= 3.4
+- Juju >= 3.5
 - Kubernetes >= 1.25
 - A `LoadBalancer` Service for Kubernetes with at least 3 addresses available
 - Multus
