@@ -295,7 +295,7 @@ This will expose the Juju controller on the first allocated MetalLB address:
 
 ```console
 mkdir -p ~/.local/share/juju
-sudo snap install juju --channel=3.4/stable
+sudo snap install juju --channel=3.5/stable
 juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore
 ```
 
