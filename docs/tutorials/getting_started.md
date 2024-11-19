@@ -349,7 +349,7 @@ juju switch sdcore
 juju run traefik/0 show-proxied-endpoints
 ```
 
-The output should be `http://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
+The output should be `https://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
 browser.
 
 In the Network Management System (NMS), create a network slice with the following attributes:

@@ -722,7 +722,7 @@ juju switch control-plane
 juju run traefik/0 show-proxied-endpoints
 ```
 
-The output should be `http://control-plane-nms.10.201.0.53.nip.io/`.
+The output should be `https://control-plane-nms.10.201.0.53.nip.io/`.
 Navigate to this address in your browser.
 
 In the Network Management System (NMS), create a network slice with the following attributes:
