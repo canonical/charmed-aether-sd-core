@@ -715,15 +715,34 @@ Apply the changes:
 terraform apply -auto-approve
 ```
 
-Retrieve the NMS address:
+Retrieve the NMS credentials (`username` and `password`):
 
 ```console
 juju switch control-plane
+juju show-secret $(juju secrets | awk '/nms[^\/]/ {print $1}') --reveal
+```
+The output looks like this:
+```
+csurgu7mp25c761k2oe0:
+  revision: 1
+  owner: nms
+  label: NMS_LOGIN
+  created: 2024-11-20T10:22:49Z
+  updated: 2024-11-20T10:22:49Z
+  content:
+    password: ',u7=VEE3XK%t'
+    token: ""
+    username: charm-admin-SOOO
+```
+
+Retrieve the NMS address:
+
+```console
 juju run traefik/0 show-proxied-endpoints
 ```
 
 The output should be `https://control-plane-nms.10.201.0.53.nip.io/`.
-Navigate to this address in your browser.
+Navigate to this address in your browser and use the `username` and `password` to login.
 
 In the Network Management System (NMS), create a network slice with the following attributes:
 
