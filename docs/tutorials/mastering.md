@@ -719,7 +719,7 @@ Retrieve the NMS credentials (`username` and `password`):
 
 ```console
 juju switch control-plane
-juju show-secret $(juju secrets | awk '/nms[^\/]/ {print $1}') --reveal
+juju show-secret NMS_LOGIN --reveal
 ```
 The output looks like this:
 ```
