@@ -1,4 +1,4 @@
-# User Management
+# User Management in the NMS
 
 The Charmed Aether SD-Core automatically creates an admin user whose username and password are securely stored in Juju secrets. These credentials are used to log in to the Network Management System (NMS).
 
