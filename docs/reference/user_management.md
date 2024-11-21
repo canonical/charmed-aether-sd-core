@@ -4,6 +4,6 @@ The Charmed Aether SD-Core automatically creates an admin user whose username an
 
 The NMS allows the admin user to manage all users, including creating, changing passwords, and deleting accounts. Other users can manage all resources except user accounts.
 
-```{caution}
-Avoid changing the admin user's password directly in the NMS. This password must also be updated in the corresponding Juju secret to prevent inconsistencies and maintain system accessibility.
+```{note}
+It is not possible to delete the admin user or change their password.
 ```
