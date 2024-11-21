@@ -170,7 +170,7 @@ App                       Version  Status   Scale  Charm                     Cha
 amf                       1.4.4    active       1  sdcore-amf-k8s            1.5/edge       707  10.152.183.176  no       
 ausf                      1.4.2    active       1  sdcore-ausf-k8s           1.5/edge       520  10.152.183.65   no       
 grafana-agent             0.32.1   waiting      1  grafana-agent-k8s         latest/stable   45  10.152.183.221  no       installing agent
-mongodb                            active       1  mongodb-k8s               6/beta          38  10.152.183.92   no       Primary
+mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.92   no       Primary
 nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/edge       580  10.152.183.141  no       
 nrf                       1.4.1    active       1  sdcore-nrf-k8s            1.5/edge       580  10.152.183.130  no       
 nssf                      1.4.1    active       1  sdcore-nssf-k8s           1.5/edge       462  10.152.183.62   no       

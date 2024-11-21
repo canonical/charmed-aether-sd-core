@@ -22,12 +22,12 @@ juju add-model core
 ## Deploy `mongodb-k8s`
 
 ```bash
-juju deploy mongodb-k8s --channel 6/beta
+juju deploy mongodb-k8s --channel 6/stable
 ```
 
 ## Follow the restore procedure
 
-Use this [procedure](https://charmhub.io/mongodb-k8s/docs/h-restore-backup?channel=6/beta)
+Use this [procedure](https://charmhub.io/mongodb-k8s/docs/h-restore-backup?channel=6/stable)
 to restore the backup.
 
 ## Redeploy the bundle
