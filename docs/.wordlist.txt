@@ -53,6 +53,7 @@ gNBs
 gnbsim
 Gnbsim
 gNodeB
+gNodeBs
 Grafana
 GTP
 hardcoded

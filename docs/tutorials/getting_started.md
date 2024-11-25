@@ -342,15 +342,34 @@ gnbsim  gnbsim       sdcore-gnbsim-k8s  557  1/1        fiveg_gnb_identity  five
 
 ## 7. Configure the 5G core network through the Network Management System
 
-Retrieve the NMS address:
+Retrieve the NMS credentials (`username` and `password`):
 
 ```console
 juju switch sdcore
+juju show-secret NMS_LOGIN --reveal
+```
+The output looks like this:
+```
+csurgu7mp25c761k2oe0:
+  revision: 1
+  owner: nms
+  label: NMS_LOGIN
+  created: 2024-11-20T10:22:49Z
+  updated: 2024-11-20T10:22:49Z
+  content:
+    password: ',u7=VEE3XK%t'
+    token: ""
+    username: charm-admin-SOOO
+```
+
+Retrieve the NMS address:
+
+```console
 juju run traefik/0 show-proxied-endpoints
 ```
 
 The output should be `https://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
-browser.
+browser and use the `username` and `password` to login.
 
 In the Network Management System (NMS), create a network slice with the following attributes:
 
