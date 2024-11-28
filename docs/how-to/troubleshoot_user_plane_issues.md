@@ -20,8 +20,8 @@ The UPF charm should be in `Active/Idle` status:
 Model      Controller                  Cloud/Region                Version  SLA          Timestamp
 private5g  microk8s-classic-localhost  microk8s-classic/localhost  3.5.4    unsupported  18:56:32Z
 
-App  Version  Status  Scale  Charm           Channel   Rev  Address         Exposed  Message
-upf  1.4.0    active      1  sdcore-upf-k8s  1.5/edge  622  10.152.183.236  no
+App  Version  Status  Scale  Charm           Channel     Rev  Address         Exposed  Message
+upf  1.5.0    active      1  sdcore-upf-k8s  1.5/stable  622  10.152.183.236  no
 
 Unit    Workload  Agent  Address       Ports  Message
 upf/0*  active    idle   10.1.145.115

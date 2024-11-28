@@ -109,14 +109,14 @@ resource "juju_model" "sdcore" {
 }
 
 module "sdcore-router" {
-  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform?ref=v1.5"
 
   model      = juju_model.sdcore.name
   depends_on = [juju_model.sdcore]
 }
 
 module "sdcore" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s?ref=v1.5"
 
   model        = juju_model.sdcore.name
   depends_on = [module.sdcore-router]
@@ -163,42 +163,46 @@ Example:
 
 ```console
 ubuntu@host:~$ juju status
-Model      Controller                  Cloud/Region                Version  SLA          Timestamp
-sdcore  microk8s-localhost  microk8s-classic/localhost  3.5.4    unsupported  08:08:50Z
+Model   Controller          Cloud/Region        Version  SLA          Timestamp
+sdcore  microk8s-localhost  microk8s/localhost  3.5.4    unsupported  11:06:36-05:00
 
 App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
-amf                       1.4.4    active       1  sdcore-amf-k8s            1.5/edge       707  10.152.183.176  no       
-ausf                      1.4.2    active       1  sdcore-ausf-k8s           1.5/edge       520  10.152.183.65   no       
-grafana-agent             0.32.1   waiting      1  grafana-agent-k8s         latest/stable   45  10.152.183.221  no       installing agent
-mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.92   no       Primary
-nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/edge       580  10.152.183.141  no       
-nrf                       1.4.1    active       1  sdcore-nrf-k8s            1.5/edge       580  10.152.183.130  no       
-nssf                      1.4.1    active       1  sdcore-nssf-k8s           1.5/edge       462  10.152.183.62   no       
-pcf                       1.4.3    active       1  sdcore-pcf-k8s            1.5/edge       512  10.152.183.144  no       
-router                             active       1  sdcore-router-k8s         1.5/edge       341  10.152.183.218  no       
-self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.33   no       
-smf                       1.5.2    active       1  sdcore-smf-k8s            1.5/edge       590  10.152.183.64   no       
-traefik                   v2.11.0  waiting      1  traefik-k8s               latest/stable  194  10.152.183.198  no       installing agent
-udm                       1.4.3    active       1  sdcore-udm-k8s            1.5/edge       489  10.152.183.31   no       
-udr                       1.4.1    active       1  sdcore-udr-k8s            1.5/edge       486  10.152.183.82   no       
-upf                       1.4.0    active       1  sdcore-upf-k8s            1.5/edge       591  10.152.183.164  no       
+amf                       1.5.1    active       1  sdcore-amf-k8s            1.5/stable     834  10.152.183.64   no
+ausf                      1.5.1    active       1  sdcore-ausf-k8s           1.5/stable     645  10.152.183.201  no
+grafana-agent             0.32.1   blocked      1  grafana-agent-k8s         latest/stable   45  10.152.183.80   no       logging-consumer: off, grafana-cloud-config: off
+mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.88   no
+nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/stable     741  10.152.183.20   no
+nrf                       1.5.2    active       1  sdcore-nrf-k8s            1.5/stable     720  10.152.183.158  no
+nssf                      1.5.1    active       1  sdcore-nssf-k8s           1.5/stable     597  10.152.183.247  no
+pcf                       1.5.2    active       1  sdcore-pcf-k8s            1.5/stable     650  10.152.183.92   no
+router                             active       1  sdcore-router-k8s         1.5/stable     424  10.152.183.62   no
+self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.193  no
+smf                       1.6.2    active       1  sdcore-smf-k8s            1.5/stable     745  10.152.183.53   no
+traefik                   2.11.0   error        1  traefik-k8s               latest/stable  199  10.152.183.104  no       hook failed: "certificates-relation-changed"
+udm                       1.5.1    active       1  sdcore-udm-k8s            1.5/stable     605  10.152.183.237  no
+udr                       1.6.1    active       1  sdcore-udr-k8s            1.5/stable     597  10.152.183.79   no
+upf                       1.5.0    active       1  sdcore-upf-k8s            1.5/stable     691  10.152.183.251  no
 
-Unit                         Workload  Agent  Address      Ports  Message
-amf/0*                       active    idle   10.1.10.181         
-ausf/0*                      active    idle   10.1.10.186         
-grafana-agent/0*             blocked   idle   10.1.10.133         grafana-cloud-config: off, logging-consumer: off
-mongodb/0*                   active    idle   10.1.10.155         Primary
-nms/0*                       active    idle   10.1.10.174         
-nrf/0*                       active    idle   10.1.10.151         
-nssf/0*                      active    idle   10.1.10.136         
-pcf/0*                       active    idle   10.1.10.146         
-router/0*                    active    idle   10.1.10.145         
-self-signed-certificates/0*  active    idle   10.1.10.141         
-smf/0*                       active    idle   10.1.10.154         
-traefik/0*                   error     idle   10.1.10.160         hook failed: "ingress-relation-changed"
-udm/0*                       active    idle   10.1.10.187         
-udr/0*                       active    idle   10.1.10.176         
-upf/0*                       active    idle   10.1.10.169
+Unit                         Workload  Agent  Address       Ports  Message
+amf/0*                       active    idle   10.1.213.193
+ausf/0*                      active    idle   10.1.213.236
+grafana-agent/0*             blocked   idle   10.1.213.248         logging-consumer: off, grafana-cloud-config: off
+mongodb/0*                   active    idle   10.1.213.252         Primary
+nms/0*                       active    idle   10.1.213.214
+nrf/0*                       active    idle   10.1.213.195
+nssf/0*                      active    idle   10.1.213.243
+pcf/0*                       active    idle   10.1.213.225
+router/0*                    active    idle   10.1.213.231
+self-signed-certificates/0*  active    idle   10.1.213.232
+smf/0*                       active    idle   10.1.213.229
+traefik/0*                   error     idle   10.1.213.208         hook failed: "certificates-relation-changed"
+udm/0*                       active    idle   10.1.213.203
+udr/0*                       active    idle   10.1.213.250
+upf/0*                       active    idle   10.1.213.200
+
+Offer  Application  Charm           Rev  Connected  Endpoint  Interface  Role
+amf    amf          sdcore-amf-k8s  834  0/0        fiveg-n2  fiveg_n2   provider
+upf    upf          sdcore-upf-k8s  685  0/0        fiveg_n3  fiveg_n3   provider
 ```
 
 ## 5. Configure the ingress
@@ -258,7 +262,7 @@ resource "juju_model" "ran-simulator" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.5"
 
   model      = juju_model.ran-simulator.name
   depends_on = [module.sdcore-router]
@@ -330,14 +334,14 @@ ran    microk8s-localhost  microk8s/localhost  3.5.4    unsupported  12:18:26+02
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
 
-App     Version  Status  Scale  Charm              Channel   Rev  Address         Exposed  Message
-gnbsim  1.4.3    active      1  sdcore-gnbsim-k8s  1.5/edge  557  10.152.183.209  no       
+App     Version  Status  Scale  Charm              Channel     Rev  Address         Exposed  Message
+gnbsim  1.5.0    active      1  sdcore-gnbsim-k8s  1.5/stable  612  10.152.183.209  no
 
 Unit       Workload  Agent  Address       Ports  Message
 gnbsim/0*  active    idle   10.1.194.238         
 
 Offer   Application  Charm              Rev  Connected  Endpoint            Interface           Role
-gnbsim  gnbsim       sdcore-gnbsim-k8s  557  1/1        fiveg_gnb_identity  fiveg_gnb_identity  provider
+gnbsim  gnbsim       sdcore-gnbsim-k8s  612  1/1        fiveg_gnb_identity  fiveg_gnb_identity  provider
 ```
 
 ## 7. Configure the 5G core network through the Network Management System
