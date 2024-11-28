@@ -31,7 +31,7 @@ module "gnb01" {
   app_name   = "gnb01"
   source     = "git::https://github.com/canonical/sdcore-gnb-integrator//terraform?ref=v1.5"
   model_name = "gnb-integration"
-  channel    = "1.5/edge"
+  channel    = "1.5/stable"
   config     = {
     tac: B01F
   }
