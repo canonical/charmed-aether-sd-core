@@ -614,7 +614,7 @@ data "juju_model" "gnbsim" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.5"
 
   model = data.juju_model.gnbsim.name
   

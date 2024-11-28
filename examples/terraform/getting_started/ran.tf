@@ -6,7 +6,7 @@ resource "juju_model" "ran-simulator" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.5"
 
   model      = juju_model.ran-simulator.name
   depends_on = [module.sdcore-router]
