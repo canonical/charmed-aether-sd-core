@@ -54,6 +54,7 @@ gnbsim
 Gnbsim
 gNodeB
 gNodeBs
+GPP
 Grafana
 GTP
 hardcoded
@@ -93,6 +94,7 @@ mgmt
 microk
 MicroK
 Microk8s
+microservices
 MNC
 Mongo
 MTU
@@ -112,12 +114,13 @@ nms
 NMS
 NRF
 NSSF
+OAI
 observability
 Observability
 OCI
 ONF
 ONF's
-ONOS
+OpenAirInterface
 OPC
 PacketPool
 PCF
