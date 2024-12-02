@@ -34,3 +34,4 @@ Terraform module to deploy the 5G user plane in edge sites.
 
 [sdcore-k8s-terraform]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-k8s
 [sdcore-control-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-control-plane-k8s
+[sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-user-plane-k8s
