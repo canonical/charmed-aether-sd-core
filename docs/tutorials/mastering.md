@@ -18,7 +18,7 @@ A machine running Ubuntu 22.04 with the following resources:
 The following IP networks will be used to connect and isolate the network functions:
 
 | Name         | Subnet        | Gateway IP |
-|--------------|---------------|------------|
+| ------------ | ------------- | ---------- |
 | `management` | 10.201.0.0/24 | 10.201.0.1 |
 | `access`     | 10.202.0.0/24 | 10.202.0.1 |
 | `core`       | 10.203.0.0/24 | 10.203.0.1 |
@@ -50,12 +50,12 @@ sudo snap install terraform --classic
 
 To complete this tutorial, you will need four virtual machines with access to the networks as follows:
 
-| Machine                              | CPUs | RAM  | Disk | Networks                       |
-|--------------------------------------|------|------|------|--------------------------------|
-| Control Plane Kubernetes Cluster     | 4    | 8g   | 40g  | `management`                   |
-| User Plane Kubernetes Cluster        | 4    | 12g  | 20g  | `management`, `access`, `core` |
-| Juju Controller + Kubernetes Cluster | 4    | 6g   | 40g  | `management`                   |
-| gNB Simulator Kubernetes Cluster     | 2    | 3g   | 20g  | `management`, `ran`            |
+| Machine                              | CPUs | RAM | Disk | Networks                       |
+| ------------------------------------ | ---- | --- | ---- | ------------------------------ |
+| Control Plane Kubernetes Cluster     | 4    | 8g  | 40g  | `management`                   |
+| User Plane Kubernetes Cluster        | 4    | 12g | 20g  | `management`, `access`, `core` |
+| Juju Controller + Kubernetes Cluster | 4    | 6g  | 40g  | `management`                   |
+| gNB Simulator Kubernetes Cluster     | 2    | 3g  | 20g  | `management`, `ran`            |
 
 The complete infrastructure can be created with Terraform using the following commands:
 
@@ -179,7 +179,7 @@ scp /tmp/user-plane-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the SD-Core `user-plane` VM:
 
 | Interface Name | Purpose                                                                                                                                                           |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | enp5s0         | internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
 | enp6s0         | core interface. This maps to the `core` subnet.                                                                                                                   |
 | enp7s0         | access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
@@ -239,7 +239,7 @@ scp /tmp/gnb-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the `gnbsim` VM:
 
 | Interface Name | Purpose                                                                         |
-|----------------|---------------------------------------------------------------------------------|
+| -------------- | ------------------------------------------------------------------------------- |
 | enp5s0         | internal Kubernetes management interface. This maps to the `management` subnet. |
 | enp6s0         | ran interface. This maps to the `ran` subnet.                                   |
 
@@ -295,7 +295,7 @@ This will expose the Juju controller on the first allocated MetalLB address:
 
 ```console
 mkdir -p ~/.local/share/juju
-sudo snap install juju --channel=3.5/stable
+sudo snap install juju --channel=3.6/stable
 juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore
 ```
 
@@ -493,7 +493,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the UPF.
 
 | Config Option         | Descriptions                                                                                      |
-|-----------------------|---------------------------------------------------------------------------------------------------|
+| --------------------- | ------------------------------------------------------------------------------------------------- |
 | access-gateway-ip     | The IP address of the gateway that knows how to route traffic from the UPF towards the gNB subnet |
 | access-interface      | The name of the MACVLAN interface on the Kubernetes host cluster to bridge to the `access` subnet |
 | access-ip             | The IP address for the UPF to use on the `access` subnet                                          |
@@ -592,7 +592,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the simulator.
 
 | Config Option           | Descriptions                                                                                                                                  |
-|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | gnb-interface           | The name of the MACVLAN interface to use on the host                                                                                          |
 | gnb-ip-address          | The IP address to use on the gnb interface                                                                                                    |
 | icmp-packet-destination | The target IP address to ping. If there is no egress to the internet on your core network, any IP that is reachable from the UPF should work. |

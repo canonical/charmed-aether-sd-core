@@ -65,7 +65,7 @@ $ juju controllers
 Use --refresh option with this command to see the latest information.
 
 Controller           Model      User   Access     Cloud/Region        Models  Nodes  HA  Version
-microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.5.4  
+microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.6.0  
 ```
 
 If your controller does not show up in the list, please follow [this guide][Bootstrap Juju Controller] to create a Juju controller.
