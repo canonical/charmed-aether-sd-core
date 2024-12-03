@@ -18,7 +18,7 @@ Navigate between the tabs below to find the steps suitable for your setup (Kuber
   - `driverctl` installed
   - LoadBalancer with 1 available address for the UPF
   - Multus CNI enabled
-- Juju >= 3.5/stable
+- Juju >= 3.6/stable
 - A Juju controller bootstrapped onto the Kubernetes cluster
 - Terraform 
 
@@ -170,7 +170,7 @@ terraform apply -auto-approve
   - 3 network interfaces
   - `driverctl` installed
 - Juju host
-  - Juju>=3.5
+  - Juju>=3.6
   - Cloud of type `manual` created
 - Terraform
 
