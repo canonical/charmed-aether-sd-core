@@ -13,7 +13,7 @@ This guide covers how to deploy the User Plane Function (UPF) in DPDK mode using
   - `driverctl` installed
   - LoadBalancer with 1 available address for the UPF
   - Multus CNI enabled
-- Juju >= 3.5/stable
+- Juju >= 3.6/stable
 - A Juju controller bootstrapped onto the Kubernetes cluster
 - Terraform 
 
@@ -150,6 +150,5 @@ Deploy SD-Core User Plane:
 ```shell
 terraform apply -auto-approve
 ```
-
 
 [SR-IOV Network Device Plugin]: https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin

@@ -52,7 +52,7 @@ sudo microk8s enable metallb:10.0.0.2-10.0.0.4
 From your terminal, install Juju.
 
 ```console
-sudo snap install juju --channel=3.5/stable
+sudo snap install juju --channel=3.6/stable
 ```
 
 Bootstrap a Juju controller
@@ -164,7 +164,7 @@ Example:
 ```console
 ubuntu@host:~$ juju status
 Model   Controller          Cloud/Region        Version  SLA          Timestamp
-sdcore  microk8s-localhost  microk8s/localhost  3.5.4    unsupported  11:06:36-05:00
+sdcore  microk8s-localhost  microk8s/localhost  3.6.0    unsupported  11:06:36-05:00
 
 App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
 amf                       1.5.1    active       1  sdcore-amf-k8s            1.5/stable     834  10.152.183.64   no
@@ -329,7 +329,7 @@ Example:
 ```console
 ubuntu@host:~/terraform $ juju status
 Model  Controller          Cloud/Region        Version  SLA          Timestamp
-ran    microk8s-localhost  microk8s/localhost  3.5.4    unsupported  12:18:26+02:00
+ran    microk8s-localhost  microk8s/localhost  3.6.0    unsupported  12:18:26+02:00
 
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
