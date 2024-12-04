@@ -32,37 +32,6 @@ Terraform module to deploy the 5G user plane in edge sites.
 
 `````
 
-## User Plane Function
-
-The User Plane Function (UPF) is available in two different charms:
-
-`````{tab-set}
-    
-````{tab-item} Kubernetes
-
-The [UPF Kubernetes Charm](https://charmhub.io/sdcore-upf-k8s) can be deployed on a Kubernetes cluster. The charm itself will not modify the host network configuration. Depending on the mode however users may need to modify the host network configuration prior to deploying the charm. To deploy the Kubernetes charm follow the guide matching the right mode:
-- [AF_PACKET](/how-to/deploy_sdcore_cups)
-- [DPDK](/how-to/deploy_sdcore_user_plane_in_dpdk_mode)
-
-````
-
-````{tab-item} Machine
-
-The [UPF Machine charm](https://charmhub.io/sdcore-upf) can be deployed on a bare metal machine or a VM. The UPF machine charm will modify the host network configuration:
-- Create network interfaces (DPDK mode only)
-- Set interfaces IP addresses
-- Modify interfaces MTU
-- Set MAC addresses on interfaces (DPDK mode only)
-- Bring interfaces up
-- Create IP routes
-- Create IP tables rules
-
-To deploy the Machine charm, follow this [guide](/how-to/deploy_sdcore_upf_machine/).
-
-````
-
-`````
-
 [sdcore-k8s-terraform]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-k8s
 [sdcore-control-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-control-plane-k8s
 [sdcore-user-plane-k8s]: https://github.com/canonical/terraform-juju-sdcore/tree/main/modules/sdcore-user-plane-k8s
