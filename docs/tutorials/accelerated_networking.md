@@ -291,7 +291,7 @@ Please replace the `access-interface-mac-address` and `core-interface-mac-addres
 cd terraform
 cat << EOF >> main.tf
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s?ref=v1.5"
 
   model = "user-plane"
 

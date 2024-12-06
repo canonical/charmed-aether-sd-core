@@ -366,7 +366,7 @@ data "juju_model" "control-plane" {
 }
 
 module "sdcore-control-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s?ref=v1.5"
 
   model = data.juju_model.control-plane.name
 
@@ -518,7 +518,7 @@ data "juju_model" "user-plane" {
 }
 
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s?ref=v1.5"
 
   model = data.juju_model.user-plane.name
 
@@ -785,7 +785,7 @@ Add `cos-lite` Terraform module to the `main.tf` file used in the previous steps
 ```console
 cat << EOF >> main.tf
 module "cos-lite" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite?ref=v1.5"
 
   model_name               = "cos-lite"
   deploy_cos_configuration = true

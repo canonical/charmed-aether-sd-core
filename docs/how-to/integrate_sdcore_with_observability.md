@@ -19,7 +19,7 @@ Update your solution Terraform module (here it's named `main.tf`):
 ```console
 cat << EOF > main.tf
 module "cos" {
-  source                   = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite"
+  source                   = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite?ref=v1.5"
   model_name               = "cos-lite"
   deploy_cos_configuration = true
   cos_configuration_config = {
@@ -85,13 +85,13 @@ resource "juju_model" "sdcore" {
 }
 
 module "sdcore" {
-  source                   = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-k8s"
+  source                   = "git::https://github.com/canonical/terraform-juju-sdcore-k8s//modules/sdcore-k8s?ref=v1.5"
   model_name               = juju_model.sdcore.name
   create_model             = false
 }
 
 module "cos" {
-  source                   = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite"
+  source                   = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite?ref=v1.5"
   model_name               = "cos-lite"
   deploy_cos_configuration = true
   cos_configuration_config = {
