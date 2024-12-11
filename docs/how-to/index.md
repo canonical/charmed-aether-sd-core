@@ -13,6 +13,7 @@ deploy_sdcore_gnbsim
 deploy_sdcore_user_plane_in_dpdk_mode
 integrate_sdcore_with_external_gnb
 integrate_sdcore_with_observability
+test_upf_performance
 ```
 
 ## Day 2 operations
