@@ -9,7 +9,7 @@ This builds upon the [Mastering](mastering.md) tutorial. Follow that tutorial un
 Log in to the `user-plane` VM:
 
 ```shell
-lxc exec user-plane --user 1000 -- bash -l
+lxc exec user-plane -- su --login ubuntu
 ```
 
 ### Enable HugePages in the User Plane VM
@@ -25,7 +25,7 @@ sudo reboot
 Log in to the `user-plane` VM again:
 
 ```shell
-lxc exec user-plane --user 1000 -- bash -l
+lxc exec user-plane -- su --login ubuntu
 ```
 
 #### Checkpoint 1: Are HugePages enabled ?

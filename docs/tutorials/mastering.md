@@ -107,7 +107,7 @@ This section covers installation of necessary tools on the VMs which are going t
 Login to the `control-plane` VM:
 
 ```console
-lxc exec control-plane --user 1000 -- bash -l
+lxc exec control-plane -- su --login ubuntu
 ```
 
 Install MicroK8s:
@@ -146,7 +146,7 @@ Log out of the VM.
 Log in to the `user-plane` VM:
 
 ```console
-lxc exec user-plane --user 1000 -- bash -l
+lxc exec user-plane -- su --login ubuntu
 ```
 
 Install MicroK8s, configure MetalLB to expose 1 IP address for the UPF (`10.201.0.200`) and enable the Multus plugin:
@@ -207,7 +207,7 @@ Log out of the VM.
 Log in to the `gnbsim` VM:
 
 ```console
-lxc exec gnbsim --user 1000 -- bash -l
+lxc exec gnbsim -- su --login ubuntu
 ```
 
 Install MicroK8s and add the Multus plugin:
@@ -263,7 +263,7 @@ Log out of the VM.
 Log in to the `juju-controller` VM:
 
 ```console
-lxc exec juju-controller --user 1000 -- bash -l
+lxc exec juju-controller -- su --login ubuntu
 ```
 
 Begin by installing MicroK8s to hold the Juju controller.
