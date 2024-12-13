@@ -400,7 +400,7 @@ You should see the following subscriber created:
 
 ## 8. Run the 5G simulation
 
-Switch to the `ran` model and make sure that the `gnbsim` appliacation is in `Active/Idle` state.
+Switch to the `ran` model and make sure that the `gnbsim` application is in `Active/Idle` state.
 
 ```console
 juju switch ran
