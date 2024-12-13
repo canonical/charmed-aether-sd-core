@@ -3,7 +3,7 @@ data "juju_model" "control-plane" {
 }
 
 module "sdcore-control-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s?ref=v1.5"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-control-plane-k8s"
 
   model = data.juju_model.control-plane.name
 
@@ -22,7 +22,7 @@ data "juju_model" "user-plane" {
 }
 
 module "sdcore-user-plane" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s?ref=v1.5"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
   model = data.juju_model.user-plane.name
 
@@ -44,7 +44,7 @@ data "juju_model" "gnbsim" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.5"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
 
   model = data.juju_model.gnbsim.name
 
@@ -70,22 +70,16 @@ resource "juju_integration" "gnbsim-amf" {
   }
 }
 
-resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = data.juju_model.gnbsim.name
-  application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
-}
-
-resource "juju_integration" "nms-gnbsim" {
-  model = data.juju_model.control-plane.name
+resource "juju_integration" "gnbsim-nms" {
+  model = data.juju_model.gnbsim.name
 
   application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_core_gnb
   }
 
   application {
-    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
+    offer_url = module.sdcore-control-plane.nms_fiveg_core_gnb_offer_url
   }
 }
 
@@ -103,7 +97,7 @@ resource "juju_integration" "nms-upf" {
 }
 
 module "cos-lite" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite?ref=v1.5"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/external/cos-lite"
 
   model_name               = "cos-lite"
   deploy_cos_configuration = true

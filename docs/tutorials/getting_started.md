@@ -103,20 +103,20 @@ EOF
 Create a Terraform module containing the SD-Core 5G core network and a router:
 
 ```console
-cat << EOF > main.tf
+cat << EOF > core.tf
 resource "juju_model" "sdcore" {
   name = "sdcore"
 }
 
 module "sdcore-router" {
-  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform?ref=v1.5"
+  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform"
 
   model      = juju_model.sdcore.name
   depends_on = [juju_model.sdcore]
 }
 
 module "sdcore" {
-  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s?ref=v1.5"
+  source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
   model        = juju_model.sdcore.name
   depends_on = [module.sdcore-router]
@@ -167,42 +167,43 @@ Model   Controller          Cloud/Region        Version  SLA          Timestamp
 sdcore  microk8s-localhost  microk8s/localhost  3.6.0    unsupported  11:06:36-05:00
 
 App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
-amf                       1.5.1    active       1  sdcore-amf-k8s            1.5/stable     834  10.152.183.64   no
-ausf                      1.5.1    active       1  sdcore-ausf-k8s           1.5/stable     645  10.152.183.201  no
-grafana-agent             0.32.1   blocked      1  grafana-agent-k8s         latest/stable   45  10.152.183.80   no       logging-consumer: off, grafana-cloud-config: off
-mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.88   no
-nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/stable     741  10.152.183.20   no
-nrf                       1.5.2    active       1  sdcore-nrf-k8s            1.5/stable     720  10.152.183.158  no
-nssf                      1.5.1    active       1  sdcore-nssf-k8s           1.5/stable     597  10.152.183.247  no
-pcf                       1.5.2    active       1  sdcore-pcf-k8s            1.5/stable     650  10.152.183.92   no
-router                             active       1  sdcore-router-k8s         1.5/stable     424  10.152.183.62   no
-self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.193  no
-smf                       1.6.2    active       1  sdcore-smf-k8s            1.5/stable     745  10.152.183.53   no
-traefik                   2.11.0   error        1  traefik-k8s               latest/stable  199  10.152.183.104  no       hook failed: "certificates-relation-changed"
-udm                       1.5.1    active       1  sdcore-udm-k8s            1.5/stable     605  10.152.183.237  no
-udr                       1.6.1    active       1  sdcore-udr-k8s            1.5/stable     597  10.152.183.79   no
-upf                       1.5.0    active       1  sdcore-upf-k8s            1.5/stable     691  10.152.183.251  no
+amf                       1.6.1    active       1  sdcore-amf-k8s            1.6/edge       862  10.152.183.173  no       
+ausf                      1.5.1    active       1  sdcore-ausf-k8s           1.6/edge       672  10.152.183.247  no       
+grafana-agent             0.40.4   waiting      1  grafana-agent-k8s         latest/stable   80  10.152.183.204  no       installing agent
+mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.96   no       
+nms                       1.1.0    active       1  sdcore-nms-k8s            1.6/edge       790  10.152.183.84   no       
+nrf                       1.6.1    active       1  sdcore-nrf-k8s            1.6/edge       747  10.152.183.132  no       
+nssf                      1.5.1    active       1  sdcore-nssf-k8s           1.6/edge       628  10.152.183.91   no       
+pcf                       1.5.2    active       1  sdcore-pcf-k8s            1.6/edge       669  10.152.183.129  no       
+router                             active       1  sdcore-router-k8s         1.6/edge       436  10.152.183.203  no       
+self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.219  no       
+smf                       1.6.2    active       1  sdcore-smf-k8s            1.6/edge       764  10.152.183.220  no       
+traefik                   2.11.0   waiting      1  traefik-k8s               latest/stable  203  10.152.183.27   no       installing agent
+udm                       1.5.1    active       1  sdcore-udm-k8s            1.6/edge       625  10.152.183.228  no       
+udr                       1.6.1    active       1  sdcore-udr-k8s            1.6/edge       612  10.152.183.141  no       
+upf                       1.4.0    active       1  sdcore-upf-k8s            1.6/edge       678  10.152.183.229  no       
 
 Unit                         Workload  Agent  Address       Ports  Message
-amf/0*                       active    idle   10.1.213.193
-ausf/0*                      active    idle   10.1.213.236
-grafana-agent/0*             blocked   idle   10.1.213.248         logging-consumer: off, grafana-cloud-config: off
-mongodb/0*                   active    idle   10.1.213.252         Primary
-nms/0*                       active    idle   10.1.213.214
-nrf/0*                       active    idle   10.1.213.195
-nssf/0*                      active    idle   10.1.213.243
-pcf/0*                       active    idle   10.1.213.225
-router/0*                    active    idle   10.1.213.231
-self-signed-certificates/0*  active    idle   10.1.213.232
-smf/0*                       active    idle   10.1.213.229
-traefik/0*                   error     idle   10.1.213.208         hook failed: "ingress-relation-created"
-udm/0*                       active    idle   10.1.213.203
-udr/0*                       active    idle   10.1.213.250
-upf/0*                       active    idle   10.1.213.200
+amf/0*                       active    idle   10.1.194.236         
+ausf/0*                      active    idle   10.1.194.243         
+grafana-agent/0*             blocked   idle   10.1.194.196         Missing ['grafana-cloud-config']|['logging-consumer'] for logging-provider; ['grafana-cloud-config']|['send-remote-wr...
+mongodb/0*                   active    idle   10.1.194.249         
+nms/0*                       active    idle   10.1.194.203         
+nrf/0*                       active    idle   10.1.194.247         
+nssf/0*                      active    idle   10.1.194.227         
+pcf/0*                       active    idle   10.1.194.224         
+router/0*                    active    idle   10.1.194.245         
+self-signed-certificates/0*  active    idle   10.1.194.225         
+smf/0*                       active    idle   10.1.194.255         
+traefik/0*                   error     idle   10.1.194.246         hook failed: "certificates-relation-changed"
+udm/0*                       active    idle   10.1.194.219         
+udr/0*                       active    idle   10.1.194.211         
+upf/0*                       active    idle   10.1.194.217         
 
-Offer  Application  Charm           Rev  Connected  Endpoint  Interface  Role
-amf    amf          sdcore-amf-k8s  834  0/0        fiveg-n2  fiveg_n2   provider
-upf    upf          sdcore-upf-k8s  685  0/0        fiveg_n3  fiveg_n3   provider
+Offer  Application  Charm           Rev  Connected  Endpoint        Interface       Role
+amf    amf          sdcore-amf-k8s  862  0/0        fiveg-n2        fiveg_n2        provider
+nms    nms          sdcore-nms-k8s  790  0/0        fiveg_core_gnb  fiveg_core_gnb  provider
+upf    upf          sdcore-upf-k8s  678  0/0        fiveg_n3        fiveg_n3        provider
 ```
 
 ## 5. Configure the ingress
@@ -223,10 +224,10 @@ traefik-lb                           LoadBalancer   10.152.183.142   10.0.0.4   
 In this tutorial, the IP is `10.0.0.4`. Please note it, as we will need it in the next step.
 
 Configure Traefik to use an external hostname. To do that, edit `traefik_config`
-in the `main.tf` file:
+in the `core.tf` file:
 
 ```
-:caption: main.tf
+:caption: core.tf
 (...)
 module "sdcore" {
   (...)
@@ -262,16 +263,10 @@ resource "juju_model" "ran-simulator" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.5"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
 
   model      = juju_model.ran-simulator.name
   depends_on = [module.sdcore-router]
-}
-
-resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = juju_model.ran-simulator.name
-  application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
 }
 
 resource "juju_integration" "gnbsim-amf" {
@@ -288,15 +283,15 @@ resource "juju_integration" "gnbsim-amf" {
 }
 
 resource "juju_integration" "gnbsim-nms" {
-  model = juju_model.sdcore.name
+  model = juju_model.ran-simulator.name
 
   application {
-    name     = module.sdcore.nms_app_name
-    endpoint = module.sdcore.fiveg_gnb_identity_endpoint
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_core_gnb
   }
 
   application {
-    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
+    offer_url = module.sdcore.nms_fiveg_core_gnb_offer_url
   }
 }
 
@@ -322,7 +317,7 @@ juju switch ran
 watch -n 1 -c juju status --color --relations
 ```
 
-The deployment is ready when the `gnbsim` application is in the `Active/Idle` state.<br>
+The deployment is ready when the `gnbsim` application is in the `Waiting/Idle` state and the message is `Waiting for TAC and PLMNs configuration`.<br>
 
 Example:
 
@@ -333,15 +328,13 @@ ran    microk8s-localhost  microk8s/localhost  3.6.0    unsupported  12:18:26+02
 
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
+nms   active  local  admin/sdcore.nms
 
-App     Version  Status  Scale  Charm              Channel     Rev  Address         Exposed  Message
-gnbsim  1.5.0    active      1  sdcore-gnbsim-k8s  1.5/stable  612  10.152.183.209  no
+App     Version  Status   Scale  Charm              Channel   Rev  Address        Exposed  Message
+gnbsim  1.4.5    waiting      1  sdcore-gnbsim-k8s  1.6/edge  638  10.152.183.85  no       installing agent
 
 Unit       Workload  Agent  Address       Ports  Message
-gnbsim/0*  active    idle   10.1.194.238         
-
-Offer   Application  Charm              Rev  Connected  Endpoint            Interface           Role
-gnbsim  gnbsim       sdcore-gnbsim-k8s  612  1/1        fiveg_gnb_identity  fiveg_gnb_identity  provider
+gnbsim/0*  waiting   idle   10.1.194.239         Waiting for TAC and PLMNs configuration
 ```
 
 ## 7. Configure the 5G core network through the Network Management System
@@ -381,7 +374,7 @@ In the Network Management System (NMS), create a network slice with the followin
 - MCC: `001`
 - MNC: `01`
 - UPF: `upf-external.sdcore.svc.cluster.local:8805`
-- gNodeB: `sdcore-gnbsim-gnbsim`
+- gNodeB: `ran-gnbsim-gnbsim`
 
 You should see the following network slice created:
 
@@ -407,10 +400,36 @@ You should see the following subscriber created:
 
 ## 8. Run the 5G simulation
 
-Run the simulation:
+Switch to the `ran` model and make sure that the `gnbsim` appliacation is in `Active/Idle` state.
 
 ```console
 juju switch ran
+juju status
+```
+
+The output should be similar to below:
+
+Example:
+
+```console
+ubuntu@host:~/terraform $ juju status
+Model  Controller          Cloud/Region        Version  SLA          Timestamp
+ran    microk8s-localhost  microk8s/localhost  3.6.0    unsupported  12:18:26+02:00
+
+SAAS  Status  Store  URL
+amf   active  local  admin/sdcore.amf
+nms   active  local  admin/sdcore.nms
+
+App     Version  Status  Scale  Charm              Channel   Rev  Address        Exposed  Message
+gnbsim  1.4.5    active      1  sdcore-gnbsim-k8s  1.6/edge  638  10.152.183.85  no       
+
+Unit       Workload  Agent  Address       Ports  Message
+gnbsim/0*  active    idle   10.1.194.239
+```
+
+Run the simulation:
+
+```console
 juju run gnbsim/leader start-simulation
 ```
 
@@ -436,7 +455,7 @@ terraform destroy -auto-approve
 
 ```{note}
 Terraform does not remove anything from the working directory. If needed, please clean up
-the `terraform` directory manually by removing everything except for the `main.tf`
+the `terraform` directory manually by removing everything except for the `core.tf`
 and `terraform.tf` files.
 ```
 

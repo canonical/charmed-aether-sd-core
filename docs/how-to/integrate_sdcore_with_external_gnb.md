@@ -29,30 +29,20 @@ Either create a new `.tf` file, or add the following content to you existing `ma
 ```console
 module "gnb01" {
   app_name   = "gnb01"
-  source     = "git::https://github.com/canonical/sdcore-gnb-integrator//terraform?ref=v1.5"
+  source     = "git::https://github.com/canonical/sdcore-gnb-integrator//terraform"
   model_name = "gnb-integration"
-  channel    = "1.5/stable"
-  config     = {
-    tac: B01F
-  }
-}
-
-resource "juju_offer" "gnb01-fiveg-gnb-identity" {
-  model            = "gnb-integration"
-  application_name = module.gnb01.app_name
-  endpoint         = module.gnb01.fiveg_gnb_identity_endpoint
 }
 
 resource "juju_integration" "nms-gnb01" {
-  model = "control-plane"
-
+  model = module.gnb01.model_name
+  
   application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
+    name     = module.gnb01.app_name
+    endpoint = module.gnb01.requires.fiveg_core_gnb
   }
 
   application {
-    offer_url = juju_offer.gnb01-fiveg-gnb-identity.url
+    offer_url = module.sdcore-control-plane.nms_fiveg_core_gnb_offer_url
   }
 }
 ```
