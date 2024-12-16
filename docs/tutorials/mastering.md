@@ -18,7 +18,7 @@ A machine running Ubuntu 22.04 with the following resources:
 The following IP networks will be used to connect and isolate the network functions:
 
 | Name         | Subnet        | Gateway IP |
-| ------------ | ------------- | ---------- |
+|--------------|---------------|------------|
 | `management` | 10.201.0.0/24 | 10.201.0.1 |
 | `access`     | 10.202.0.0/24 | 10.202.0.1 |
 | `core`       | 10.203.0.0/24 | 10.203.0.1 |
@@ -53,7 +53,7 @@ sudo snap install terraform --classic
 To complete this tutorial, you will need four virtual machines with access to the networks as follows:
 
 | Machine                              | CPUs | RAM | Disk | Networks                       |
-| ------------------------------------ | ---- | --- | ---- | ------------------------------ |
+|--------------------------------------|------|-----|------|--------------------------------|
 | Control Plane Kubernetes Cluster     | 4    | 8g  | 40g  | `management`                   |
 | User Plane Kubernetes Cluster        | 4    | 12g | 20g  | `management`, `access`, `core` |
 | Juju Controller + Kubernetes Cluster | 4    | 6g  | 40g  | `management`                   |
@@ -109,7 +109,7 @@ This section covers installation of necessary tools on the VMs which are going t
 Login to the `control-plane` VM:
 
 ```console
-lxc exec control-plane --user 1000 -- bash -l
+lxc exec control-plane -- su --login ubuntu
 ```
 
 Install MicroK8s:
@@ -148,7 +148,7 @@ Log out of the VM.
 Log in to the `user-plane` VM:
 
 ```console
-lxc exec user-plane --user 1000 -- bash -l
+lxc exec user-plane -- su --login ubuntu
 ```
 
 Install MicroK8s, configure MetalLB to expose 1 IP address for the UPF (`10.201.0.200`) and enable the Multus plugin:
@@ -181,7 +181,7 @@ scp /tmp/user-plane-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the SD-Core `user-plane` VM:
 
 | Interface Name | Purpose                                                                                                                                                           |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | enp5s0         | internal Kubernetes management interface. This maps to the `management` subnet.                                                                                   |
 | enp6s0         | core interface. This maps to the `core` subnet.                                                                                                                   |
 | enp7s0         | access interface. This maps to the `access` subnet. Note that internet egress is required here and routing tables are already set to route gNB generated traffic. |
@@ -209,7 +209,7 @@ Log out of the VM.
 Log in to the `gnbsim` VM:
 
 ```console
-lxc exec gnbsim --user 1000 -- bash -l
+lxc exec gnbsim -- su --login ubuntu
 ```
 
 Install MicroK8s and add the Multus plugin:
@@ -241,7 +241,7 @@ scp /tmp/gnb-cluster.yaml juju-controller.mgmt:
 In this guide, the following network interfaces are available on the `gnbsim` VM:
 
 | Interface Name | Purpose                                                                         |
-| -------------- | ------------------------------------------------------------------------------- |
+|----------------|---------------------------------------------------------------------------------|
 | enp5s0         | internal Kubernetes management interface. This maps to the `management` subnet. |
 | enp6s0         | ran interface. This maps to the `ran` subnet.                                   |
 
@@ -265,7 +265,7 @@ Log out of the VM.
 Log in to the `juju-controller` VM:
 
 ```console
-lxc exec juju-controller --user 1000 -- bash -l
+lxc exec juju-controller -- su --login ubuntu
 ```
 
 Begin by installing MicroK8s to hold the Juju controller.
@@ -343,7 +343,7 @@ Create new folder called `terraform`:
 mkdir terraform
 ```
 
-Inside newly created `terraform` folder create a `terraform.tf` file:
+Inside newly created `terraform` folder create a `versions.tf` file:
 
 ```console
 cd terraform
@@ -495,7 +495,7 @@ We will provide necessary configuration (please see the list of the config optio
 Lastly, we will expose the Software as a Service offer for the UPF.
 
 | Config Option         | Descriptions                                                                                      |
-| --------------------- | ------------------------------------------------------------------------------------------------- |
+|-----------------------|---------------------------------------------------------------------------------------------------|
 | access-gateway-ip     | The IP address of the gateway that knows how to route traffic from the UPF towards the gNB subnet |
 | access-interface      | The name of the MACVLAN interface on the Kubernetes host cluster to bridge to the `access` subnet |
 | access-ip             | The IP address for the UPF to use on the `access` subnet                                          |
@@ -590,11 +590,10 @@ Log out of the `user-plane` VM.
 The following steps build on the Juju controller which was bootstrapped and knows how to manage the gNB Simulator Kubernetes cluster.
 
 First, we will add gNB Simulator to the Terraform module used in the previous steps.
-We will provide necessary configuration (please see the list of the config options with the description in the table below) for the application and integrate the simulator with previously exposed AMF offering.
-Lastly, we will expose the Software as a Service offer for the simulator.
+We will provide necessary configuration (please see the list of the config options with the description in the table below) for the application and integrate the simulator with the relevant 5G Core Network Functions (AMF, NMS and UPF).
 
 | Config Option           | Descriptions                                                                                                                                  |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | gnb-interface           | The name of the MACVLAN interface to use on the host                                                                                          |
 | gnb-ip-address          | The IP address to use on the gnb interface                                                                                                    |
 | icmp-packet-destination | The target IP address to ping. If there is no egress to the internet on your core network, any IP that is reachable from the UPF should work. |
@@ -616,7 +615,7 @@ data "juju_model" "gnbsim" {
 }
 
 module "gnbsim" {
-  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform?ref=v1.5"
+  source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
 
   model = data.juju_model.gnbsim.name
   
@@ -642,10 +641,30 @@ resource "juju_integration" "gnbsim-amf" {
   }
 }
 
-resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = data.juju_model.gnbsim.name
-  application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
+resource "juju_integration" "gnbsim-nms" {
+  model = data.juju_model.gnbsim.name
+
+  application {
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_core_gnb
+  }
+
+  application {
+    offer_url = module.sdcore-control-plane.nms_fiveg_core_gnb_offer_url
+  }
+}
+
+resource "juju_integration" "nms-upf" {
+  model = data.juju_model.control-plane.name
+
+  application {
+    name     = module.sdcore-control-plane.nms_app_name
+    endpoint = module.sdcore-control-plane.fiveg_n4_endpoint
+  }
+
+  application {
+    offer_url = module.sdcore-user-plane.upf_fiveg_n4_offer_url
+  }
 }
 
 EOF
@@ -669,53 +688,12 @@ Monitor the status of the deployment:
 juju status --watch 1s --relations
 ```
 
-The deployment is ready when the `gnbsim` application is in the `Active/Idle` state.
+The deployment is ready when the `gnbsim` application is in the `Waiting/Idle` state and the message is `Waiting for TAC and PLMNs configuration`.<br>
 
 ## 7. Configure SD-Core
 
 The following steps show how to configure the SD-Core 5G core network.
-
-We will start by creating integrations between the Network Management System (NMS) and the UPF and the gNB Simulator.
-Once the integrations are ready, we will create the core network configuration: a network slice, a device group and a subscriber.
-
-Add required integrations to the `main.tf` file used in the previous steps:
-
-```console
-cat << EOF >> main.tf
-resource "juju_integration" "nms-gnbsim" {
-  model = data.juju_model.control-plane.name
-
-  application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
-  }
-
-  application {
-    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
-  }
-}
-
-resource "juju_integration" "nms-upf" {
-  model = data.juju_model.control-plane.name
-
-  application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_n4_endpoint
-  }
-
-  application {
-    offer_url = module.sdcore-user-plane.upf_fiveg_n4_offer_url
-  }
-}
-
-EOF
-```
-
-Apply the changes:
-
-```console
-terraform apply -auto-approve
-```
+In this step we will create a network slice, a device group and a subscriber.
 
 Retrieve the NMS credentials (`username` and `password`):
 
