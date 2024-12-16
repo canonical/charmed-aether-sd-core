@@ -26,8 +26,15 @@ The following IP networks will be used to connect and isolate the network functi
 
 ### Install and Configure LXD
 
+Install LXD:
+
 ```console
 sudo snap install lxd
+```
+
+Initialize LXD:
+
+```console
 sudo usermod -aG lxd "$USER"
 newgrp lxd
 lxd init --auto
