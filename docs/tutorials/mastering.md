@@ -35,6 +35,8 @@ sudo snap install lxd
 Initialize LXD:
 
 ```console
+sudo usermod -aG lxd "$USER"
+newgrp lxd
 lxd init --auto
 ```
 
