@@ -997,7 +997,7 @@ Apply the changes:
 terraform apply -auto-approve
 ```
 
-## Checkpoint 4: Validate that the Grafana dashboard available
+#### Checkpoint 4: Validate that the Grafana dashboard available
 
 From the `juju-controller` VM, retrieve the Grafana URL and admin password:
 
