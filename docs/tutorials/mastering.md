@@ -113,24 +113,13 @@ Login to the `control-plane` VM:
 lxc exec control-plane -- su --login ubuntu
 ```
 
-Install MicroK8s:
+Install MicroK8s with the necessary plugins:
 
 ```console
 sudo snap install microk8s --channel=1.31-strict/stable
 sudo microk8s enable hostpath-storage
 sudo usermod -a -G snap_microk8s $(whoami)
-```
-
-The control plane needs to expose two services: the AMF and the NMS.
-In this step, we enable the MetalLB add on in MicroK8s, and give it a range of two IP addresses:
-
-```console
 sudo microk8s enable metallb:10.201.0.52-10.201.0.53
-```
-
-Now update MicroK8s DNS to point to our DNS server:
-
-```console
 sudo microk8s disable dns
 sudo microk8s enable dns:10.201.0.1
 ```
@@ -152,7 +141,7 @@ Log in to the `user-plane` VM:
 lxc exec user-plane -- su --login ubuntu
 ```
 
-### Enable HugePages in the User Plane VM
+### Enable HugePages
 
 Update Grub to enable 2 units of 1Gi HugePages in the User Plane VM. Then, the VM is gracefully rebooted to activate the settings.
 
@@ -168,7 +157,7 @@ Log in to the `user-plane` VM again:
 lxc exec user-plane -- su --login ubuntu
 ```
 
-#### Checkpoint 1: Are HugePages enabled ?
+#### Checkpoint 2: Are HugePages enabled ?
 
 You should be able to see the 2 units of Free HugePages with 1048576 kB size by executing the following command:
 
@@ -212,28 +201,13 @@ ip link
 
 ### Load the `vfio-pci` driver in the User Plane VM
 
-As `root` user, load the `vfio-pci` driver. To make it persistent upon VM restarts, add it to the `/etc/rc.local` file.
-
-```console
-cat << EOF | sudo tee -a /etc/rc.local
-#!/bin/bash
-sudo echo "vfio-pci" > /etc/modules-load.d/vfio-pci.conf
-sudo modprobe vfio-pci
-EOF
-sudo chmod +x /etc/rc.local
-sudo /etc/rc.local
-```
-
-```{note}
-Using `vfio-pci`, by default, needs IOMMU to be enabled. IOMMU support could be checked by running the command `ls /sys/kernel/iommu_groups/`. 
-If IOMMU groups do not exist in the command output then it is not supported.
-In the environments which do not support IOMMU, `vfio-pci` needs to be loaded with additional module parameter persistently using the command below.
-```
-
-Enable VFIO driver unsafe IOMMU mode if IOMMU mode is not supported:
+Enable the `vfio-pci` driver:
 
 ```console
 cat << EOF | sudo sudo tee -a /etc/rc.local
+#!/bin/bash
+sudo echo "vfio-pci" > /etc/modules-load.d/vfio-pci.conf
+sudo modprobe vfio-pci
 sudo echo "options vfio enable_unsafe_noiommu_mode=1" > /etc/modprobe.d/vfio-noiommu.conf
 sudo echo "Y" > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode
 sudo modprobe vfio enable_unsafe_noiommu_mode=1
@@ -280,7 +254,7 @@ sudo chmod +x /etc/rc.local
 sudo /etc/rc.local
 ```
 
-#### Checkpoint 5: Verify that VFIO-PCI driver is loaded ?
+#### Checkpoint 3: Validate that the VFIO-PCI driver is loaded
 
 Check the current driver of interfaces by running the following command:
 
@@ -312,7 +286,7 @@ crw-rw-rw- 1 root root  10, 196 Aug 17 21:51 vfio
 
 ### Install Kubernetes Cluster
 
-Install the Microk8s and enable the `hostpath-storage`, `multus` and  `metallb` plugins.
+Install MicroK8s with the necessary plugins:
 
 ```console
 sudo snap install microk8s --channel=1.31/stable --classic
@@ -323,11 +297,6 @@ sudo usermod -a -G microk8s $(whoami)
 sudo snap alias microk8s.kubectl kubectl
 sudo microk8s enable metallb:10.201.0.200/32
 newgrp microk8s
-```
-
-Now, update the MicroK8s DNS to point to our DNS server:
-
-```console
 sudo microk8s disable dns
 sudo microk8s enable dns:10.201.0.1
 ```
@@ -371,7 +340,7 @@ Deploy [SR-IOV Network Device Plugin]:
 kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin/v3.6.2/deployments/sriovdp-daemonset.yaml
 ```
 
-#### Checkpoint 6: Check the allocatable resources in the Kubernetes node
+#### Checkpoint 4: Check the allocatable resources in the Kubernetes node
 
 Make sure that there are 2 `1Gi HugePages`, 1 `intel_sriov_vfio_access` and 1 `intel_sriov_vfio_core` are available by running the following command:
 
@@ -412,8 +381,7 @@ sudo microk8s.config > /tmp/user-plane-cluster.yaml
 scp /tmp/user-plane-cluster.yaml juju-controller.mgmt:
 ```
 
-Log out of the VM and go back to the Mastering tutorial, continuing at the [Prepare gNB Simulator VM](mastering.md/#prepare-gnb-simulator-vm).
-When you reach step 5 (`Deploy SD-Core User Plane`), come back here instead.
+Log out of the VM.
 
 ### Prepare the gNB Simulator VM
 
@@ -756,7 +724,7 @@ juju status --watch 1s --relations
 The deployment is ready when the UPF application is in the `Active/Idle` state.
 It is normal for `grafana-agent` to remain in waiting state.
 
-### Checkpoint 7: Is UPF running in DPDK mode ?
+### Checkpoint 5: Validate that the UPF is running in DPDK mode
 
 Verify that DPDK BESSD is configured in DPDK mode by using the Juju debug log:
 
@@ -1052,7 +1020,7 @@ Apply the changes:
 terraform apply -auto-approve
 ```
 
-## Checkpoint 4: Is Grafana dashboard available?
+## Checkpoint 4: Validate that the Grafana dashboard available
 
 From the `juju-controller` VM, retrieve the Grafana URL and admin password:
 
