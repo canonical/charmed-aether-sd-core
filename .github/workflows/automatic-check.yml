@@ -1,8 +1,12 @@
 name: Automatic documentation checks
 
 on:
-  - push
-  - pull_request
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
