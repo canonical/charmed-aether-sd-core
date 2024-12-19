@@ -206,14 +206,17 @@ Enable the `vfio-pci` driver:
 ```console
 cat << EOF | sudo sudo tee -a /etc/rc.local
 #!/bin/bash
-sudo echo "vfio-pci" > /etc/modules-load.d/vfio-pci.conf
-sudo modprobe vfio-pci
 sudo echo "options vfio enable_unsafe_noiommu_mode=1" > /etc/modprobe.d/vfio-noiommu.conf
 sudo echo "Y" > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode
 sudo modprobe vfio enable_unsafe_noiommu_mode=1
 EOF
 sudo chmod +x /etc/rc.local
 sudo /etc/rc.local
+```
+
+
+```{note}
+After running the above command, you will not see the interfaces `enp6s0` and `enp7s0` in the `ip link` output.
 ```
 
 #### Bind `access` and `core` interfaces to VFIO driver
@@ -349,7 +352,7 @@ sudo snap install jq
 kubectl get node -o json | jq '.items[].status.allocatable'
 ```
 
-You should see the following output:
+After a couple of seconds, you should see the following output:
 
 ```
 {
