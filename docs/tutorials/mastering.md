@@ -652,7 +652,7 @@ juju add-model user-plane user-plane-cluster
 
 Deploy `sdcore-user-plane-k8s` Terraform Module.
 In the directory named `terraform`, update the `main.tf` file.
-Please replace the `access-interface-mac-address` and `core-interface-mac-address` according your environment. They are advised to be noted in the `Checkpoint 4`.
+Please replace the `access-interface-mac-address` and `core-interface-mac-address` according your environment. You would have noted them at the `Checkpoint 4`.
 
 ```console
 cd terraform
