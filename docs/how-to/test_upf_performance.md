@@ -4,7 +4,7 @@ This guide covers how to test the performance of the UPF.
 
 ## Requirements
 
-You will need for this test a working deployment of Charmed Aether SD-Core by following the [Accelerated Networking Tutorial](../tutorials/accelerated_networking.md).
+You will need for this test a working deployment of Charmed Aether SD-Core by following the [Mastering Tutorial](../tutorials/mastering.md).
 
 You will also require a machine on the data network to run the `iperf3` server.
 
