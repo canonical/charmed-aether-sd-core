@@ -207,6 +207,6 @@ iperf Done.
 
 ### Summary
 
-The results above show the throughput of the connection between the UE and the host. In this case:
-- **Uplink**: 7.23 Mbits/sec
-- **Downlink**: 191 Mbits/sec
+The results above show the throughput of the connection between the UE and the host, going through the UPF. In this case, the results are:
+- **Uplink**: 7.23 Mbps/sec
+- **Downlink**: 191 Mbps/sec

@@ -34,6 +34,7 @@ CSR
 deployable
 DHCP
 DN
+Downlink
 DPDK
 dns
 dnsmasq
@@ -88,6 +89,7 @@ lxd
 LXD
 MACVLAN
 mbit
+Mbps
 MCC
 MetalLB
 mgmt
@@ -162,6 +164,7 @@ unsecure
 upf
 UPF
 UPFs
+Uplink
 vCPUs
 VFIO
 vfio
