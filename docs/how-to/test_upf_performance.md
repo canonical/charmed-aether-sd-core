@@ -173,10 +173,10 @@ iperf Done.
 
 ### Downlink
 
-On the `gnbsim` terminal, run the `iperf3` client:
+On the `gnbsim` terminal, run the `iperf3` client with the `-R` flag:
 
 ```console
-iperf3 -c <IP address of the host> --bind-dev uesimtun0
+iperf3 -c <IP address of the host> --bind-dev uesimtun0 -R
 ```
 
 You should see the throughput reported. For example:
