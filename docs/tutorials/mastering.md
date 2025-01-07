@@ -343,7 +343,7 @@ Create new folder called `terraform`:
 mkdir terraform
 ```
 
-Inside newly created `terraform` folder create a `terraform.tf` file:
+Inside newly created `terraform` folder create a `versions.tf` file:
 
 ```console
 cd terraform
@@ -435,7 +435,7 @@ We will need them shortly.
 If the IP for the AMF is not `10.201.0.52`, you will need to update the DNS entry. In the host,
 edit the `main.tf` file. Find the following line and set it to the right IP address, like so:
 
-`host-record=amf.mgmt,10.201.0.53`
+`host-record=amf.mgmt,10.201.0.52`
 
 Then, run the following command on the host:
 
@@ -1051,5 +1051,5 @@ terraform destroy -auto-approve
 
 ```{note}
 Terraform does not remove anything from the working directory.
-If needed, please clean up the `terraform` directory manually by removing everything except for the `main.tf` and `terraform.tf` files.
+If needed, please clean up the `terraform` directory manually by removing everything except for the `main.tf` and `versions.tf` files.
 ```
