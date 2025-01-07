@@ -435,7 +435,7 @@ We will need them shortly.
 If the IP for the AMF is not `10.201.0.52`, you will need to update the DNS entry. In the host,
 edit the `main.tf` file. Find the following line and set it to the right IP address, like so:
 
-`host-record=amf.mgmt,10.201.0.53`
+`host-record=amf.mgmt,10.201.0.52`
 
 Then, run the following command on the host:
 
