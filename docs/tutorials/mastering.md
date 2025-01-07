@@ -343,7 +343,7 @@ Create new folder called `terraform`:
 mkdir terraform
 ```
 
-Inside newly created `terraform` folder create a `terraform.tf` file:
+Inside newly created `terraform` folder create a `versions.tf` file:
 
 ```console
 cd terraform
@@ -1051,5 +1051,5 @@ terraform destroy -auto-approve
 
 ```{note}
 Terraform does not remove anything from the working directory.
-If needed, please clean up the `terraform` directory manually by removing everything except for the `main.tf` and `terraform.tf` files.
+If needed, please clean up the `terraform` directory manually by removing everything except for the `main.tf` and `versions.tf` files.
 ```
