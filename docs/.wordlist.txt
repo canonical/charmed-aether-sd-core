@@ -4,6 +4,7 @@ addons
 Aether
 AKS
 AMF
+api
 APIs
 allocatable
 AUSF
@@ -85,6 +86,7 @@ Kubernetes
 lifecycle
 LoadBalancer
 localhost
+loki
 lxd
 LXD
 MACVLAN
@@ -132,6 +134,7 @@ pdpe
 PDU
 PFCP
 Pre
+prometheus
 RAN
 resolv
 requirer
