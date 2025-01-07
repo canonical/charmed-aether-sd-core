@@ -84,7 +84,7 @@ On the host machine create a new directory called `terraform`:
 mkdir terraform
 ```
 
-Inside newly created `terraform` directory create a `terraform.tf` file:
+Inside newly created `terraform` directory create a `versions.tf` file:
 
 ```console
 cd terraform
@@ -455,8 +455,8 @@ terraform destroy -auto-approve
 
 ```{note}
 Terraform does not remove anything from the working directory. If needed, please clean up
-the `terraform` directory manually by removing everything except for the `core.tf`
-and `terraform.tf` files.
+the `terraform` directory manually by removing everything except for the `core.tf`, `ran.tf`
+and `versions.tf` files.
 ```
 
 Destroy the Juju controller and all its models:
