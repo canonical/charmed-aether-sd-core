@@ -32,6 +32,7 @@ coreDstMAC
 Corefile
 CPUs
 CSR
+DDR
 deployable
 DHCP
 DN
@@ -49,6 +50,7 @@ GCP
 Gi
 GiB
 GKE
+GL
 gnb
 gNB
 gNBs
@@ -135,6 +137,7 @@ PDU
 PFCP
 Pre
 prometheus
+Quectel
 RAN
 resolv
 requirer
@@ -144,6 +147,8 @@ Ryzen
 SCTP
 sdcore
 sdcore-k8s
+SFI
+SFP
 SMF
 sub-module
 subnet
@@ -161,6 +166,7 @@ UDM
 UDP
 UDR
 UE
+ueransim
 UERANSIM
 UERANSIM's
 unsecure
@@ -168,6 +174,7 @@ upf
 UPF
 UPFs
 Uplink
+USRP
 vCPUs
 VFIO
 vfio
