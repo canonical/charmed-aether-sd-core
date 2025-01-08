@@ -2,7 +2,9 @@
 
 These how-to guides cover key operations and processes in Charmed Aether SD-Core.
 
-## Day 1 operations
+## Day-1 operations
+
+Day-1 operations cover the deployment and integration of Charmed Aether SD-Core.
 
 ```{toctree}
 :maxdepth: 1
@@ -16,21 +18,15 @@ integrate_sdcore_with_observability
 test_upf_performance
 ```
 
-## Day 2 operations
+## Day-2 operations
+
+Day-2 operations cover the management and maintenance of Charmed Aether SD-Core over its lifecycle.
 
 ```{toctree}
 :maxdepth: 1
 
 backup_sdcore
 restore_sdcore
-```
-
-
-## Troubleshooting
-
-```{toctree}
-:maxdepth: 1
-
 troubleshoot_deployment_issues
 troubleshoot_user_plane_issues
 ```
