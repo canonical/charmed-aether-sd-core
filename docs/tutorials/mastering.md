@@ -432,10 +432,9 @@ Note both IPs - in this case `10.201.0.52` for the AMF and `10.201.0.53` for Tra
 We will need them shortly.
 
 ```{note}
-If the IP for the AMF is not `10.201.0.52`, you will need to update the DNS entry. In the host,
-edit the `main.tf` file. Find the following line and set it to the right IP address, like so:
+If the IP for the AMF is not `10.201.0.52`, you will need to update the DNS entry to match the actual external IP for the AMF. In the host, edit the `main.tf` file. Find the following line and set it to the correct IP address, like so:
 
-`host-record=amf.mgmt,10.201.0.52`
+`host-record=amf.mgmt,10.201.0.53`
 
 Then, run the following command on the host:
 
