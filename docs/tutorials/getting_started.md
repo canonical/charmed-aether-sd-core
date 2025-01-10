@@ -177,7 +177,7 @@ pcf                       1.5.2    active       1  sdcore-pcf-k8s            1.6
 router                             active       1  sdcore-router-k8s         1.6/edge       436  10.152.183.203  no       
 self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.219  no       
 smf                       1.6.2    active       1  sdcore-smf-k8s            1.6/edge       764  10.152.183.220  no       
-traefik                   2.11.0   waiting      1  traefik-k8s               latest/stable  218  10.152.183.27   no       Serving at 10.0.0.2
+traefik                   2.11.0   active       1  traefik-k8s               latest/stable  218  10.152.183.27   no       Serving at 10.0.0.2
 udm                       1.5.1    active       1  sdcore-udm-k8s            1.6/edge       625  10.152.183.228  no       
 udr                       1.6.1    active       1  sdcore-udr-k8s            1.6/edge       612  10.152.183.141  no       
 upf                       1.4.0    active       1  sdcore-upf-k8s            1.6/edge       678  10.152.183.229  no       
