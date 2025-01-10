@@ -562,7 +562,6 @@ juju status --watch 1s --relations
 
 The deployment is ready when all the charms are in the `Active/Idle` state.<br>
 It is normal for `grafana-agent` to remain in waiting state.<br>
-It is also expected that `traefik` goes to the error state (related Traefik [bug](https://github.com/canonical/traefik-k8s-operator/issues/361)).
 
 Once the deployment is ready, we will proceed to the configuration part.
 

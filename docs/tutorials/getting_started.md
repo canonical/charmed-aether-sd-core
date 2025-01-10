@@ -157,7 +157,6 @@ watch -n 1 -c juju status --color --relations
 
 The deployment is ready when all the charms are in the `Active/Idle` state.<br>
 It is normal for `grafana-agent` to remain in waiting state.<br>
-It is also expected that `traefik` goes to the error state (related Traefik [bug](https://github.com/canonical/traefik-k8s-operator/issues/361)).
 
 Example:
 
@@ -178,7 +177,7 @@ pcf                       1.5.2    active       1  sdcore-pcf-k8s            1.6
 router                             active       1  sdcore-router-k8s         1.6/edge       436  10.152.183.203  no       
 self-signed-certificates           active       1  self-signed-certificates  latest/stable  155  10.152.183.219  no       
 smf                       1.6.2    active       1  sdcore-smf-k8s            1.6/edge       764  10.152.183.220  no       
-traefik                   2.11.0   waiting      1  traefik-k8s               latest/stable  203  10.152.183.27   no       installing agent
+traefik                   2.11.0   active       1  traefik-k8s               latest/stable  218  10.152.183.27   no       Serving at 10.0.0.2
 udm                       1.5.1    active       1  sdcore-udm-k8s            1.6/edge       625  10.152.183.228  no       
 udr                       1.6.1    active       1  sdcore-udr-k8s            1.6/edge       612  10.152.183.141  no       
 upf                       1.4.0    active       1  sdcore-upf-k8s            1.6/edge       678  10.152.183.229  no       
@@ -195,7 +194,7 @@ pcf/0*                       active    idle   10.1.194.224
 router/0*                    active    idle   10.1.194.245         
 self-signed-certificates/0*  active    idle   10.1.194.225         
 smf/0*                       active    idle   10.1.194.255         
-traefik/0*                   error     idle   10.1.194.246         hook failed: "ingress-relation-created"
+traefik/0*                   active    idle   10.1.194.246         Serving at 10.0.0.2
 udm/0*                       active    idle   10.1.194.219         
 udr/0*                       active    idle   10.1.194.211         
 upf/0*                       active    idle   10.1.194.217         
@@ -208,23 +207,9 @@ upf    upf          sdcore-upf-k8s  678  0/0        fiveg_n3        fiveg_n3    
 
 ## 5. Configure the ingress
 
-Get the external IP address of Traefik's `traefik-lb` LoadBalancer service:
+Note Traefik's external IP address displayed in the output of `juju status` (in this tutorial the IP is `10.0.0.2`).
 
-```console
-microk8s.kubectl -n sdcore get svc | grep "traefik-lb"
-```
-
-The output should look similar to below:
-
-```console
-ubuntu@host:~/terraform$ microk8s.kubectl -n private5g get svc | grep "traefik-lb"
-traefik-lb                           LoadBalancer   10.152.183.142   10.0.0.4      80:32435/TCP,443:32483/TCP    11m
-```
-
-In this tutorial, the IP is `10.0.0.4`. Please note it, as we will need it in the next step.
-
-Configure Traefik to use an external hostname. To do that, edit `traefik_config`
-in the `core.tf` file:
+Configure Traefik to use an external hostname. To do that, edit `traefik_config` in the `core.tf` file:
 
 ```
 :caption: core.tf
@@ -233,7 +218,7 @@ module "sdcore" {
   (...)
   traefik_config = {
     routing_mode      = "subdomain"
-    external_hostname = "10.0.0.4.nip.io"
+    external_hostname = "10.0.0.2.nip.io"
   }
   (...)
 }
@@ -244,12 +229,6 @@ Apply new configuration:
 
 ```console
 terraform apply -auto-approve
-```
-
-Resolve Traefik error in Juju:
-
-```console
-juju resolve traefik/0
 ```
 
 ## 6. Deploy the gNodeB and a cellphone simulator
@@ -365,7 +344,7 @@ Retrieve the NMS address:
 juju run traefik/0 show-proxied-endpoints
 ```
 
-The output should be `https://sdcore-nms.10.0.0.4.nip.io/`. Navigate to this address in your
+The output should be `https://sdcore-nms.10.0.0.2.nip.io/`. Navigate to this address in your
 browser and use the `username` and `password` to login.
 
 In the Network Management System (NMS), create a network slice with the following attributes:
