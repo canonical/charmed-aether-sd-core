@@ -6,7 +6,7 @@ The UPF performance results presented here were tested on real hardware. The
 computer used had the following specifications:
 
 - CPU: Intel i5-1240P
-- RAM: 32 Gb DDR5
+- RAM: 32 GB DDR5
 - Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
 
 The software consisted of:
