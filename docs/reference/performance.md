@@ -20,7 +20,7 @@ The UPF was running in DPDK mode, with the network cards passed through SR-IOV.
 ### RAN Host Specifications
 
 - CPU: Intel i5-1240P
-- RAM: 16 Gb DDR5
+- RAM: 16 GB DDR5
 - Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
 
 The software consisted of:
