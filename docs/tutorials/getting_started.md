@@ -126,6 +126,12 @@ module "sdcore" {
   }
 }
 
+resource "juju_offer" "nms-fiveg-core-gnb" {
+  model            = juju_model.sdcore.name
+  application_name = module.sdcore.nms_app_name
+  endpoint         = module.sdcore.fiveg_core_gnb_endpoint
+}
+
 EOF
 ```
 
@@ -170,7 +176,7 @@ amf                       1.5.1    active       1  sdcore-amf-k8s            1.5
 ausf                      1.5.1    active       1  sdcore-ausf-k8s           1.5/stable     645  10.152.183.201  no
 grafana-agent             0.32.1   blocked      1  grafana-agent-k8s         latest/stable   45  10.152.183.80   no       logging-consumer: off, grafana-cloud-config: off
 mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.88   no
-nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/stable     741  10.152.183.20   no
+nms                       1.0.0    active       1  sdcore-nms-k8s            1.5/stable     819  10.152.183.20   no
 nrf                       1.5.2    active       1  sdcore-nrf-k8s            1.5/stable     720  10.152.183.158  no
 nssf                      1.5.1    active       1  sdcore-nssf-k8s           1.5/stable     597  10.152.183.247  no
 pcf                       1.5.2    active       1  sdcore-pcf-k8s            1.5/stable     650  10.152.183.92   no
@@ -199,9 +205,10 @@ udm/0*                       active    idle   10.1.213.203
 udr/0*                       active    idle   10.1.213.250
 upf/0*                       active    idle   10.1.213.200
 
-Offer  Application  Charm           Rev  Connected  Endpoint  Interface  Role
-amf    amf          sdcore-amf-k8s  834  0/0        fiveg-n2  fiveg_n2   provider
-upf    upf          sdcore-upf-k8s  685  0/0        fiveg_n3  fiveg_n3   provider
+Offer  Application  Charm           Rev  Connected  Endpoint        Interface       Role
+amf    amf          sdcore-amf-k8s  834  0/0        fiveg-n2        fiveg_n2        provider
+upf    upf          sdcore-upf-k8s  685  0/0        fiveg_n3        fiveg_n3        provider
+nms    nms          sdcore-nms-k8s  819  0/0        fiveg_core_gnb  fiveg_core_gnb  provider
 ```
 
 ## 5. Configure the ingress
@@ -247,12 +254,6 @@ module "gnbsim" {
   depends_on = [module.sdcore-router]
 }
 
-resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = juju_model.ran-simulator.name
-  application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
-}
-
 resource "juju_integration" "gnbsim-amf" {
   model = juju_model.ran-simulator.name
 
@@ -267,15 +268,15 @@ resource "juju_integration" "gnbsim-amf" {
 }
 
 resource "juju_integration" "gnbsim-nms" {
-  model = juju_model.sdcore.name
+  model = juju_model.ran-simulator.name
 
   application {
-    name     = module.sdcore.nms_app_name
-    endpoint = module.sdcore.fiveg_gnb_identity_endpoint
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_core_gnbf
   }
 
   application {
-    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
+    offer_url = juju_offer.nms-fiveg-core-gnb.url
   }
 }
 
@@ -318,9 +319,6 @@ gnbsim  1.5.0    active      1  sdcore-gnbsim-k8s  1.5/stable  612  10.152.183.2
 
 Unit       Workload  Agent  Address       Ports  Message
 gnbsim/0*  active    idle   10.1.194.238         
-
-Offer   Application  Charm              Rev  Connected  Endpoint            Interface           Role
-gnbsim  gnbsim       sdcore-gnbsim-k8s  612  1/1        fiveg_gnb_identity  fiveg_gnb_identity  provider
 ```
 
 ## 7. Configure the 5G core network through the Network Management System

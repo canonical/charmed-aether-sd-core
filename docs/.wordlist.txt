@@ -157,6 +157,7 @@ unsecure
 upf
 UPF
 UPFs
+URL
 vCPUs
 VFIO
 vfio

@@ -380,6 +380,12 @@ module "sdcore-control-plane" {
   }
 }
 
+resource "juju_offer" "nms-fiveg-core-gnb" {
+  model            = data.juju_model.control-plane.name
+  application_name = module.sdcore-control-plane.nms_app_name
+  endpoint         = module.sdcore-control-plane.fiveg_core_gnb_endpoint
+}
+
 EOF
 ```
 
@@ -640,12 +646,6 @@ resource "juju_integration" "gnbsim-amf" {
   }
 }
 
-resource "juju_offer" "gnbsim-fiveg-gnb-identity" {
-  model            = data.juju_model.gnbsim.name
-  application_name = module.gnbsim.app_name
-  endpoint         = module.gnbsim.provides.fiveg_gnb_identity
-}
-
 EOF
 ```
 
@@ -684,12 +684,12 @@ resource "juju_integration" "nms-gnbsim" {
   model = data.juju_model.control-plane.name
 
   application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
+    name     = module.gnbsim.app_name
+    endpoint = module.gnbsim.requires.fiveg_core_gnb
   }
 
   application {
-    offer_url = juju_offer.gnbsim-fiveg-gnb-identity.url
+    offer_url = juju_offer.nms-fiveg-core-gnb.url
   }
 }
 
