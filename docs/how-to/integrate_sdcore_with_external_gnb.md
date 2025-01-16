@@ -1,6 +1,6 @@
 # Integrate SD-Core with an Externally Managed Radio
 
-For simplicity in managing deployments, the gNB Name and TAC can be supplied via a charm integration. This is the purpose of the sdcore-gnb-integrator charm.
+For simplicity in managing deployments, the gNB Name can be supplied via a charm integration. This is the purpose of the sdcore-gnb-integrator charm.
 
 ## Pre-requisites
 
@@ -12,8 +12,8 @@ You need to have the following information ready:
 
 - A name for the gNB
 - The name of the juju model for the gNB integrator
-- The TAC (represented in hex) that the gNB is serving
 - The name of the control plane model
+- An offer URL from the core for the `fiveg_core_gnb` interface
 
 ## Deploying gNB Integrator
 
@@ -21,8 +21,8 @@ Given the following:
 
 - Model name: `gnb-integration`
 - GNB Name: `gnb01`
-- TAC: `B01F`
 - Control Plane Model: `control-plane`
+- Offer URL: `juju_offer.nms-fiveg-core-gnb.url`
 
 Either create a new `.tf` file, or add the following content to you existing `main.tf`.
 
@@ -32,27 +32,18 @@ module "gnb01" {
   source     = "git::https://github.com/canonical/sdcore-gnb-integrator//terraform?ref=v1.5"
   model_name = "gnb-integration"
   channel    = "1.5/stable"
-  config     = {
-    tac: B01F
-  }
-}
-
-resource "juju_offer" "gnb01-fiveg-gnb-identity" {
-  model            = "gnb-integration"
-  application_name = module.gnb01.app_name
-  endpoint         = module.gnb01.fiveg_gnb_identity_endpoint
 }
 
 resource "juju_integration" "nms-gnb01" {
   model = "control-plane"
 
   application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_gnb_identity_endpoint
+    name     = module.gnb01.app_name
+    endpoint = module.gnb01.requires.fiveg_core_gnb
   }
 
   application {
-    offer_url = juju_offer.gnb01-fiveg-gnb-identity.url
+    offer_url = juju_offer.nms-fiveg-core-gnb.url
   }
 }
 ```

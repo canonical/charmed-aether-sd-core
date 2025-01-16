@@ -22,3 +22,9 @@ module "sdcore" {
     routing_mode = "subdomain"
   }
 }
+
+resource "juju_offer" "nms-fiveg-core-gnb" {
+  model            = juju_model.sdcore.name
+  application_name = module.sdcore.nms_app_name
+  endpoint         = module.sdcore.fiveg_core_gnb_endpoint
+}
