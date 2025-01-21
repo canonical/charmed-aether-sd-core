@@ -11,4 +11,5 @@ networking
 public_clouds
 user_management
 release_notes/index
+performance
 ```
