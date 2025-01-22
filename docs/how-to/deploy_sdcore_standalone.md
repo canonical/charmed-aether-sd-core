@@ -16,12 +16,12 @@ You will need a Kubernetes cluster installed and configured with Multus.
 ## Deploy
 
 Get Charmed Aether SD-Core Terraform modules by cloning the [Charmed Aether SD-Core Terraform modules][Charmed Aether SD-Core Terraform modules] Git repository.
-Inside the `modules/sdcore-k8s` directory, create a `terraform.tfvars` file to set the name of Juju model for the deployment:
+Inside the `modules/sdcore-k8s` directory, create a `variables.tfvars` file to set the name of Juju model for the deployment:
 
 ```console
 git clone https://github.com/canonical/terraform-juju-sdcore.git
 cd terraform-juju-sdcore/modules/sdcore-k8s
-cat << EOF > terraform.tfvars
+cat << EOF > variables.tfvars
 model = "<YOUR_JUJU_MODEL_NAME>"
 EOF
 ```
@@ -35,7 +35,7 @@ terraform init
 Deploy 5G network.
 
 ```console
-terraform apply -var-file="terraform.tfvars" -auto-approve
+terraform apply -var-file="variables.tfvars" -auto-approve
 ```
 
 The deployment process should take approximately 15-20 minutes.
@@ -59,7 +59,7 @@ To view all the available configuration options, please inspect the `variables.t
 To be effective, every configuration change needs to be applied using the following command:
 
 ```console
-terraform apply -var-file="terraform.tfvars" -auto-approve
+terraform apply -var-file="variables.tfvars" -auto-approve
 ```
 
 [Charmed Aether SD-Core Terraform modules]: https://github.com/canonical/terraform-juju-sdcore
