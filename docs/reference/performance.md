@@ -2,31 +2,34 @@
 
 ## UPF throughput
 
-### Test setup
+### Results
 
-The UPF performance results presented here were tested on real hardware. The
-computer used had the following specifications:
+| UE Type               | UPF Mode  | Downlink  | Uplink    |
+| --------------------- | --------- | --------- | --------- |
+| UERANSIM              | DPDK      | 962 Mbps  | 957 Mbps  |
+| OAI UE (Over the air) | DPDK      | 79.8 Mbps | 12.5 Mbps |
+| UERANSIM              | AF_PACKET | 6.146     | 268.2     |
 
-- CPU: Intel i5-1240P
-- RAM: 32 GB DDR5
-- Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
+### Methodology
 
-The software consisted of:
+Tests were performed using `iperf3` to measure the throughput between the
+UE and an iPerf3 server going through the UPF.
 
+The tests results were obtained by running each test 5 times and averaging the
+results.
+
+#### Environment
+
+#### UPF Host
+
+Software:
 - OS: Ubuntu 24.04
 - Kubernetes: microk8s 1.31.3
 - sdcore-upf-k8s: 1.5/stable; revision 691
 
-The UPF was running in DPDK mode, with the network cards passed through SR-IOV.
+#### RAN Host
 
-#### RAN Host Specifications
-
-- CPU: Intel i5-1240P
-- RAM: 16 GB DDR5
-- Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
-
-The software consisted of:
-
+Software:
 - OS: Ubuntu 24.04
 - Kubernetes: microk8s 1.31.3
 
@@ -46,18 +49,3 @@ with a bandwidth of 40 MHz. The radio unit used was a USRP B210 and the UE modul
 was a Quectel RM520N-GL over USB.
 
 This test is limited by the radio link configuration.
-
-### Results
-
-The tests results were obtained by running each test 5 times and averaging the
-results.
-
-#### UERANSIM simulator
-
-- Uplink: 957 Mbps
-- Downlink: 962 Mbps
-
-#### Over the air with OpenAirInterface
-
-- Uplink: 12.5 Mbps
-- Downlink: 79.8 Mbps

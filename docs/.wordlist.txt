@@ -78,6 +78,7 @@ integrations
 integrator
 IOMMU
 IOV
+iPerf
 jq
 juju
 Juju
