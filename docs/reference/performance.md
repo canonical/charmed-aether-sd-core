@@ -8,7 +8,7 @@
 | --------------------- | --------- | --------- | --------- |
 | UERANSIM              | DPDK      | 962 Mbps  | 957 Mbps  |
 | OAI UE (Over the air) | DPDK      | 79.8 Mbps | 12.5 Mbps |
-| UERANSIM              | AF_PACKET | 6.146     | 268.2     |
+| UERANSIM              | AF_PACKET | 39.1 Mbps | 932 Mbps  |
 
 ### Methodology
 
