@@ -8,8 +8,10 @@
 | --------------------- | --------- | -------- | ---------  | ---------  |
 | UERANSIM              | DPDK      | vfioveth | 962 Mbps   | 957 Mbps   |
 | UERANSIM              | AF_PACKET | bridge   | 7.8 Mbps   | 823.8 Mbps |
+| UERANSIM              | AF_PACKET | macvlan  | 8.27 Mbps  | 958 Mbps   |
 | OAI UE (Over the air) | DPDK      | vfioveth | 79.8 Mbps  | 12.5 Mbps  |
 | OAI UE (Over the air) | AF_PACKET | bridge   | 0.741 Mbps | 11.7 Mbps  |
+| OAI UE (Over the air) | AF_PACKET | macvlan  | 0.748 Mbps | 12.8 Mbps  |
 
 ### Methodology
 
