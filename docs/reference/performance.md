@@ -2,31 +2,49 @@
 
 ## UPF throughput
 
-### Test setup
+### Results
 
-The UPF performance results presented here were tested on real hardware. The
-computer used had the following specifications:
+| UE Type               | UPF Mode  | CNI Type    | Downlink   | Uplink     |
+| --------------------- | --------- | --------    | ---------  | ---------  |
+| UERANSIM              | DPDK      | vfioveth    | 962 Mbps   | 957 Mbps   |
+| UERANSIM              | AF_PACKET | bridge      | 7.8 Mbps   | 823.8 Mbps |
+| UERANSIM              | AF_PACKET | MACVLAN     | 8.27 Mbps  | 958 Mbps   |
+| UERANSIM              | AF_PACKET | host-device | 8 Mbps     | 957.2 Mbps |
+| Quectel RM520N-GL     | DPDK      | vfioveth    | 79.8 Mbps  | 12.5 Mbps  |
+| Quectel RM520N-GL     | AF_PACKET | bridge      | 0.741 Mbps | 11.7 Mbps  |
+| Quectel RM520N-GL     | AF_PACKET | MACVLAN     | 0.748 Mbps | 12.8 Mbps  |
+| Quectel RM520N-GL     | AF_PACKET | host-device | 0.739 Mbps | 12.46 Mbps |
 
+### Methodology
+
+Tests were performed using `iperf3` to measure the throughput between the
+UE and an iPerf3 server going through the UPF.
+
+The tests results were obtained by running each test 5 times and averaging the
+results.
+
+#### Environment
+
+#### UPF Host
+
+Hardware:
 - CPU: Intel i5-1240P
 - RAM: 32 GB DDR5
 - Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
 
-The software consisted of:
-
+Software:
 - OS: Ubuntu 24.04
 - Kubernetes: microk8s 1.31.3
 - sdcore-upf-k8s: 1.5/stable; revision 691
 
-The UPF was running in DPDK mode, with the network cards passed through SR-IOV.
+#### RAN Host
 
-#### RAN Host Specifications
-
+Hardware:
 - CPU: Intel i5-1240P
 - RAM: 16 GB DDR5
 - Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
 
-The software consisted of:
-
+Software:
 - OS: Ubuntu 24.04
 - Kubernetes: microk8s 1.31.3
 
@@ -46,18 +64,3 @@ with a bandwidth of 40 MHz. The radio unit used was a USRP B210 and the UE modul
 was a Quectel RM520N-GL over USB.
 
 This test is limited by the radio link configuration.
-
-### Results
-
-The tests results were obtained by running each test 5 times and averaging the
-results.
-
-#### UERANSIM simulator
-
-- Uplink: 957 Mbps
-- Downlink: 962 Mbps
-
-#### Over the air with OpenAirInterface
-
-- Uplink: 12.5 Mbps
-- Downlink: 79.8 Mbps
