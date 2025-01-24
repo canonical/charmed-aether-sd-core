@@ -27,12 +27,22 @@ results.
 
 #### UPF Host
 
+Hardware:
+- CPU: Intel i5-1240P
+- RAM: 32 GB DDR5
+- Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
+
 Software:
 - OS: Ubuntu 24.04
 - Kubernetes: microk8s 1.31.3
 - sdcore-upf-k8s: 1.5/stable; revision 691
 
 #### RAN Host
+
+Hardware:
+- CPU: Intel i5-1240P
+- RAM: 16 GB DDR5
+- Network cards: Intel 82599ES 10-Gigabit SFI/SFP+
 
 Software:
 - OS: Ubuntu 24.04
