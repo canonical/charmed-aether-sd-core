@@ -8,11 +8,11 @@
 | --------------------- | --------- | --------    | ---------  | ---------  |
 | UERANSIM              | DPDK      | vfioveth    | 962 Mbps   | 957 Mbps   |
 | UERANSIM              | AF_PACKET | bridge      | 7.8 Mbps   | 823.8 Mbps |
-| UERANSIM              | AF_PACKET | macvlan     | 8.27 Mbps  | 958 Mbps   |
+| UERANSIM              | AF_PACKET | MACVLAN     | 8.27 Mbps  | 958 Mbps   |
 | UERANSIM              | AF_PACKET | host-device | 8 Mbps     | 957.2 Mbps |
 | Quectel RM520N-GL     | DPDK      | vfioveth    | 79.8 Mbps  | 12.5 Mbps  |
 | Quectel RM520N-GL     | AF_PACKET | bridge      | 0.741 Mbps | 11.7 Mbps  |
-| Quectel RM520N-GL     | AF_PACKET | macvlan     | 0.748 Mbps | 12.8 Mbps  |
+| Quectel RM520N-GL     | AF_PACKET | MACVLAN     | 0.748 Mbps | 12.8 Mbps  |
 | Quectel RM520N-GL     | AF_PACKET | host-device | 0.739 Mbps | 12.46 Mbps |
 
 ### Methodology
