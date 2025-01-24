@@ -4,11 +4,12 @@
 
 ### Results
 
-| UE Type               | UPF Mode  | Downlink  | Uplink    |
-| --------------------- | --------- | --------- | --------- |
-| UERANSIM              | DPDK      | 962 Mbps  | 957 Mbps  |
-| OAI UE (Over the air) | DPDK      | 79.8 Mbps | 12.5 Mbps |
-| UERANSIM              | AF_PACKET | 39.1 Mbps | 932 Mbps  |
+| UE Type               | UPF Mode  | CNI Type | Downlink   | Uplink     |
+| --------------------- | --------- | -------- | ---------  | ---------  |
+| UERANSIM              | DPDK      | vfioveth | 962 Mbps   | 957 Mbps   |
+| UERANSIM              | AF_PACKET | bridge   | 7.8 Mbps   | 823.8 Mbps |
+| OAI UE (Over the air) | DPDK      | vfioveth | 79.8 Mbps  | 12.5 Mbps  |
+| OAI UE (Over the air) | AF_PACKET | bridge   | 0.741 Mbps | 11.7 Mbps  |
 
 ### Methodology
 
