@@ -272,7 +272,7 @@ resource "juju_integration" "gnbsim-nms" {
 
   application {
     name     = module.gnbsim.app_name
-    endpoint = module.gnbsim.requires.fiveg_core_gnbf
+    endpoint = module.gnbsim.requires.fiveg_core_gnb
   }
 
   application {
