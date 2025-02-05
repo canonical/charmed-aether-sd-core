@@ -17,4 +17,4 @@ We run performance tests to assess the throughput of the solution under differen
 
 ## A note on workload testing
 
-Charmed Aether SD-Core is a charmed distribution of Aether SD-Core. The focus of the testing is therefore on the charms themselves - and not on the workload. If you are interested in learning more about how the underlying 5G core is tested (ex. 3GPP procedures), please refer to the upstream project.Charmed Aether SD-Core is a charmed distribution of Aether SD-Core. Therefore, the testing focuses on the charms themselves - and not on the workload. If you want to learn more about how the underlying 5G core is tested (ex., 3GPP procedures), please refer to the upstream project.
+Charmed Aether SD-Core is a charmed distribution of Aether SD-Core. Therefore, the testing focuses on the charms themselves - and not on their underlying workloads (ex. 5G network functions). If you want to learn more about how the underlying 5G core is tested (ex., 3GPP procedures), please refer to the upstream project.
