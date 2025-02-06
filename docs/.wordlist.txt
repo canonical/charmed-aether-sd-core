@@ -34,6 +34,7 @@ CPUs
 CSR
 DDR
 deployable
+deregister
 DHCP
 DN
 Downlink
