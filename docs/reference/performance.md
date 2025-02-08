@@ -1,21 +1,29 @@
 # Performance
 
-## UPF throughput
+## Results
 
-### Results
+### UPF throughput
 
-| UE Type               | UPF Mode  | CNI Type    | Downlink   | Uplink     |
-| --------------------- | --------- | --------    | ---------  | ---------  |
-| UERANSIM              | DPDK      | vfioveth    | 962 Mbps   | 957 Mbps   |
-| UERANSIM              | AF_PACKET | bridge      | 7.8 Mbps   | 823.8 Mbps |
-| UERANSIM              | AF_PACKET | MACVLAN     | 8.27 Mbps  | 958 Mbps   |
-| UERANSIM              | AF_PACKET | host-device | 8 Mbps     | 957.2 Mbps |
-| Quectel RM520N-GL     | DPDK      | vfioveth    | 79.8 Mbps  | 12.5 Mbps  |
-| Quectel RM520N-GL     | AF_PACKET | bridge      | 0.741 Mbps | 11.7 Mbps  |
-| Quectel RM520N-GL     | AF_PACKET | MACVLAN     | 0.748 Mbps | 12.8 Mbps  |
-| Quectel RM520N-GL     | AF_PACKET | host-device | 0.739 Mbps | 12.46 Mbps |
+| UE Type           | UPF Mode  | CNI Type    | Downlink   | Uplink     |
+| ----------------- | --------- | ----------- | ---------- | ---------- |
+| UERANSIM          | DPDK      | vfioveth    | 962 Mbps   | 957 Mbps   |
+| UERANSIM          | AF_PACKET | bridge      | 7.8 Mbps   | 823.8 Mbps |
+| UERANSIM          | AF_PACKET | MACVLAN     | 8.27 Mbps  | 958 Mbps   |
+| UERANSIM          | AF_PACKET | host-device | 8 Mbps     | 957.2 Mbps |
+| Quectel RM520N-GL | DPDK      | vfioveth    | 79.8 Mbps  | 12.5 Mbps  |
+| Quectel RM520N-GL | AF_PACKET | bridge      | 0.741 Mbps | 11.7 Mbps  |
+| Quectel RM520N-GL | AF_PACKET | MACVLAN     | 0.748 Mbps | 12.8 Mbps  |
+| Quectel RM520N-GL | AF_PACKET | host-device | 0.739 Mbps | 12.46 Mbps |
 
-### Methodology
+### Subscribers
+
+Charmed Aether SD-Core can stand up **500 concurrent PDU sessions**, the maximum UERANSIM supports.
+
+Further testing would be needed to determine the maximum number of PDU sessions that can be supported by the Core.
+
+## Methodology
+
+### UPF throughput
 
 Tests were performed using `iperf3` to measure the throughput between the
 UE and an iPerf3 server going through the UPF.
@@ -64,3 +72,10 @@ with a bandwidth of 40 MHz. The radio unit used was a USRP B210 and the UE modul
 was a Quectel RM520N-GL over USB.
 
 This test is limited by the radio link configuration.
+
+### Subscribers
+
+The PDU sessions were tested using the UERANSIM simulator on the RAN host.
+
+We used the `--num-of-UE` flag to specify the number of UEs to simulate. We tested
+the maximum number of UEs that UERANSIM supports, which is 500.
