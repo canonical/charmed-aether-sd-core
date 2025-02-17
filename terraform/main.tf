@@ -124,25 +124,21 @@ resource "lxd_instance" "control-plane" {
       trigger       = "once"
       fail_on_error = true
     }
-    "03-microk8s-enable-hostpath-storeage" = {
+    "03-microk8s-enable-hostpath-storage" = {
       command       = ["microk8s", "enable", "hostpath-storage"]
       trigger       = "once"
-      fail_on_error = true
     }
     "04-microk8s-enable-metallb" = {
       command       = ["microk8s", "enable", "metallb:10.201.0.52-10.201.0.53"]
       trigger       = "once"
-      fail_on_error = true
     }
     "05-microk8s-disable-default-dns" = {
       command       = ["microk8s", "disable", "dns"]
       trigger       = "once"
-      fail_on_error = true
     }
     "06-microk8s-enable-custom-dns" = {
       command       = ["microk8s", "enable", "dns:10.201.0.1"]
       trigger       = "once"
-      fail_on_error = true
     }
     "07-add-ubuntu-user-to-snap_microk8s-group" = {
       command       = ["usermod", "-a", "-G", "snap_microk8s", "ubuntu"]
@@ -326,42 +322,34 @@ resource "lxd_instance" "user-plane" {
     "11-microk8s-enable-hostpath-storage" = {
       command       = ["microk8s", "enable", "hostpath-storage"]
       trigger       = "once"
-      fail_on_error = true
     }
     "12-microk8s-enable-multus" = {
       command       = ["microk8s", "enable", "multus"]
       trigger       = "once"
-      fail_on_error = true
     }
     "13-microk8s-enable-sriov-device-plugin" = {
       command       = ["microk8s", "enable", "sriov-device-plugin", "-r", "/root/sriov_resources.json"]
       trigger       = "once"
-      fail_on_error = true
     }
     "14-copy-vfioveth-cni-binary" = {
       command       = ["wget", "-O", "/opt/cni/bin/vfioveth", "https://raw.githubusercontent.com/opencord/omec-cni/master/vfioveth"]
       trigger       = "once"
-      fail_on_error = true
     }
     "15-chmod-vfioveth-cni-binary" = {
       command       = ["chmod", "+x", "/opt/cni/bin/vfioveth"]
       trigger       = "once"
-      fail_on_error = true
     }
     "16-microk8s-enable-metallb" = {
       command       = ["microk8s", "enable", "metallb:10.201.0.200/32"]
       trigger       = "once"
-      fail_on_error = true
     }
     "17-microk8s-disable-default-dns" = {
       command       = ["microk8s", "disable", "dns"]
       trigger       = "once"
-      fail_on_error = true
     }
     "18-microk8s-enable-custom-dns" = {
       command       = ["microk8s", "enable", "dns:10.201.0.1"]
       trigger       = "once"
-      fail_on_error = true
     }
     "19-add-ubuntu-user-to-snap_microk8s-group" = {
       command       = ["usermod", "-a", "-G", "microk8s", "ubuntu"]
