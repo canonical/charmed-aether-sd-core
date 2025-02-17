@@ -101,336 +101,7 @@ The output should be similar to the following:
 +-----------------+---------+-----------------------+------+-----------------+-----------+
 ```
 
-## 3. Configure VMs for SD-Core Deployment
-
-This section covers installation of necessary tools on the VMs which are going to build up the infrastructure for SD-Core.
-
-### Prepare the SD-Core Control Plane VM
-
-Login to the `control-plane` VM:
-
-```console
-lxc exec control-plane -- su --login ubuntu
-```
-
-Install MicroK8s with the necessary plugins:
-
-```console
-sudo snap install microk8s --channel=1.31-strict/stable
-sudo microk8s enable hostpath-storage
-sudo usermod -a -G snap_microk8s $(whoami)
-sudo microk8s enable metallb:10.201.0.52-10.201.0.53
-sudo microk8s disable dns
-sudo microk8s enable dns:10.201.0.1
-```
-
-Export the Kubernetes configuration and copy it to the `juju-controller` VM:
-
-```console
-sudo microk8s.config > /tmp/control-plane-cluster.yaml
-scp /tmp/control-plane-cluster.yaml juju-controller.mgmt.local:
-```
-
-Log out of the VM.
-
-### Prepare the SD-Core User Plane VM
-
-Log in to the `user-plane` VM:
-
-```console
-lxc exec user-plane -- su --login ubuntu
-```
-
-#### Enable HugePages
-
-Update Grub to enable 2 units of 1Gi HugePages in the User Plane VM. Then, the VM is gracefully rebooted to activate the settings.
-
-```console
-sudo sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX='default_hugepagesz=1G hugepages=2'/" /etc/default/grub
-sudo update-grub
-sudo reboot
-```
-
-Log in to the `user-plane` VM again:
-
-```console
-lxc exec user-plane -- su --login ubuntu
-```
-
-##### Checkpoint 2: Are HugePages enabled ?
-
-You should be able to see the 2 units of Free HugePages with 1048576 kB size by executing the following command:
-
-```console
-cat /proc/meminfo | grep Huge
-```
-
-The output should be similar to the following:
-
-```console
-AnonHugePages:         0 kB
-ShmemHugePages:        0 kB
-FileHugePages:         0 kB
-HugePages_Total:       2
-HugePages_Free:        2
-HugePages_Rsvd:        0
-HugePages_Surp:        0
-Hugepagesize:    1048576 kB
-Hugetlb:         2097152 kB
-```
-
-#### Take note of access and core interfaces MAC addresses
-
-List the network interfaces to take note of the MAC addresses of the `enp6s0` and `enp7s0` interfaces.
-In this example, the `core` interface named `enp6s0` has the MAC address `00:16:3e:87:67:eb` and the `access` interface named `enp7s0` has the MAC address `00:16:3e:31:d7:e0`.
-
-```console
-ip link
-```
-
-```console
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: enp5s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
-    link/ether 00:16:3e:52:85:ef brd ff:ff:ff:ff:ff:ff
-3: enp6s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
-    link/ether 00:16:3e:87:67:eb brd ff:ff:ff:ff:ff:ff
-4: enp7s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
-    link/ether 00:16:3e:31:d7:e0 brd ff:ff:ff:ff:ff:ff
-```
-
-#### Load the `vfio-pci` driver in the User Plane VM
-
-Enable the `vfio-pci` driver:
-
-```console
-cat << EOF | sudo sudo tee -a /etc/rc.local
-#!/bin/bash
-sudo echo "options vfio enable_unsafe_noiommu_mode=1" > /etc/modprobe.d/vfio-noiommu.conf
-sudo echo "Y" > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode
-sudo modprobe vfio enable_unsafe_noiommu_mode=1
-EOF
-sudo chmod +x /etc/rc.local
-sudo /etc/rc.local
-```
-
-
-```{note}
-After running the above command, you will not see the interfaces `enp6s0` and `enp7s0` in the `ip link` output.
-```
-
-#### Bind `access` and `core` interfaces to VFIO driver
-
-Get the PCI addresses of the access and core interfaces.
-
-```console
-sudo lshw -c network -businfo
-```
-
-```console
-Bus info          Device      Class          Description
-========================================================
-pci@0000:05:00.0              network        Virtio network device
-virtio@10         enp5s0      network        Ethernet interface
-pci@0000:06:00.0              network        Virtio network device
-virtio@11         enp6s0      network        Ethernet interface  # In this example `core` with PCI address `0000:06:00.0` 
-pci@0000:07:00.0              network        Virtio network device
-virtio@13         enp7s0      network        Ethernet interface # In this example `access` with PCI address `0000:07:00.0` 
-```
-
-Install driverctl:
-
-```console
-sudo apt update
-sudo apt install -y driverctl
-```
-
-Bind `access` and `core` interfaces to `vfio-pci` driver persistently:
-
-```console
-cat << EOF | sudo tee -a /etc/rc.local
-#!/bin/bash
-sudo driverctl set-override 0000:07:00.0 vfio-pci
-sudo driverctl set-override 0000:06:00.0 vfio-pci
-EOF
-sudo chmod +x /etc/rc.local
-sudo /etc/rc.local
-```
-
-##### Checkpoint 3: Validate that the VFIO-PCI driver is loaded
-
-Check the current driver of interfaces by running the following command:
-
-```console
-sudo driverctl -v list-devices | grep -i net
-```
-
-You should see the following output:
-
-```
-0000:05:00.0 virtio-pci (Virtio network device)
-0000:06:00.0 vfio-pci [*] (Virtio network device)
-0000:07:00.0 vfio-pci [*] (Virtio network device)
-```
-
-Verify that two VFIO devices are created with a form of `noiommu-{a number}` by running the following command:
-
-```console
-ls -l /dev/vfio/
-```
-
-You should see a similar output:
-
-```
-crw------- 1 root root 242,   0 Aug 17 22:15 noiommu-0
-crw------- 1 root root 242,   1 Aug 17 22:16 noiommu-1
-crw-rw-rw- 1 root root  10, 196 Aug 17 21:51 vfio
-```
-
-#### Install Kubernetes Cluster
-
-Install MicroK8s with the necessary plugins:
-
-```console
-sudo snap install microk8s --channel=1.31/stable --classic
-sudo microk8s enable hostpath-storage
-sudo microk8s addons repo add community https://github.com/canonical/microk8s-community-addons --reference feat/strict-fix-multus
-sudo microk8s enable multus
-sudo usermod -a -G microk8s $(whoami)
-sudo snap alias microk8s.kubectl kubectl
-sudo microk8s enable metallb:10.201.0.200/32
-sudo microk8s disable dns
-sudo microk8s enable dns:10.201.0.1
-newgrp microk8s
-```
-
-#### Configure Kubernetes for DPDK
-
-Create [SR-IOV Network Device Plugin] ConfigMap by replacing the `pciAddresses` with the PCI addresses of `access` and `core` interfaces:
-
-```console
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: sriovdp-config
-  namespace: kube-system
-data:
-  config.json: |
-    {
-      "resourceList": [
-        {
-          "resourceName": "intel_sriov_vfio_access",
-          "selectors": {
-            "pciAddresses": ["0000:07:00.0"]
-          }
-        },
-        {
-          "resourceName": "intel_sriov_vfio_core",
-          "selectors": {
-            "pciAddresses": ["0000:06:00.0"]
-          }
-        }
-      ]
-    }
-
-EOF
-```
-
-Deploy [SR-IOV Network Device Plugin]:
-
-```console
-kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin/v3.6.2/deployments/sriovdp-daemonset.yaml
-```
-
-##### Checkpoint 4: Check the allocatable resources in the Kubernetes node
-
-Make sure that there are 2 `1Gi HugePages`, 1 `intel_sriov_vfio_access` and 1 `intel_sriov_vfio_core` are available by running the following command:
-
-```console
-sudo snap install jq
-kubectl get node -o json | jq '.items[].status.allocatable'
-```
-
-After a couple of seconds, you should see the following output:
-
-```
-{
-  "cpu": "4",
-  "ephemeral-storage": "19086016Ki",
-  "hugepages-1Gi": "2Gi",
-  "hugepages-2Mi": "0",
-  "intel.com/intel_sriov_vfio_access": "1",
-  "intel.com/intel_sriov_vfio_core": "1",
-  "memory": "14160716Ki",
-  "pods": "110"
-}
-```
-
-#### Copy vfioveth CNI under /opt/cni/bin on the VM
-
-Copy the `vfioveth` CNI under `/opt/cni/bin`:
-
-```console
-sudo mkdir -p /opt/cni/bin
-sudo wget -O /opt/cni/bin/vfioveth https://raw.githubusercontent.com/opencord/omec-cni/master/vfioveth
-sudo chmod +x /opt/cni/bin/vfioveth
-```
-
-Export the Kubernetes configuration and copy it to the `juju-controller` VM:
-
-```console
-sudo microk8s.config > /tmp/user-plane-cluster.yaml
-scp /tmp/user-plane-cluster.yaml juju-controller.mgmt.local:
-```
-
-Log out of the VM.
-
-### Prepare the gNB Simulator VM
-
-Log in to the `gnbsim` VM:
-
-```console
-lxc exec gnbsim -- su --login ubuntu
-```
-
-Install MicroK8s and add the Multus plugin:
-
-```console
-sudo snap install microk8s --channel=1.31-strict/stable
-sudo microk8s enable hostpath-storage
-sudo microk8s addons repo add community \
-    https://github.com/canonical/microk8s-community-addons \
-    --reference feat/strict-fix-multus
-sudo microk8s enable multus
-sudo microk8s disable dns
-sudo microk8s enable dns:10.201.0.1
-sudo usermod -a -G snap_microk8s $(whoami)
-```
-
-Export the Kubernetes configuration and copy it to the `juju-controller` VM:
-
-```console
-sudo microk8s.config > /tmp/gnb-cluster.yaml
-scp /tmp/gnb-cluster.yaml juju-controller.mgmt.local:
-```
-
-Create the MACVLAN bridges for `enp6s0`, and label them accordingly:
-
-```console
-cat << EOF | sudo tee /etc/rc.local
-#!/bin/bash
-
-sudo ip link add ran link enp6s0 type macvlan mode bridge
-sudo ip link set dev ran up
-EOF
-sudo chmod +x /etc/rc.local
-sudo /etc/rc.local
-```
-
-Log out of the VM.
-
-### Prepare the Juju Controller VM
+## 3. Prepare the Juju Controller VM
 
 Log in to the `juju-controller` VM:
 
@@ -438,25 +109,10 @@ Log in to the `juju-controller` VM:
 lxc exec juju-controller -- su --login ubuntu
 ```
 
-Begin by installing MicroK8s to hold the Juju controller.
-Configure MetalLB to expose one IP address for the controller (`10.201.0.50`) and one for the Canonical Observability Stack (`10.201.0.51)`:
-
-```console
-sudo snap install microk8s --channel=1.31-strict/stable
-sudo microk8s enable hostpath-storage
-sudo microk8s enable metallb:10.201.0.50-10.201.0.51
-sudo microk8s disable dns
-sudo microk8s enable dns:10.201.0.1
-sudo usermod -a -G snap_microk8s $(whoami)
-newgrp snap_microk8s
-```
-
-Install Juju and bootstrap the controller to the local MicroK8s install as a LoadBalancer service.
+Bootstrap the controller to the local MicroK8s install as a LoadBalancer service.
 This will expose the Juju controller on the first allocated MetalLB address:
 
 ```console
-mkdir -p ~/.local/share/juju
-sudo snap install juju --channel=3.6/stable
 juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore
 ```
 
@@ -465,12 +121,11 @@ Add the Kubernetes clusters representing the user plane, control plane, and gNB 
 This is done by using the Kubernetes configuration file generated when setting up the clusters above.
 
 ```console
-cd /home/ubuntu
-export KUBECONFIG=control-plane-cluster.yaml
+export KUBECONFIG=/home/ubuntu/control-plane-cluster.yaml
 juju add-k8s control-plane-cluster --controller sdcore
-export KUBECONFIG=user-plane-cluster.yaml
+export KUBECONFIG=/home/ubuntu/user-plane-cluster.yaml
 juju add-k8s user-plane-cluster --controller sdcore
-export KUBECONFIG=gnb-cluster.yaml
+export KUBECONFIG=/home/ubuntu/gnb-cluster.yaml
 juju add-k8s gnb-cluster --controller sdcore
 ```
 
@@ -612,7 +267,7 @@ module "sdcore-control-plane" {
   (...)
   amf_config = {
     external-amf-ip       = "10.201.0.52"
-    external-amf-hostname = "amf.mgmt.local"
+    external-amf-hostname = "amf.mgmt"
   }
   (...)
 }
@@ -656,7 +311,6 @@ In the directory named `terraform`, update the `main.tf` file.
 Please replace the `access-interface-mac-address` and `core-interface-mac-address` according your environment. You would have noted them at the `Checkpoint 4`.
 
 ```console
-cd terraform
 cat << EOF >> main.tf
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
@@ -675,6 +329,19 @@ module "sdcore-user-plane" {
     core-interface-mac-address = "e2:01:8e:95:cb:4d" # In this example, its the MAC address of core interface
     enable-hw-checksum           = "false"
     gnb-subnet = "10.204.0.0/24"
+  }
+}
+
+resource "juju_integration" "nms-upf" {
+  model = data.juju_model.control-plane.name
+
+  application {
+    name     = module.sdcore-control-plane.nms_app_name
+    endpoint = module.sdcore-control-plane.fiveg_n4_endpoint
+  }
+
+  application {
+    offer_url = module.sdcore-user-plane.upf_fiveg_n4_offer_url
   }
 }
 
@@ -782,19 +449,6 @@ resource "juju_integration" "gnbsim-nms" {
 
   application {
     offer_url = module.sdcore-control-plane.nms_fiveg_core_gnb_offer_url
-  }
-}
-
-resource "juju_integration" "nms-upf" {
-  model = data.juju_model.control-plane.name
-
-  application {
-    name     = module.sdcore-control-plane.nms_app_name
-    endpoint = module.sdcore-control-plane.fiveg_n4_endpoint
-  }
-
-  application {
-    offer_url = module.sdcore-user-plane.upf_fiveg_n4_offer_url
   }
 }
 

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo ip link add ran link enp6s0 type macvlan mode bridge
+sudo ip link set dev ran up
