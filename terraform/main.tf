@@ -124,20 +124,20 @@ resource "lxd_instance" "control-plane" {
       trigger       = "once"
       fail_on_error = true
     }
-    "03-microk8s-enable-hostpath-storage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
-      trigger       = "once"
-    }
-    "04-microk8s-enable-metallb" = {
-      command       = ["microk8s", "enable", "metallb:10.201.0.52-10.201.0.53"]
-      trigger       = "once"
-    }
-    "05-microk8s-disable-default-dns" = {
+    "03-microk8s-disable-default-dns" = {
       command       = ["microk8s", "disable", "dns"]
       trigger       = "once"
     }
-    "06-microk8s-enable-custom-dns" = {
+    "04-microk8s-enable-custom-dns" = {
       command       = ["microk8s", "enable", "dns:10.201.0.1"]
+      trigger       = "once"
+    }
+    "05-microk8s-enable-hostpath-storage" = {
+      command       = ["microk8s", "enable", "hostpath-storage"]
+      trigger       = "once"
+    }
+    "06-microk8s-enable-metallb" = {
+      command       = ["microk8s", "enable", "metallb:10.201.0.52-10.201.0.53"]
       trigger       = "once"
     }
     "07-add-ubuntu-user-to-snap_microk8s-group" = {
@@ -634,20 +634,20 @@ resource "lxd_instance" "juju-controller" {
       trigger       = "once"
       fail_on_error = true
     }
-    "03-microk8s-enable-hostpath-storeage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
-      trigger       = "once"
-    }
-    "04-microk8s-enable-metallb" = {
-      command       = ["microk8s", "enable", "metallb:10.201.0.50-10.201.0.51"]
-      trigger       = "once"
-    }
-    "05-microk8s-disable-default-dns" = {
+    "03-microk8s-disable-default-dns" = {
       command       = ["microk8s", "disable", "dns"]
       trigger       = "once"
     }
-    "06-microk8s-enable-custom-dns" = {
+    "04-microk8s-enable-custom-dns" = {
       command       = ["microk8s", "enable", "dns:10.201.0.1"]
+      trigger       = "once"
+    }
+    "05-microk8s-enable-hostpath-storeage" = {
+      command       = ["microk8s", "enable", "hostpath-storage"]
+      trigger       = "once"
+    }
+    "06-microk8s-enable-metallb" = {
+      command       = ["microk8s", "enable", "metallb:10.201.0.50-10.201.0.51"]
       trigger       = "once"
     }
     "07-add-ubuntu-user-to-snap_microk8s-group" = {
@@ -665,14 +665,59 @@ resource "lxd_instance" "juju-controller" {
       gid           = 1000
       trigger       = "once"
     }
-    "10-wait-for-dns" = {
-      command       = ["microk8s", "status", "-a", "dns", "--wait"]
-      trigger       = "once"
-    }
-    "11-bootstrap-juju" = {
+    "10-bootstrap-juju" = {
       command       = ["/bin/sh", "-c", "su ubuntu -c \"juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore\""]
       trigger       = "once"
-      record_output = true
+      fail_on_error = true
+    }
+    "11-add-control-plane-cluster" = {
+      command     = ["juju", "add-k8s", "control-plane-cluster", "--controller", "sdcore"]
+      uid         = 1000
+      gid         = 1000
+      trigger     = "once"
+      environment = {
+        "KUBECONFIG" = "/home/ubuntu/control-plane-cluster.yaml"
+      }
+    }
+    "12-add-control-plane-model" = {
+      command     = ["juju", "add-model", "control-plane", "control-plane-cluster"]
+      uid         = 1000
+      gid         = 1000
+      trigger     = "once"
+    }
+    "13-add-user-plane-cluster" = {
+      command     = ["juju", "add-k8s", "user-plane-cluster", "--controller", "sdcore"]
+      uid         = 1000
+      gid         = 1000
+      trigger     = "once"
+      environment = {
+        "KUBECONFIG" = "/home/ubuntu/user-plane-cluster.yaml"
+      }
+    }
+    "14-add-user-plane-model" = {
+      command     = ["juju", "add-model", "user-plane", "user-plane-cluster"]
+      uid         = 1000
+      gid         = 1000
+      trigger     = "once"
+    }
+    "15-add-gnb-cluster" = {
+      command     = ["juju", "add-k8s", "gnb-cluster", "--controller", "sdcore"]
+      uid         = 1000
+      gid         = 1000
+      trigger     = "once"
+      environment = {
+        "KUBECONFIG" = "/home/ubuntu/gnb-cluster.yaml"
+      }
+    }
+    "16-add-gnbsim-model" = {
+      command     = ["juju", "add-model", "gnbsim", "gnb-cluster"]
+      uid         = 1000
+      gid         = 1000
+      trigger     = "once"
+    }
+    "17-install-terraform" = {
+      command     = ["snap", "install", "terraform", "--classic"]
+      trigger     = "once"
     }
   }
 

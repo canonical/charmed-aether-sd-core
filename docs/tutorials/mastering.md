@@ -69,6 +69,29 @@ terraform init
 terraform apply -auto-approve
 ```
 
+Terraform will output two MAC addresses - the `access-mac-address` and the `core-mac-address`. Note them for later.
+
+Example Terraform output:
+
+```console
+Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+access-mac-address = {
+  "out" = <<-EOT
+  00:16:3e:2c:e4:8f
+  
+  EOT
+}
+core-mac-address = {
+  "out" = <<-EOT
+  00:16:3e:6c:60:de
+  
+  EOT
+}
+```
+
 ```{note}
 The current version of the Terraform module has some race conditions, if the deployment fail, a retry will
 usually fix the issue.
@@ -101,41 +124,7 @@ The output should be similar to the following:
 +-----------------+---------+-----------------------+------+-----------------+-----------+
 ```
 
-## 3. Prepare the Juju Controller VM
-
-Log in to the `juju-controller` VM:
-
-```console
-lxc exec juju-controller -- su --login ubuntu
-```
-
-Bootstrap the controller to the local MicroK8s install as a LoadBalancer service.
-This will expose the Juju controller on the first allocated MetalLB address:
-
-```console
-juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore
-```
-
-At this point, the Juju controller is ready to start managing external clouds.
-Add the Kubernetes clusters representing the user plane, control plane, and gNB simulator to Juju.
-This is done by using the Kubernetes configuration file generated when setting up the clusters above.
-
-```console
-export KUBECONFIG=/home/ubuntu/control-plane-cluster.yaml
-juju add-k8s control-plane-cluster --controller sdcore
-export KUBECONFIG=/home/ubuntu/user-plane-cluster.yaml
-juju add-k8s user-plane-cluster --controller sdcore
-export KUBECONFIG=/home/ubuntu/gnb-cluster.yaml
-juju add-k8s gnb-cluster --controller sdcore
-```
-
-Install Terraform:
-
-```console
-sudo snap install terraform --classic
-```
-
-## 4. Deploy SD-Core Control Plane
+## 3. Deploy SD-Core Control Plane
 
 The following steps build on the Juju controller which was bootstrapped and knows how to manage the SD-Core Control Plane Kubernetes cluster.
 
@@ -144,12 +133,6 @@ After the successful deployment, we will configure the Access and Mobility Manag
 This host name must be resolvable by the gNB and the IP address must be reachable and resolve to the AMF unit.
 In the bootstrap step, we set the Control Plane MetalLB IP range, and that is what we use in the configuration.
 Lastly, the module will expose the Software as a Service offer for the AMF.
-
-Create Juju model for the SD-Core Control Plane:
-
-```console
-juju add-model control-plane control-plane-cluster
-```
 
 Create new folder called `terraform`:
 
@@ -298,17 +281,11 @@ Apply the changes:
 terraform apply -auto-approve
 ```
 
-## 5. Deploy User Plane Function (UPF) in DPDK mode
-
-Create a Juju model named `user-plane`:
-
-```console
-juju add-model user-plane user-plane-cluster
-```
+## 4. Deploy User Plane Function (UPF) in DPDK mode
 
 Deploy `sdcore-user-plane-k8s` Terraform Module.
 In the directory named `terraform`, update the `main.tf` file.
-Please replace the `access-interface-mac-address` and `core-interface-mac-address` according your environment. You would have noted them at the `Checkpoint 4`.
+Please replace the `access-interface-mac-address` and `core-interface-mac-address` with the MAC addresses noted in `2. Create Virtual Machines`.
 
 ```console
 cat << EOF >> main.tf
@@ -369,7 +346,7 @@ juju status --watch 1s --relations
 The deployment is ready when the UPF application is in the `Active/Idle` state.
 It is normal for `grafana-agent` to remain in waiting state.
 
-### Checkpoint 5: Validate that the UPF is running in DPDK mode
+### Checkpoint 2: Validate that the UPF is running in DPDK mode
 
 Verify that DPDK BESSD is configured in DPDK mode by using the Juju debug log:
 
@@ -383,7 +360,7 @@ You should see the following output:
 unit-upf-0: 16:18:59 INFO unit.upf/0.juju-log Container bessd configured for DPDK
 ```
 
-## 6. Deploy the gNB Simulator
+## 5. Deploy the gNB Simulator
 
 The following steps build on the Juju controller which was bootstrapped and knows how to manage the gNB Simulator Kubernetes cluster.
 
@@ -397,12 +374,6 @@ We will provide necessary configuration (please see the list of the config optio
 | icmp-packet-destination | The target IP address to ping. If there is no egress to the internet on your core network, any IP that is reachable from the UPF should work. |
 | upf-gateway             | The IP address of the gateway between the RAN and Access networks                                                                             |
 | upf-subnet              | Subnet where the UPFs are located (also called Access network)                                                                                |
-
-In the `juju-controller` VM, create Juju model for the SD-Core Control Plane:
-
-```console
-juju add-model gnbsim gnb-cluster
-```
 
 Update the `main.tf` file:
 
@@ -475,7 +446,7 @@ juju status --watch 1s --relations
 
 The deployment is ready when the `gnbsim` application is in the `Waiting/Idle` state and the message is `Waiting for TAC and PLMNs configuration`.<br>
 
-## 7. Configure SD-Core
+## 6. Configure SD-Core
 
 The following steps show how to configure the SD-Core 5G core network.
 In this step we will create a network slice, a device group and a subscriber.
@@ -536,7 +507,7 @@ Fill in the following:
 - Network Slice: `Tutorial`
 - Device Group: `Tutorial-default`
 
-## 8. Integrate SD-Core with the Canonical Observability Stack (COS)
+## 7. Integrate SD-Core with the Canonical Observability Stack (COS)
 
 The following steps show how to integrate the SD-Core 5G core network with the Canonical Observability Stack (COS).
 
@@ -652,7 +623,7 @@ Apply the changes:
 terraform apply -auto-approve
 ```
 
-#### Checkpoint 4: Validate that the Grafana dashboard available
+#### Checkpoint 3: Validate that the Grafana dashboard available
 
 From the `juju-controller` VM, retrieve the Grafana URL and admin password:
 
@@ -692,7 +663,7 @@ Keep this page open, we will revisit it shortly.
 It may take up to 5 minutes for the relevant metrics to be available in Prometheus.
 ```
 
-## 9. Run the 5G simulation
+## 8. Run the 5G simulation
 
 On the `juju-controller` VM, switch to the `gnbsim` model.
 
@@ -717,7 +688,7 @@ info: 5/5 profiles passed
 success: "true"
 ```
 
-## Checkpoint 5: Check the simulation logs to see the communication between elements and the data exchange
+## Checkpoint 4: Check the simulation logs to see the communication between elements and the data exchange
 
 ### gNB Simulation Logs
 
@@ -768,7 +739,7 @@ microk8s.kubectl logs -n control-plane -c udm udm-0 --tail 70
 microk8s.kubectl logs -n control-plane -c udr udr-0 --tail 70
 ```
 
-## Checkpoint 6: View the metrics
+## Checkpoint 5: View the metrics
 
 ### Grafana Metrics
 
@@ -781,7 +752,7 @@ There is now one active PDU session, and the ping test throughput can be seen in
 :align: center
 ```
 
-## 10. Review
+## 9. Review
 
 We have deployed 4 Kubernetes clusters, bootstrapped a Juju controller to manage them all, and deployed portions of the Charmed Aether SD-Core software according to CUPS principles.
 You now have 5 Juju models as follows:
@@ -804,7 +775,7 @@ For your convenience, a complete Terraform module covering the deployments and i
 All necessary files are in the `examples/terraform/mastering` directory.
 ```
 
-## 11. Cleaning up
+## 10. Cleaning up
 
 On the host machine, destroy the Terraform deployment to get rid of the whole infrastructure:
 

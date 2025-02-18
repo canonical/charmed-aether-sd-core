@@ -12,10 +12,3 @@ output "access-mac-address" {
     "out" = lxd_instance.user-plane.execs["06-get-access-mac-address"].stdout
   }
 }
-
-output "bootstrap" {
-  value = {
-    "out" = lxd_instance.juju-controller.execs["11-bootstrap-juju"].stdout
-    "err" = lxd_instance.juju-controller.execs["11-bootstrap-juju"].stderr
-  }
-}
