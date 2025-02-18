@@ -13,8 +13,9 @@ output "access-mac-address" {
   }
 }
 
-output "control-plane-config" {
+output "bootstrap" {
   value = {
-    "out" = lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout
+    "out" = lxd_instance.juju-controller.execs["10-bootstrap-juju"].stdout
+    "err" = lxd_instance.juju-controller.execs["10-bootstrap-juju"].stderr
   }
 }

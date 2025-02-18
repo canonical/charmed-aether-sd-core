@@ -665,7 +665,11 @@ resource "lxd_instance" "juju-controller" {
       gid           = 1000
       trigger       = "once"
     }
-    "10-bootstrap-juju" = {
+    "10-wait-for-dns" = {
+      command       = ["microk8s", "status", "-a", "dns", "--wait"]
+      trigger       = "once"
+    }
+    "11-bootstrap-juju" = {
       command       = ["/bin/sh", "-c", "su ubuntu -c \"juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore\""]
       trigger       = "once"
       record_output = true
