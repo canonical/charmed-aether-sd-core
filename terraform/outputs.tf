@@ -15,7 +15,7 @@ output "access-mac-address" {
 
 output "bootstrap" {
   value = {
-    "out" = lxd_instance.juju-controller.execs["10-bootstrap-juju"].stdout
-    "err" = lxd_instance.juju-controller.execs["10-bootstrap-juju"].stderr
+    "out" = lxd_instance.juju-controller.execs["11-bootstrap-juju"].stdout
+    "err" = lxd_instance.juju-controller.execs["11-bootstrap-juju"].stderr
   }
 }
