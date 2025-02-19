@@ -562,206 +562,206 @@ resource "lxd_instance_file" "gnbsim-privkey" {
   ]
 }
 
-resource "lxd_instance" "juju-controller" {
-  name  = "juju-controller"
-  image = "ubuntu:24.04"
-  type = "virtual-machine"
+# resource "lxd_instance" "juju-controller" {
+#   name  = "juju-controller"
+#   image = "ubuntu:24.04"
+#   type = "virtual-machine"
 
-  config = {
-    "boot.autostart" = true
-  }
+#   config = {
+#     "boot.autostart" = true
+#   }
 
-  limits = {
-    cpu = 4
-    memory = "6GB"
-  }
+#   limits = {
+#     cpu = 4
+#     memory = "6GB"
+#   }
 
-  device {
-    type = "disk"
-    name = "root"
+#   device {
+#     type = "disk"
+#     name = "root"
 
-    properties = {
-      pool = "sdcore-pool"
-      path = "/"
-      size = "40GB"
-    }
-  }
+#     properties = {
+#       pool = "sdcore-pool"
+#       path = "/"
+#       size = "40GB"
+#     }
+#   }
 
-  device {
-    type = "nic"
-    name = "eth0"
+#   device {
+#     type = "nic"
+#     name = "eth0"
 
-    properties = {
-      network = "sdcore-mgmt"
-      "ipv4.address" = "10.201.0.104"
-    }
-  }
+#     properties = {
+#       network = "sdcore-mgmt"
+#       "ipv4.address" = "10.201.0.104"
+#     }
+#   }
 
-  file {
-    content = lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout
-    target_path = "/home/ubuntu/control-plane-cluster.yaml"
-    uid = 1000
-    gid = 1000
-  }
+#   file {
+#     content = lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout
+#     target_path = "/home/ubuntu/control-plane-cluster.yaml"
+#     uid = 1000
+#     gid = 1000
+#   }
 
-  file {
-    content = lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout
-    target_path = "/home/ubuntu/user-plane-cluster.yaml"
-    uid = 1000
-    gid = 1000
-  }
+#   file {
+#     content = lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout
+#     target_path = "/home/ubuntu/user-plane-cluster.yaml"
+#     uid = 1000
+#     gid = 1000
+#   }
 
-  file {
-    content = lxd_instance.gnbsim.execs["09-get-microk8s-config"].stdout
-    target_path = "/home/ubuntu/gnb-cluster.yaml"
-    uid = 1000
-    gid = 1000
-  }
+#   file {
+#     content = lxd_instance.gnbsim.execs["09-get-microk8s-config"].stdout
+#     target_path = "/home/ubuntu/gnb-cluster.yaml"
+#     uid = 1000
+#     gid = 1000
+#   }
 
-  execs = {
-    "00-run-first" = {
-      # wait for boot to complete
-      command = ["systemctl", "is-system-running", "--wait", "--quiet"]
-      trigger = "on_start"
-    }
-    "01-install-microk8s" = {
-      command       = ["snap", "install", "microk8s", "--channel=1.31-strict/stable"]
-      trigger       = "once"
-      fail_on_error = true
-    }
-    "02-wait-for-microk8s" = {
-      command       = ["microk8s", "status", "--wait"]
-      trigger       = "once"
-      fail_on_error = true
-    }
-    "03-microk8s-disable-default-dns" = {
-      command       = ["microk8s", "disable", "dns"]
-      trigger       = "once"
-    }
-    "04-microk8s-enable-custom-dns" = {
-      command       = ["microk8s", "enable", "dns:10.201.0.1"]
-      trigger       = "once"
-    }
-    "05-microk8s-enable-hostpath-storeage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
-      trigger       = "once"
-    }
-    "06-microk8s-enable-metallb" = {
-      command       = ["microk8s", "enable", "metallb:10.201.0.50-10.201.0.51"]
-      trigger       = "once"
-    }
-    "07-add-ubuntu-user-to-snap_microk8s-group" = {
-      command       = ["usermod", "-a", "-G", "snap_microk8s", "ubuntu"]
-      trigger       = "once"
-      fail_on_error = true
-    }
-    "08-install-juju" = {
-      command       = ["snap", "install", "juju", "--channel=3.6/stable"]
-      trigger       = "once"
-    }
-    "09-create-juju-shared-folder" = {
-      command       = ["mkdir", "-p", "/home/ubuntu/.local/share/juju"]
-      uid           = 1000
-      gid           = 1000
-      trigger       = "once"
-    }
-    "10-bootstrap-juju" = {
-      command       = ["/bin/sh", "-c", "su ubuntu -c \"juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore\""]
-      trigger       = "once"
-      fail_on_error = true
-    }
-    "11-add-control-plane-cluster" = {
-      command     = ["juju", "add-k8s", "control-plane-cluster", "--controller", "sdcore"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
-      environment = {
-        "KUBECONFIG" = "/home/ubuntu/control-plane-cluster.yaml"
-      }
-    }
-    "12-add-control-plane-model" = {
-      command     = ["juju", "add-model", "control-plane", "control-plane-cluster"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
-    }
-    "13-add-user-plane-cluster" = {
-      command     = ["juju", "add-k8s", "user-plane-cluster", "--controller", "sdcore"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
-      environment = {
-        "KUBECONFIG" = "/home/ubuntu/user-plane-cluster.yaml"
-      }
-    }
-    "14-add-user-plane-model" = {
-      command     = ["juju", "add-model", "user-plane", "user-plane-cluster"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
-    }
-    "15-add-gnb-cluster" = {
-      command     = ["juju", "add-k8s", "gnb-cluster", "--controller", "sdcore"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
-      environment = {
-        "KUBECONFIG" = "/home/ubuntu/gnb-cluster.yaml"
-      }
-    }
-    "16-add-gnbsim-model" = {
-      command     = ["juju", "add-model", "gnbsim", "gnb-cluster"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
-    }
-    "17-install-terraform" = {
-      command     = ["snap", "install", "terraform", "--classic"]
-      trigger     = "once"
-    }
-  }
+#   execs = {
+#     "00-run-first" = {
+#       # wait for boot to complete
+#       command = ["systemctl", "is-system-running", "--wait", "--quiet"]
+#       trigger = "on_start"
+#     }
+#     "01-install-microk8s" = {
+#       command       = ["snap", "install", "microk8s", "--channel=1.31-strict/stable"]
+#       trigger       = "once"
+#       fail_on_error = true
+#     }
+#     "02-wait-for-microk8s" = {
+#       command       = ["microk8s", "status", "--wait"]
+#       trigger       = "once"
+#       fail_on_error = true
+#     }
+#     "03-microk8s-disable-default-dns" = {
+#       command       = ["microk8s", "disable", "dns"]
+#       trigger       = "once"
+#     }
+#     "04-microk8s-enable-custom-dns" = {
+#       command       = ["microk8s", "enable", "dns:10.201.0.1"]
+#       trigger       = "once"
+#     }
+#     "05-microk8s-enable-hostpath-storeage" = {
+#       command       = ["microk8s", "enable", "hostpath-storage"]
+#       trigger       = "once"
+#     }
+#     "06-microk8s-enable-metallb" = {
+#       command       = ["microk8s", "enable", "metallb:10.201.0.50-10.201.0.51"]
+#       trigger       = "once"
+#     }
+#     "07-add-ubuntu-user-to-snap_microk8s-group" = {
+#       command       = ["usermod", "-a", "-G", "snap_microk8s", "ubuntu"]
+#       trigger       = "once"
+#       fail_on_error = true
+#     }
+#     "08-install-juju" = {
+#       command       = ["snap", "install", "juju", "--channel=3.6/stable"]
+#       trigger       = "once"
+#     }
+#     "09-create-juju-shared-folder" = {
+#       command       = ["mkdir", "-p", "/home/ubuntu/.local/share/juju"]
+#       uid           = 1000
+#       gid           = 1000
+#       trigger       = "once"
+#     }
+#     "10-bootstrap-juju" = {
+#       command       = ["/bin/sh", "-c", "su ubuntu -c \"juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore\""]
+#       trigger       = "once"
+#       fail_on_error = true
+#     }
+#     "11-add-control-plane-cluster" = {
+#       command     = ["juju", "add-k8s", "control-plane-cluster", "--controller", "sdcore"]
+#       uid         = 1000
+#       gid         = 1000
+#       trigger     = "once"
+#       environment = {
+#         "KUBECONFIG" = "/home/ubuntu/control-plane-cluster.yaml"
+#       }
+#     }
+#     "12-add-control-plane-model" = {
+#       command     = ["juju", "add-model", "control-plane", "control-plane-cluster"]
+#       uid         = 1000
+#       gid         = 1000
+#       trigger     = "once"
+#     }
+#     "13-add-user-plane-cluster" = {
+#       command     = ["juju", "add-k8s", "user-plane-cluster", "--controller", "sdcore"]
+#       uid         = 1000
+#       gid         = 1000
+#       trigger     = "once"
+#       environment = {
+#         "KUBECONFIG" = "/home/ubuntu/user-plane-cluster.yaml"
+#       }
+#     }
+#     "14-add-user-plane-model" = {
+#       command     = ["juju", "add-model", "user-plane", "user-plane-cluster"]
+#       uid         = 1000
+#       gid         = 1000
+#       trigger     = "once"
+#     }
+#     "15-add-gnb-cluster" = {
+#       command     = ["juju", "add-k8s", "gnb-cluster", "--controller", "sdcore"]
+#       uid         = 1000
+#       gid         = 1000
+#       trigger     = "once"
+#       environment = {
+#         "KUBECONFIG" = "/home/ubuntu/gnb-cluster.yaml"
+#       }
+#     }
+#     "16-add-gnbsim-model" = {
+#       command     = ["juju", "add-model", "gnbsim", "gnb-cluster"]
+#       uid         = 1000
+#       gid         = 1000
+#       trigger     = "once"
+#     }
+#     "17-install-terraform" = {
+#       command     = ["snap", "install", "terraform", "--classic"]
+#       trigger     = "once"
+#     }
+#   }
 
-  timeouts = {
-    read   = "10m"
-    create = "10m"
-    update = "10m"
-    delete = "10m"
-  }
+#   timeouts = {
+#     read   = "10m"
+#     create = "10m"
+#     update = "10m"
+#     delete = "10m"
+#   }
 
-  depends_on = [
-    lxd_storage_pool.sdcore-pool,
-    lxd_network.sdcore-mgmt,
-    lxd_instance.control-plane,
-    lxd_instance.user-plane,
-    lxd_instance.gnbsim,
-    tls_private_key.juju-key
-  ]
-}
+#   depends_on = [
+#     lxd_storage_pool.sdcore-pool,
+#     lxd_network.sdcore-mgmt,
+#     lxd_instance.control-plane,
+#     lxd_instance.user-plane,
+#     lxd_instance.gnbsim,
+#     tls_private_key.juju-key
+#   ]
+# }
 
-resource "lxd_instance_file" "juju-controller-pubkey" {
-  instance = lxd_instance.juju-controller.name
-  content = tls_private_key.juju-key.public_key_openssh
-  target_path = "/home/ubuntu/.ssh/authorized_keys"
-  uid = 1000
-  gid = 1000
-  mode = "0600"
+# resource "lxd_instance_file" "juju-controller-pubkey" {
+#   instance = lxd_instance.juju-controller.name
+#   content = tls_private_key.juju-key.public_key_openssh
+#   target_path = "/home/ubuntu/.ssh/authorized_keys"
+#   uid = 1000
+#   gid = 1000
+#   mode = "0600"
 
-  depends_on = [
-    lxd_instance.juju-controller,
-    tls_private_key.juju-key
-  ]
-}
+#   depends_on = [
+#     lxd_instance.juju-controller,
+#     tls_private_key.juju-key
+#   ]
+# }
 
-resource "lxd_instance_file" "juju-controller-privkey" {
-  instance = lxd_instance.juju-controller.name
-  content = tls_private_key.juju-key.private_key_openssh
-  target_path = "/home/ubuntu/.ssh/id_rsa"
-  uid = 1000
-  gid = 1000
-  mode = "0600"
+# resource "lxd_instance_file" "juju-controller-privkey" {
+#   instance = lxd_instance.juju-controller.name
+#   content = tls_private_key.juju-key.private_key_openssh
+#   target_path = "/home/ubuntu/.ssh/id_rsa"
+#   uid = 1000
+#   gid = 1000
+#   mode = "0600"
 
-  depends_on = [
-    lxd_instance.juju-controller,
-    tls_private_key.juju-key
-  ]
-}
+#   depends_on = [
+#     lxd_instance.juju-controller,
+#     tls_private_key.juju-key
+#   ]
+# }
