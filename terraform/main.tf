@@ -692,6 +692,7 @@ resource "lxd_instance" "juju-controller" {
       gid         = 1000
       trigger     = "once"
       fail_on_error = true
+      record_output = true
     }
     "13-add-user-plane-cluster" = {
       command     = ["juju", "add-k8s", "user-plane-cluster", "--controller", "sdcore"]
@@ -709,6 +710,7 @@ resource "lxd_instance" "juju-controller" {
       gid         = 1000
       trigger     = "once"
       fail_on_error = true
+      record_output = true
     }
     "15-add-gnb-cluster" = {
       command     = ["juju", "add-k8s", "gnb-cluster", "--controller", "sdcore"]
@@ -726,6 +728,7 @@ resource "lxd_instance" "juju-controller" {
       gid         = 1000
       trigger     = "once"
       fail_on_error = true
+      record_output = true
     }
     "17-install-terraform" = {
       command     = ["snap", "install", "terraform", "--classic"]
