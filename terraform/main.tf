@@ -601,24 +601,27 @@ resource "lxd_instance" "juju-controller" {
   }
 
   file {
-    content = lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout
-    target_path = "/home/ubuntu/control-plane-cluster.yaml"
-    uid = 1000
-    gid = 1000
+    content            = lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout
+    target_path        = "/home/ubuntu/control-plane-cluster.yaml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
   }
 
   file {
-    content = lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout
-    target_path = "/home/ubuntu/user-plane-cluster.yaml"
-    uid = 1000
-    gid = 1000
+    content            = lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout
+    target_path        = "/home/ubuntu/user-plane-cluster.yaml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
   }
 
   file {
-    content = lxd_instance.gnbsim.execs["09-get-microk8s-config"].stdout
-    target_path = "/home/ubuntu/gnb-cluster.yaml"
-    uid = 1000
-    gid = 1000
+    content            = lxd_instance.gnbsim.execs["09-get-microk8s-config"].stdout
+    target_path        = "/home/ubuntu/gnb-cluster.yaml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
   }
 
   execs = {
