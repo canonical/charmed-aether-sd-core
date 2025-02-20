@@ -381,7 +381,8 @@ resource "lxd_instance" "user-plane" {
     lxd_network.sdcore-mgmt,
     lxd_network.sdcore-core,
     lxd_network.sdcore-access,
-    tls_private_key.juju-key
+    tls_private_key.juju-key,
+    lxd_instance.control-plane
   ]
 }
 
@@ -530,7 +531,9 @@ resource "lxd_instance" "gnbsim" {
     lxd_storage_pool.sdcore-pool,
     lxd_network.sdcore-mgmt,
     lxd_network.sdcore-ran,
-    tls_private_key.juju-key
+    tls_private_key.juju-key,
+    lxd_instance.control-plane,
+    lxd_instance.user-plane
   ]
 }
 
@@ -732,11 +735,8 @@ resource "lxd_instance" "juju-controller" {
     lxd_storage_pool.sdcore-pool,
     lxd_network.sdcore-mgmt,
     lxd_instance.control-plane,
-    lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout,
     lxd_instance.user-plane,
-    lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout,
     lxd_instance.gnbsim,
-    lxd_instance.gnbsim.execs["09-get-microk8s-config"].stdout,
     tls_private_key.juju-key
   ]
 }
