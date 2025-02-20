@@ -24,9 +24,9 @@ resource "lxd_network" "sdcore-mgmt" {
     "ipv4.nat"     = "true"
     "ipv6.address" = "none"
     "dns.mode"     = "managed"
-    "dns.domain"   = "mgmt"
+    "dns.domain"   = "mgmt.local"
     "raw.dnsmasq"  = <<-EOF
-        host-record=amf.mgmt,10.201.0.52
+        host-record=amf.mgmt.local,10.201.0.52
         host-record=upf.mgmt.local,10.201.0.200
     EOF
   }

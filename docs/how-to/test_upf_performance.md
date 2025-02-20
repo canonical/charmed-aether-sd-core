@@ -55,7 +55,7 @@ above.
 
 Edit the `gtpIp` field to `10.204.0.100`.
 
-Edit the `address` field under `amfConfigs` to `amf.mgmt`.
+Edit the `address` field under `amfConfigs` to `amf.mgmt.local`.
 
 This section of the file should look like this:
 
@@ -66,7 +66,7 @@ gtpIp:  10.204.0.100 # IP to use to communicate with the UPF
 
 # List of AMF address information
 amfConfigs:
-  - address: amf.mgmt
+  - address: amf.mgmt.local
     port: 38412
 ```
 

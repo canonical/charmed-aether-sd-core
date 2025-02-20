@@ -9,7 +9,7 @@ module "sdcore-control-plane" {
 
   amf_config = {
     external-amf-ip       = "10.201.0.52"
-    external-amf-hostname = "amf.mgmt"
+    external-amf-hostname = "amf.mgmt.local"
   }
   traefik_config = {
     routing_mode      = "subdomain"
