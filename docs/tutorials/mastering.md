@@ -134,6 +134,12 @@ This host name must be resolvable by the gNB and the IP address must be reachabl
 In the bootstrap step, we set the Control Plane MetalLB IP range, and that is what we use in the configuration.
 Lastly, the module will expose the Software as a Service offer for the AMF.
 
+Log in to the `juju-controller` VM:
+
+```console
+lxc exec juju-controller -- su --login ubuntu
+```
+
 Create new folder called `terraform`:
 
 ```console

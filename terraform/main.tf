@@ -678,6 +678,7 @@ resource "lxd_instance" "juju-controller" {
       uid         = 1000
       gid         = 1000
       trigger     = "once"
+      fail_on_error = true
       environment = {
         "KUBECONFIG" = "/home/ubuntu/control-plane-cluster.yaml"
       }
@@ -687,12 +688,14 @@ resource "lxd_instance" "juju-controller" {
       uid         = 1000
       gid         = 1000
       trigger     = "once"
+      fail_on_error = true
     }
     "13-add-user-plane-cluster" = {
       command     = ["juju", "add-k8s", "user-plane-cluster", "--controller", "sdcore"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
+      fail_on_error = true
       environment = {
         "KUBECONFIG" = "/home/ubuntu/user-plane-cluster.yaml"
       }
@@ -702,12 +705,14 @@ resource "lxd_instance" "juju-controller" {
       uid         = 1000
       gid         = 1000
       trigger     = "once"
+      fail_on_error = true
     }
     "15-add-gnb-cluster" = {
       command     = ["juju", "add-k8s", "gnb-cluster", "--controller", "sdcore"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
+      fail_on_error = true
       environment = {
         "KUBECONFIG" = "/home/ubuntu/gnb-cluster.yaml"
       }
@@ -717,6 +722,7 @@ resource "lxd_instance" "juju-controller" {
       uid         = 1000
       gid         = 1000
       trigger     = "once"
+      fail_on_error = true
     }
     "17-install-terraform" = {
       command     = ["snap", "install", "terraform", "--classic"]
