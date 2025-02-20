@@ -670,7 +670,7 @@ module "sdcore-user-plane" {
     access-ip             = "10.202.0.10/24"
     core-gateway-ip       = "10.203.0.1"
     core-ip               = "10.203.0.10/24"
-    external-upf-hostname = "upf.mgmt"
+    external-upf-hostname = "upf.mgmt.local"
     access-interface-mac-address = "c2:c8:c7:e9:cc:18" # In this example, its the MAC address of access interface.
     core-interface-mac-address = "e2:01:8e:95:cb:4d" # In this example, its the MAC address of core interface
     enable-hw-checksum           = "false"
@@ -860,7 +860,7 @@ In the Network Management System (NMS), create a network slice with the followin
 - Name: `Tutorial`
 - MCC: `001`
 - MNC: `01`
-- UPF: `upf.mgmt:8805`
+- UPF: `upf.mgmt.local:8805`
 - gNodeB: `gnbsim-gnbsim-gnbsim (tac:1)`
 
 You should see the following network slice created.
