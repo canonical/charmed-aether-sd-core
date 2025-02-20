@@ -9,7 +9,7 @@ module "sdcore-control-plane" {
 
   amf_config = {
     external-amf-ip       = "10.201.0.52"
-    external-amf-hostname = "amf.mgmt"
+    external-amf-hostname = "amf.mgmt.local"
   }
   traefik_config = {
     routing_mode      = "subdomain"
@@ -34,7 +34,7 @@ module "sdcore-user-plane" {
     core-gateway-ip       = "10.203.0.1"
     core-interface        = "core"
     core-ip               = "10.203.0.10/24"
-    external-upf-hostname = "upf.mgmt"
+    external-upf-hostname = "upf.mgmt.local"
     gnb-subnet            = "10.204.0.0/24"
   }
 }
@@ -102,9 +102,9 @@ module "cos-lite" {
   model_name               = "cos-lite"
   deploy_cos_configuration = true
   cos_configuration_config = {
-    git_repo                 = "https://github.com/canonical/sdcore-cos-configuration"
-    git_branch               = "main"
-    grafana_dashboards_path  = "grafana_dashboards/sdcore/"
+    git_repo                = "https://github.com/canonical/sdcore-cos-configuration"
+    git_branch              = "main"
+    grafana_dashboards_path = "grafana_dashboards/sdcore/"
   }
 }
 

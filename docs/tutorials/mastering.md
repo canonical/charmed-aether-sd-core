@@ -128,7 +128,7 @@ Export the Kubernetes configuration and copy it to the `juju-controller` VM:
 
 ```console
 sudo microk8s.config > /tmp/control-plane-cluster.yaml
-scp /tmp/control-plane-cluster.yaml juju-controller.mgmt:
+scp /tmp/control-plane-cluster.yaml juju-controller.mgmt.local:
 ```
 
 Log out of the VM.
@@ -381,7 +381,7 @@ Export the Kubernetes configuration and copy it to the `juju-controller` VM:
 
 ```console
 sudo microk8s.config > /tmp/user-plane-cluster.yaml
-scp /tmp/user-plane-cluster.yaml juju-controller.mgmt:
+scp /tmp/user-plane-cluster.yaml juju-controller.mgmt.local:
 ```
 
 Log out of the VM.
@@ -412,7 +412,7 @@ Export the Kubernetes configuration and copy it to the `juju-controller` VM:
 
 ```console
 sudo microk8s.config > /tmp/gnb-cluster.yaml
-scp /tmp/gnb-cluster.yaml juju-controller.mgmt:
+scp /tmp/gnb-cluster.yaml juju-controller.mgmt.local:
 ```
 
 Create the MACVLAN bridges for `enp6s0`, and label them accordingly:
@@ -532,7 +532,7 @@ module "sdcore-control-plane" {
   model = data.juju_model.control-plane.name
 
   amf_config = {
-    external-amf-hostname = "amf.mgmt"
+    external-amf-hostname = "amf.mgmt.local"
   }
   traefik_config = {
     routing_mode = "subdomain"
@@ -592,7 +592,7 @@ We will need them shortly.
 ```{note}
 If the IP for the AMF is not `10.201.0.52`, you will need to update the DNS entry to match the actual external IP for the AMF. In the host, edit the `main.tf` file. Find the following line and set it to the correct IP address, like so:
 
-`host-record=amf.mgmt,10.201.0.53`
+`host-record=amf.mgmt.local,10.201.0.53`
 
 Then, run the following command on the host:
 
@@ -612,7 +612,7 @@ module "sdcore-control-plane" {
   (...)
   amf_config = {
     external-amf-ip       = "10.201.0.52"
-    external-amf-hostname = "amf.mgmt"
+    external-amf-hostname = "amf.mgmt.local"
   }
   (...)
 }
@@ -670,7 +670,7 @@ module "sdcore-user-plane" {
     access-ip             = "10.202.0.10/24"
     core-gateway-ip       = "10.203.0.1"
     core-ip               = "10.203.0.10/24"
-    external-upf-hostname = "upf.mgmt"
+    external-upf-hostname = "upf.mgmt.local"
     access-interface-mac-address = "c2:c8:c7:e9:cc:18" # In this example, its the MAC address of access interface.
     core-interface-mac-address = "e2:01:8e:95:cb:4d" # In this example, its the MAC address of core interface
     enable-hw-checksum           = "false"
@@ -860,7 +860,7 @@ In the Network Management System (NMS), create a network slice with the followin
 - Name: `Tutorial`
 - MCC: `001`
 - MNC: `01`
-- UPF: `upf.mgmt:8805`
+- UPF: `upf.mgmt.local:8805`
 - gNodeB: `gnbsim-gnbsim-gnbsim (tac:1)`
 
 You should see the following network slice created.
