@@ -677,7 +677,7 @@ resource "lxd_instance" "juju-controller" {
       fail_on_error = true
     }
     "11-add-control-plane-cluster" = {
-      command     = ["juju", "add-k8s", "control-plane-cluster", "--controller", "sdcore"]
+      command     = ["/bin/sh", "-c", "juju add-k8s control-plane-cluster --controller sdcore"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
@@ -688,7 +688,7 @@ resource "lxd_instance" "juju-controller" {
       }
     }
     "12-add-control-plane-model" = {
-      command     = ["juju", "add-model", "control-plane", "control-plane-cluster"]
+      command     = ["/bin/sh", "-c", "juju add-model control-plane control-plane-cluster"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
@@ -696,7 +696,7 @@ resource "lxd_instance" "juju-controller" {
       record_output = true
     }
     "13-add-user-plane-cluster" = {
-      command     = ["juju", "add-k8s", "user-plane-cluster", "--controller", "sdcore"]
+      command     = ["/bin/sh", "-c", "juju add-k8s user-plane-cluster --controller sdcore"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
@@ -707,7 +707,7 @@ resource "lxd_instance" "juju-controller" {
       }
     }
     "14-add-user-plane-model" = {
-      command     = ["juju", "add-model", "user-plane", "user-plane-cluster"]
+      command     = ["/bin/sh", "-c", "juju add-model user-plane user-plane-cluster"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
@@ -715,7 +715,7 @@ resource "lxd_instance" "juju-controller" {
       record_output = true
     }
     "15-add-gnb-cluster" = {
-      command     = ["juju", "add-k8s", "gnb-cluster", "--controller", "sdcore"]
+      command     = ["/bin/sh", "-c", "juju add-k8s gnb-cluster --controller sdcore"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
@@ -726,7 +726,7 @@ resource "lxd_instance" "juju-controller" {
       }
     }
     "16-add-gnbsim-model" = {
-      command     = ["juju", "add-model", "gnbsim", "gnb-cluster"]
+      command     = ["/bin/sh", "-c", "juju add-model gnbsim gnb-cluster"]
       uid         = 1000
       gid         = 1000
       trigger     = "once"
