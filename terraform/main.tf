@@ -682,6 +682,7 @@ resource "lxd_instance" "juju-controller" {
       gid         = 1000
       trigger     = "once"
       fail_on_error = true
+      record_output = true
       environment = {
         "KUBECONFIG" = "/home/ubuntu/control-plane-cluster.yaml"
       }
@@ -700,6 +701,7 @@ resource "lxd_instance" "juju-controller" {
       gid         = 1000
       trigger     = "once"
       fail_on_error = true
+      record_output = true
       environment = {
         "KUBECONFIG" = "/home/ubuntu/user-plane-cluster.yaml"
       }
@@ -718,6 +720,7 @@ resource "lxd_instance" "juju-controller" {
       gid         = 1000
       trigger     = "once"
       fail_on_error = true
+      record_output = true
       environment = {
         "KUBECONFIG" = "/home/ubuntu/gnb-cluster.yaml"
       }
