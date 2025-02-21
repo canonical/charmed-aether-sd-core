@@ -677,9 +677,7 @@ resource "lxd_instance" "juju-controller" {
       fail_on_error = true
     }
     "11-add-control-plane-cluster" = {
-      command     = ["/bin/sh", "-c", "juju add-k8s control-plane-cluster --controller sdcore"]
-      uid         = 1000
-      gid         = 1000
+      command     = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s control-plane-cluster --controller sdcore\""]
       trigger     = "once"
       fail_on_error = true
       record_output = true
@@ -696,9 +694,7 @@ resource "lxd_instance" "juju-controller" {
       record_output = true
     }
     "13-add-user-plane-cluster" = {
-      command     = ["/bin/sh", "-c", "juju add-k8s user-plane-cluster --controller sdcore"]
-      uid         = 1000
-      gid         = 1000
+      command     = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s user-plane-cluster --controller sdcore\""]
       trigger     = "once"
       fail_on_error = true
       record_output = true
@@ -715,9 +711,7 @@ resource "lxd_instance" "juju-controller" {
       record_output = true
     }
     "15-add-gnb-cluster" = {
-      command     = ["/bin/sh", "-c", "juju add-k8s gnb-cluster --controller sdcore"]
-      uid         = 1000
-      gid         = 1000
+      command     = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s gnb-cluster --controller sdcore\""]
       trigger     = "once"
       fail_on_error = true
       record_output = true
