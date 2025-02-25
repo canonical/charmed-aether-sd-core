@@ -886,7 +886,7 @@ Navigate to Device groups and click on Create. Fill in the following:
 
 You should see the following device group created:
 
-```{image} ../images/mastering_device-group.png
+```{image} ../images/mastering_device_group.png
 :alt: NMS Device Group
 :align: center
 ```
