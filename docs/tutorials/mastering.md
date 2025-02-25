@@ -69,6 +69,10 @@ terraform init
 terraform apply -auto-approve
 ```
 
+```{note}
+Creating the complete infrastructe for the network will take approximately 20 minutes. 
+```
+
 Terraform will output two MAC addresses - the `access-mac-address` and the `core-mac-address`. Note them for later.
 
 Example Terraform output:
@@ -90,11 +94,6 @@ core-mac-address = {
   
   EOT
 }
-```
-
-```{note}
-The current version of the Terraform module has some race conditions, if the deployment fail, a retry will
-usually fix the issue.
 ```
 
 ### Checkpoint 1: Are the VM's ready ?
