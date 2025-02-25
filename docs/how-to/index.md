@@ -15,6 +15,7 @@ deploy_sdcore_gnbsim
 deploy_sdcore_user_plane_in_dpdk_mode
 integrate_sdcore_with_external_gnb
 integrate_sdcore_with_observability
+add_inventory
 test_upf_performance
 ```
 
