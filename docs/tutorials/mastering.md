@@ -200,6 +200,7 @@ terraform apply -auto-approve
 Monitor the status of the deployment:
 
 ```console
+juju switch control-plane
 juju status --watch 1s --relations
 ```
 
@@ -345,6 +346,7 @@ terraform apply -auto-approve
 Monitor the status of the deployment:
 
 ```console
+juju switch user-plane
 juju status --watch 1s --relations
 ```
 
@@ -446,6 +448,7 @@ terraform apply -auto-approve
 Monitor the status of the deployment:
 
 ```console
+juju switch gnbsim
 juju status --watch 1s --relations
 ```
 
