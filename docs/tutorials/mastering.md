@@ -70,7 +70,7 @@ terraform apply -auto-approve
 ```
 
 ```{note}
-Creating the complete infrastructe for the network will take approximately 20 minutes. 
+Creating the complete infrastructure for the network will take approximately 20 minutes. 
 ```
 
 Terraform will output two MAC addresses - the `access-mac-address` and the `core-mac-address`. Note them for later.
