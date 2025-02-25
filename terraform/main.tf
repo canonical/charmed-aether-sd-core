@@ -724,10 +724,10 @@ resource "lxd_instance" "juju-controller" {
   }
 
   timeouts = {
-    read   = "10m"
-    create = "10m"
-    update = "10m"
-    delete = "10m"
+    read   = "15m"
+    create = "15m"
+    update = "15m"
+    delete = "15m"
   }
 
   depends_on = [
