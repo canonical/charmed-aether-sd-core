@@ -20,7 +20,7 @@ juju add-model gnbsim gnbsim-cloud
 Deploy the `sdcore-gnbsim-k8s` operator charm.
 
 ```console
-juju deploy sdcore-gnbsim-k8s gnbsim --trust --channel=1.5/stable \
+juju deploy sdcore-gnbsim-k8s gnbsim --trust --channel=1.6/stable \
   --config gnb-interface=ran \
   --config gnb-ip-address=10.204.0.10/24 \
   --config icmp-packet-destination=8.8.8.8 \

@@ -3,10 +3,11 @@ addon
 addons
 Aether
 AKS
+allocatable
 AMF
 api
 APIs
-allocatable
+ARP
 AUSF
 AVX
 backend
@@ -15,6 +16,7 @@ balancers
 bessctl
 bessd
 br
+bitrate
 Bitrate
 bootloader
 Canonical
@@ -139,6 +141,8 @@ PDU
 PFCP
 Pre
 prometheus
+QI
+QoS
 Quectel
 RAN
 resolv
