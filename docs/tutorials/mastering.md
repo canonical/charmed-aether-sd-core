@@ -295,10 +295,14 @@ Please replace the `access-interface-mac-address` and `core-interface-mac-addres
 
 ```console
 cat << EOF >> main.tf
+data "juju_model" "user-plane" {
+  name = "user-plane"
+}
+
 module "sdcore-user-plane" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-user-plane-k8s"
 
-  model = "user-plane"
+  model = data.juju_model.user-plane.name
 
   upf_config = {
     cni-type               = "vfioveth"
