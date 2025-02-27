@@ -357,8 +357,28 @@ In the Network Management System (NMS), create a network slice with the followin
 
 You should see the following network slice created:
 
-```{image} ../images/nms_network_slice.png
+```{image} ../images/getting_started_network_slice.png
 :alt: NMS Network Slice
+:align: center
+```
+
+Create a device group with the following attributes:
+- Name: `device-group`
+- Network Slice: `default`
+- Subscriber IP pool: `172.250.1.0/16`
+- DNS: `8.8.8.8`
+- MTU (bytes): `1456`
+- Maximum bitrate (Mbps):
+  - Downstream: `200`
+  - Upstream: `20`
+- QoS:
+  - 5QI: `1: GBR - Conversational Voice`
+  - ARP: `6`
+
+You should see the following device group created:
+
+```{image} ../images/getting_started_device_group.png
+:alt: NMS Device Group
 :align: center
 ```
 
@@ -368,11 +388,11 @@ Create a subscriber with the following attributes:
 - Key: `5122250214c33e723a5dd523fc145fc0`
 - Sequence Number: `16f3b3f70fc2`
 - Network Slice: `default`
-- Device Group: `default-default`
+- Device Group: `device-group`
 
 You should see the following subscriber created:
 
-```{image} ../images/nms_subscriber.png
+```{image} ../images/getting_started_subscriber.png
 :alt: NMS Subscriber
 :align: center
 ```

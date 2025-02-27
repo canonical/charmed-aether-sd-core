@@ -501,23 +501,42 @@ In the Network Management System (NMS), create a network slice with the followin
 - gNodeB: `gnbsim-gnbsim-gnbsim (tac:1)`
 
 You should see the following network slice created.
-Note the device group has been expanded to show the default group that is created in the slice for you.
 
-```{image} ../images/nms_tutorial_network_slice_with_device_group.png
+```{image} ../images/mastering_network_slice.png
 :alt: NMS Network Slice
 :align: center
 ```
 
+Navigate to Device groups and click on Create. Fill in the following:
+
+- Name: `device-group`
+- Network Slice: `Tutorial`
+- Subscriber IP pool: `172.250.1.0/16`
+- DNS: `8.8.8.8`
+- MTU (bytes): `1456`
+- Maximum bitrate (Mbps):
+  - Downstream: `200`
+  - Upstream: `20`
+- QoS:
+  - 5QI: `1: GBR - Conversational Voice`
+  - ARP: `6`
+
+You should see the following device group created:
+
+```{image} ../images/mastering_device_group.png
+:alt: NMS Device Group
+:align: center
+```
+
 We will now add a subscriber with the IMSI that was provided to the gNB simulator.
-Navigate to Subscribers and click on Create.
-Fill in the following:
+Navigate to Subscribers and click on Create. Fill in the following:
 
 - IMSI: `001010100007487`
 - OPC: `981d464c7c52eb6e5036234984ad0bcf`
 - Key: `5122250214c33e723a5dd523fc145fc0`
 - Sequence Number: `16f3b3f70fc2`
 - Network Slice: `Tutorial`
-- Device Group: `Tutorial-default`
+- Device Group: `device-group`
 
 ## 7. Integrate SD-Core with the Canonical Observability Stack (COS)
 
