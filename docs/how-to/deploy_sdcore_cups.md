@@ -32,11 +32,10 @@ Inside the `modules/sdcore-control-plane-k8s` directory, create a `control-plane
 git clone https://github.com/canonical/terraform-juju-sdcore.git
 cd terraform-juju-sdcore/modules/sdcore-control-plane-k8s
 cat << EOF > control-plane.tfvars
-model_name = "control-plane"
-create_model = false
+model      = "control-plane"
 amf_config = {
-  external-amf-ip       = "10.201.0.201"
-  external-amf-hostname = "amf.core"
+  external-amf-ip       = "10.201.0.201"  # Change this value to match your environment configuration
+  external-amf-hostname = "amf.core.local"  # Change this value to match your environment configuration
 }
 
 EOF
@@ -58,25 +57,28 @@ terraform apply -var-file="control-plane.tfvars" -auto-approve
 
 The AMF charm allows establishing the N2-plane connectivity through the `fiveg_n2` charm interface.
 
+[See the example of deploying the `fiveg_n2` requirer application using SD-Core GNBSIM K8s Operator](deploy_sdcore_gnbsim.md).
+
 ``````{tab-set}
 
 `````{tab-item} Option 1: Integration within the same Juju model
 
-It is assumed that the `fiveg-n2` requirer application is already deployed in the Juju model.
+It is assumed that the `fiveg_n2` requirer application is already deployed in the same Juju model as the Charmed Aether SD-Core Control Plane.
+
 To create a `fiveg_n2` integration between the AMF and another application within the same Juju model, add the following section to the `main.tf` file in the `terraform-juju-sdcore/modules/sdcore-control-plane-k8s` directory:
 
 ```console
 resource "juju_integration" "fiveg-n2" {
-  model = "control-plane"
+  model = data.juju_model.sdcore.name
 
   application {
     name     = module.amf.app_name
-    endpoint = module.amf.fiveg_n2_endpoint
+    endpoint = module.amf.requires.fiveg_n2
   }
 
   application {
-    name     = <THE `fiveg-n2` REQUIRER APP>
-    endpoint = <THE `fiveg-n2` REQUIRER APP'S INTEGRATION ENDPOINT>
+    name     = <THE `fiveg_n2` REQUIRER APP>
+    endpoint = <THE `fiveg_n2` REQUIRER APP'S INTEGRATION ENDPOINT>
   }
 }
 ```
@@ -92,26 +94,20 @@ terraform apply -var-file="control-plane.tfvars" -auto-approve
 `````{tab-item} Option 2: Cross-model integration
 
 In this option, it is assumed that the `sdcore-control-plane-k8s` has been deployed as part (a sub-module) of a bigger system.
-The `sdcore-control-plane-k8s` Terraform module exposes the AMF application name and the `fiveg-n2` endpoint through the `output.tf` file.
+The `sdcore-control-plane-k8s` Terraform module exposes the `fiveg_n2` cross-model relation offer endpoint through the `output.tf` file.
 To create a cross-model `fiveg_n2` integration in the root module of your deployment, add the following section to the `main.tf` file:
 
 ```console
-resource "juju_offer" "amf-fiveg-n2" {
-  model            = "control-plane"
-  application_name = module.<CONTROL PLANE MODULE NAME>.amf_app_name
-  endpoint         = module.<CONTROL PLANE MODULE NAME>.fiveg_n2_endpoint
-}
-
 resource "juju_integration" "fiveg-n2" {
-  model = "control-plane"
+  model = <NAME OF THE MODEL HOSTING THE N2 REQUIRER APPLICATION>
 
   application {
-    name     = <THE `fiveg-n2` REQUIRER APP>
-    endpoint = <THE `fiveg-n2` REQUIRER APP'S INTEGRATION ENDPOINT>
+    name     = <THE `fiveg_n2` REQUIRER APP>
+    endpoint = <THE `fiveg_n2` REQUIRER APP'S INTEGRATION ENDPOINT>
   }
 
   application {
-    offer_url = juju_offer.amf-fiveg-n2.url
+    offer_url = module.sdcore-control-plane-k8s.amf_fiveg_n2_offer_url
   }
 }
 ```
@@ -141,17 +137,16 @@ Inside the `modules/sdcore-user-plane-k8s` directory, create a `user-plane.tfvar
 git clone https://github.com/canonical/terraform-juju-sdcore.git
 cd terraform-juju-sdcore/modules/sdcore-user-plane-k8s
 cat << EOF > user-plane.tfvars
-model_name = "user-plane"
-create_model = false
+model      = "user-plane"
 upf_config = {
   cni-type          = "macvlan"
-  access-gateway-ip = "10.202.0.1"
+  access-gateway-ip = "10.202.0.1"  # Change this value to match your environment configuration
   access-interface  = "access"
-  access-ip         = "10.202.0.10/24"
-  core-gateway-ip   = "10.203.0.1"
+  access-ip         = "10.202.0.10/24"  # Change this value to match your environment configuration
+  core-gateway-ip   = "10.203.0.1"  # Change this value to match your environment configuration
   core-interface    = "core"
-  core-ip           = "10.203.0.10/24"
-  gnb-subnet        = "10.204.0.0/24"
+  core-ip           = "10.203.0.10/24"  # Change this value to match your environment configuration
+  gnb-subnet        = "10.204.0.0/24"  # Change this value to match your environment configuration
 }
 
 EOF
@@ -172,21 +167,24 @@ terraform apply -var-file="user-plane.tfvars" -auto-approve
 ### Integration with the UPF N4 interface
 
 The UPF charm allows establishing the N4-plane connectivity through the `fiveg_n4` charm interface.
+In Charmed Aether SD-Core the N4-plane connectivity between the UPF and the SMF is facilitated by the NMS (Network Management System). 
+The NMS is part of the [Charmed Aether SD-Core Control Plane](#deploy-sd-core-control-plane).
 
 ``````{tab-set}
 
 `````{tab-item} Option 1: Integration within the same Juju model
 
-It is assumed that the `fiveg_n4` requirer application is already deployed in the Juju model.
+It is assumed that the `fiveg_n4` requirer application is already deployed in the same Juju model as the Charmed Aether SD-Core User Plane.
+
 To create a `fiveg_n4` integration between the UPF and another application within the same Juju model, add the following section to the `main.tf` file in the `terraform-juju-sdcore/modules/sdcore-user-plane-k8s` directory:
 
 ```console
 resource "juju_integration" "fiveg-n4" {
-  model = "user-plane"
+  model = data.juju_model.sdcore_upf.name
 
   application {
     name     = module.upf.app_name
-    endpoint = module.upf.fiveg_n4_endpoint
+    endpoint = module.upf.provides.fiveg_n4
   }
 
   application {
@@ -207,18 +205,12 @@ terraform apply -var-file="user-plane.tfvars" -auto-approve
 `````{tab-item} Option 2: Cross-model integration
 
 In this option, it is assumed that the `sdcore-user-plane-k8s` has been deployed as part (a sub-module) of a bigger system.
-The `sdcore-user-plane-k8s` Terraform module exposes the UPF application name and the `fiveg_n4` endpoint through the `output.tf` file.
+The `sdcore-user-plane-k8s` Terraform module exposes the `fiveg_n4` cross-model relation offer endpoint through the `output.tf` file.
 To create a cross-model `fiveg_n4` integration in the root module of your deployment, add the following section to the `main.tf` file:
 
 ```console
-resource "juju_offer" "upf-fiveg-n4" {
-  model            = "user-plane"
-  application_name = module.<USER PLANE MODULE NAME>.upf_app_name
-  endpoint         = module.<USER PLANE MODULE NAME>.fiveg_n4_endpoint
-}
-
 resource "juju_integration" "fiveg-n4" {
-  model = "control-plane"
+  model = <NAME OF THE MODEL HOSTING THE N4 REQUIRER APPLICATION>
 
   application {
     name     = <THE `fiveg_n4` REQUIRER APP>
@@ -226,7 +218,7 @@ resource "juju_integration" "fiveg-n4" {
   }
 
   application {
-    offer_url = juju_offer.upf-fiveg-n4.url
+    offer_url = module.sdcore-user-plane-k8s.upf_fiveg_n4_offer_url
   }
 }
 ```
