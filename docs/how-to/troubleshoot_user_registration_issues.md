@@ -20,6 +20,9 @@ Validate the AMF is able to select an AUSF by inspecting logs using `microk8s.ku
 ```console
 INFO	gmm/handler.go:1509	Authentication procedure	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:36", "suci": "suci-0-001-01-0-0-0-0100007487"}
 INFO	message/send.go:80	send Authentication Request	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:36", "suci": "suci-0-001-01-0-0-0-0100007487"}
+INFO	gmm/handler.go:583	Handle InitialRegistration	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:2", "suci": "suci-0-001-01-0-0-0-0100007487", "supi": "SUPI:imsi-001010100007487"}
+INFO	gmm/handler.go:2254	Handle Registration Complete	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:2", "suci": "suci-0-001-01-0-0-0-0100007487", "supi": "SUPI:imsi-001010100007487"}
+INFO	fsm/fsm.go:99	handle event[ContextSetup Success], transition from [ContextSetup] to [Registered]	{"component": "LIB", "category": "FSM"}
 ```
 
 Validate the AUSF is able to select an UDM by inspecting logs using `microk8s.kubectl logs -n sdcore ausf-0 -c ausf -f`. The logs should report:
@@ -66,7 +69,7 @@ This error is typically raised when the UE is provisioned in SD-Core but the DNN
 Validate whether the DNN/S-NSSAI requested by the UE are available in the configured Network Slice and Device Group for the UE.
 
 
-### Configuration
+#### Configuration
 Validate the AMF is able to select an AUSF by inspecting logs using `microk8s.kubectl logs -n sdcore amf-0 -c amf -f`. The logs should report:
 ```console
 INFO	gmm/handler.go:94	Transport 5GSM Message to SMF	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:54", "suci": "suci-0-001-01-0-0-0-0100007487", "supi": "SUPI:imsi-001010100007487"}
