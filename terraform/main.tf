@@ -720,6 +720,7 @@ resource "lxd_instance" "juju-controller" {
     "17-install-terraform" = {
       command     = ["snap", "install", "terraform", "--classic"]
       trigger     = "once"
+      fail_on_error = true
     }
   }
 
