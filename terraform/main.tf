@@ -673,53 +673,53 @@ resource "lxd_instance" "juju-controller" {
       fail_on_error = true
     }
     "11-add-control-plane-cluster" = {
-      command     = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s control-plane-cluster --controller sdcore\""]
-      trigger     = "once"
+      command       = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s control-plane-cluster --controller sdcore\""]
+      trigger       = "once"
       fail_on_error = true
-      environment = {
+      environment   = {
         "KUBECONFIG" = "/home/ubuntu/control-plane-cluster.yaml"
       }
     }
     "12-add-control-plane-model" = {
-      command     = ["/bin/sh", "-c", "juju add-model control-plane control-plane-cluster"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
+      command       = ["/bin/sh", "-c", "juju add-model control-plane control-plane-cluster"]
+      uid           = 1000
+      gid           = 1000
+      trigger       = "once"
       fail_on_error = true
     }
     "13-add-user-plane-cluster" = {
-      command     = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s user-plane-cluster --controller sdcore\""]
-      trigger     = "once"
+      command       = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s user-plane-cluster --controller sdcore\""]
+      trigger       = "once"
       fail_on_error = true
-      environment = {
+      environment   = {
         "KUBECONFIG" = "/home/ubuntu/user-plane-cluster.yaml"
       }
     }
     "14-add-user-plane-model" = {
-      command     = ["/bin/sh", "-c", "juju add-model user-plane user-plane-cluster"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
+      command       = ["/bin/sh", "-c", "juju add-model user-plane user-plane-cluster"]
+      uid           = 1000
+      gid           = 1000
+      trigger       = "once"
       fail_on_error = true
     }
     "15-add-gnb-cluster" = {
-      command     = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s gnb-cluster --controller sdcore\""]
-      trigger     = "once"
+      command       = ["/bin/sh", "-c", "su ubuntu -c \"juju add-k8s gnb-cluster --controller sdcore\""]
+      trigger       = "once"
       fail_on_error = true
-      environment = {
+      environment   = {
         "KUBECONFIG" = "/home/ubuntu/gnb-cluster.yaml"
       }
     }
     "16-add-gnbsim-model" = {
-      command     = ["/bin/sh", "-c", "juju add-model gnbsim gnb-cluster"]
-      uid         = 1000
-      gid         = 1000
-      trigger     = "once"
+      command       = ["/bin/sh", "-c", "juju add-model gnbsim gnb-cluster"]
+      uid           = 1000
+      gid           = 1000
+      trigger       = "once"
       fail_on_error = true
     }
     "17-install-terraform" = {
-      command     = ["snap", "install", "terraform", "--classic"]
-      trigger     = "once"
+      command       = ["snap", "install", "terraform", "--classic"]
+      trigger       = "once"
       fail_on_error = true
     }
   }
