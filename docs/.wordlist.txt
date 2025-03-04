@@ -39,6 +39,7 @@ deployable
 deregister
 DHCP
 DN
+DNN
 Downlink
 DPDK
 dns
@@ -124,6 +125,7 @@ nms
 NMS
 NRF
 NSSF
+NSSAI
 OAI
 observability
 Observability
@@ -132,6 +134,7 @@ ONF
 ONF's
 OpenAirInterface
 OPC
+OPc
 PacketPool
 PCF
 PCI
