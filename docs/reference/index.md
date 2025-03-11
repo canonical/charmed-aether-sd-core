@@ -5,7 +5,7 @@ This section provides detailed reference material for Charmed Aether SD-Core, fr
 ```{toctree}
 :maxdepth: 1
 
-charms
+components
 deployment_options
 networking
 public_clouds
