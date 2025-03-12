@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo echo "options vfio enable_unsafe_noiommu_mode=1" > /etc/modprobe.d/vfio-noiommu.conf
+sudo echo "Y" > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode
+sudo modprobe vfio enable_unsafe_noiommu_mode=1
+
+sudo driverctl set-override 0000:07:00.0 vfio-pci
+sudo driverctl set-override 0000:06:00.0 vfio-pci
