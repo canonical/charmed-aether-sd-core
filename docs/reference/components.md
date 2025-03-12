@@ -7,6 +7,7 @@ Charmed Aether SD-Core `v1.6` is composed of the following components and their 
 | {bdg-link-primary-line}`Grafana Agent  <https://charmhub.io/grafana-agent-k8s>`                   | latest/stable      | 0                    |
 | {bdg-link-primary-line}`MongoDB  <https://charmhub.io/mongodb-k8s>`                               | 6/stable           | 6                    |
 | {bdg-link-primary-line}`Self Signed Certificates  <https://charmhub.io/self-signed-certificates>` | 1/stable           | N/A                  |
+| {bdg-link-primary-line}`Traefik  <https://charmhub.io/self-signed-certificates>`                  | latest/stable      | 2                    |
 | {bdg-link-primary-line}`AMF  <https://charmhub.io/sdcore-amf-k8s>`                                | 1.6/edge           | 1.6                  |
 | {bdg-link-primary-line}`AUSF  <https://charmhub.io/sdcore-amf-k8s>`                               | 1.6/edge           | 1.6                  |
 | {bdg-link-primary-line}`GNBSIM  <https://charmhub.io/sdcore-gnbsim-k8s>`                          | 1.6/edge           | 1.6                  |
