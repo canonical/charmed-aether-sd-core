@@ -179,6 +179,7 @@ UEs
 ueransim
 UERANSIM
 UERANSIM's
+UI
 unsecure
 upf
 UPF
