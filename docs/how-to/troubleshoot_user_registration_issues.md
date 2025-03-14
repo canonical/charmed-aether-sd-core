@@ -38,7 +38,7 @@ Validate the UDM is able to select a UDR by inspecting logs using `kubectl logs 
 INFO	producer/generate_auth_data.go:84	handle GenerateAuthDataRequest	{"component": "UDM", "category": "UEAU"}
 ```
 If the logs do not match, ensure that NRF, AUSF, UDM, UDR pods are up and running using `kubectl get pods -n sdcore`.
-The command should report `Running` for all the three pods.
+The command should report `Running` for all the four pods.
 ```console
 NAME                            READY   STATUS    RESTARTS   AGE
 nrf-0                           2/2     Running   0          15m
@@ -64,7 +64,7 @@ Validate whether the UE authentication in SD-Core matches the actual UE authenti
 
 #### Configuration
 If the logs do not match, ensure that NRF, AUSF, UDM, UDR pods are up and running using `kubectl get pods -n sdcore`.
-The command should report `Running` for all the three pods.
+The command should report `Running` for all the four pods.
 ```console
 NAME                            READY   STATUS    RESTARTS   AGE
 nrf-0                           2/2     Running   0          15m
@@ -115,7 +115,7 @@ INFO	context/sm_context.go:276	context state change, current state[SmStatePfcpMo
 INFO	context/sm_context.go:276	context state change, current state[SmStateActive] next state[SmStateActive]	{"component": "SMF", "category": "CTX", "uuid": "urn:uuid:554a3fbb-0d23-451b-b3e9-c6fad3e96c8c", "id": "imsi-001010100007487", "pduid": 10}
 ```
 If the logs do not match, ensure that NRF, AUSF, SMF, UPF pods are up and running using `kubectl get pods -n sdcore`.
-The command should report `Running` for all the three pods.
+The command should report `Running` for all the four pods.
 ```console
 NAME                            READY   STATUS    RESTARTS   AGE
 nrf-0                           2/2     Running   0          15m
