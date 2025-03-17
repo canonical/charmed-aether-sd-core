@@ -531,12 +531,11 @@ You should see the following device group created:
 We will now add a subscriber with the IMSI that was provided to the gNB simulator.
 Navigate to Subscribers and click on Create. Fill in the following:
 
-- IMSI: `001010100007487`
-- OPC: `981d464c7c52eb6e5036234984ad0bcf`
-- Key: `5122250214c33e723a5dd523fc145fc0`
-- Sequence Number: `16f3b3f70fc2`
 - Network Slice: `Tutorial`
 - Device Group: `device-group`
+- IMSI: `0100007487`
+
+To automatically get the OPC, Key and Sequence Number, click on the `Generate` button in the `Authentication` section of the modal.
 
 ## 7. Integrate SD-Core with the Canonical Observability Stack (COS)
 
