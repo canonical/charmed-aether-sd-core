@@ -535,7 +535,7 @@ Navigate to Subscribers and click on Create. Fill in the following:
 - Device Group: `device-group`
 - IMSI: `0100007487`
 
-To automatically get the OPC, Key and Sequence Number, click on the `Generate` button in the `Authentication` section of the modal.
+To automatically fill in the OPC, Key and Sequence Number, click on the `Generate` button in the `Authentication` section of the modal.
 
 ## 7. Integrate SD-Core with the Canonical Observability Stack (COS)
 
