@@ -12,5 +12,6 @@ public_clouds
 user_management
 release_notes/index
 performance
+sim_configuration
 testing
 ```
