@@ -87,6 +87,7 @@ juju
 Juju
 kB
 K8s
+Ki
 kubectl
 Kubernetes
 lifecycle
@@ -105,8 +106,10 @@ microk
 MicroK
 Microk8s
 microservices
+Milenage
 MNC
 Mongo
+MSIN
 MTU
 multipass
 Multus
@@ -131,6 +134,7 @@ OCI
 ONF
 ONF's
 OpenAirInterface
+OPc
 OPC
 PacketPool
 PCF
