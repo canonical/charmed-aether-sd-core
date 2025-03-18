@@ -382,15 +382,12 @@ You should see the following device group created:
 :align: center
 ```
 
-Create a subscriber with the following attributes:
-- IMSI: `001010100007487`
-- OPC: `981d464c7c52eb6e5036234984ad0bcf`
-- Key: `5122250214c33e723a5dd523fc145fc0`
-- Sequence Number: `16f3b3f70fc2`
+Navigate to Subscribers and click on Create. Fill in the following:
+
 - Network Slice: `default`
 - Device Group: `device-group`
 
-You should see the following subscriber created:
+Click on the two `Generate` buttons to automatically fill in the IMSI, OPC, Key and Sequence Number. After clicking on the `Submit` button you should see the subscriber created:
 
 ```{image} ../images/getting_started_subscriber.png
 :alt: NMS Subscriber
