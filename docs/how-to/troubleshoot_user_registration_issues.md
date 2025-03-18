@@ -63,7 +63,7 @@ This error is typically raised when the UE is provisioned in SD-Core but the aut
 Validate whether the UE authentication in SD-Core matches the actual UE authentication data, either via the UI or the API.
 
 #### Configuration
-If the logs do not match, ensure that NRF, AUSF, UDM, UDR pods are up and running using `kubectl get pods -n sdcore`.
+Ensure that NRF, AUSF, UDM, UDR pods are up and running using `kubectl get pods -n sdcore`.
 The command should report `Running` for all the four pods.
 ```console
 NAME                            READY   STATUS    RESTARTS   AGE
@@ -87,7 +87,31 @@ This error is typically raised when the UE is provisioned in SD-Core but the DNN
 
 ### Recommended Actions
 #### Provisioning
-Validate whether the DNN/S-NSSAI requested by the UE are available in the configured Network Slice and Device Group for the UE, either via the UI or the API.
+Validate whether the DNN/S-NSSAI requested by the UE are available in the configured Network Slice and Device Group for the UE, via the API.
+
+To retrieve the DNN and/or S-NSSAI requested by the UE, refer to the documentation of the specific UE.
+
+To check available DNN/S-NSSAI in the Network Slice, first retrieve NMS address and token. Refer to the _Getting started_ tutorial for the instructions.
+
+The available S-NSSAI can be retrieved using: `curl -sK <nms-address>/config/v1/network-slice/<network-slice-name> -H "Authorization: Bearer <token>" | jq '."slice-id"'`. The output should be similar to the following:
+```console
+{
+  "sst": "1",
+  "sd": "102030"
+}
+```
+
+To retrieve the available DNNs, first retrieve all the device groups associated to the slice using:
+`curl -sK <nms-address>/config/v1/network-slice/<network-slice-name> -H "Authorization: Bearer <token>" | jq '."site-device-group"'`. The output should be similar to the following:
+```console
+[
+  "device-group-1",
+  "device-group-2"
+]
+```
+For each device group, the DNN can be retrieved using:
+`curl -sK <nms-address>/config/v1/device-group/<device-group-name> -H "Authorization: Bearer <token>" | jq '."site-device-group"'`.
+
 
 #### Configuration
 Validate the AMF is able to select an AUSF by inspecting logs using `microk8s.kubectl logs -n sdcore amf-0 -c amf -f`. The logs should report:

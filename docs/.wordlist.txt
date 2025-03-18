@@ -40,6 +40,7 @@ deregister
 DHCP
 DN
 DNN
+DNNs
 Downlink
 DPDK
 dns
