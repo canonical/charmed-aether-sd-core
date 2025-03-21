@@ -398,7 +398,14 @@ After clicking on the `Submit` button you should see the subscriber created:
 
 ## 8. Run the 5G simulation
 
-Switch to the `ran` model and make sure that the `gnbsim` application is in `Active/Idle` state.
+Switch to the `ran` model and set up the subscriber information using the value noted in the previous step:
+
+```console
+juju switch ran
+juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
+```
+
+Make sure that the `gnbsim` application is in `Active/Idle` state.
 
 ```console
 juju switch ran
@@ -423,12 +430,6 @@ gnbsim  1.4.5    active      1  sdcore-gnbsim-k8s  1.6/edge  638  10.152.183.85 
 
 Unit       Workload  Agent  Address       Ports  Message
 gnbsim/0*  active    idle   10.1.194.239
-```
-
-Set up the subscriber information using the value noted in the previous step:
-
-```
-juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
 ```
 
 Run the simulation:
