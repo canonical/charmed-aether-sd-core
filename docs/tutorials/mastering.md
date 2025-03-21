@@ -528,14 +528,12 @@ You should see the following device group created:
 :align: center
 ```
 
-We will now add a subscriber with the IMSI that was provided to the gNB simulator.
 Navigate to Subscribers and click on Create. Fill in the following:
 
 - Network Slice: `Tutorial`
 - Device Group: `device-group`
-- IMSI: `0100007487`
 
-To automatically fill in the OPC, Key and Sequence Number, click on the `Generate` button in the `Authentication` section of the modal.
+Click on the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number, we are going to use them shortly.
 
 ## 7. Integrate SD-Core with the Canonical Observability Stack (COS)
 
@@ -695,10 +693,17 @@ It may take up to 5 minutes for the relevant metrics to be available in Promethe
 
 ## 8. Run the 5G simulation
 
-On the `juju-controller` VM, switch to the `gnbsim` model.
+On the `juju-controller` VM, switch to the `gnbsim` model and set up the subscriber information using the values noted in [step 6](#6-configure-sd-core).
 
 ```console
 juju switch gnbsim
+juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
+
+```
+Wait for the `gnbsim` status to be `Active/Idle`.
+
+```
+juju status --watch 1s --relations
 ```
 
 Start the simulation.
@@ -748,10 +753,10 @@ $ juju debug-log | grep ControlPlaneTransport
 
 We can do the same for the user plane transport to see it starts on the RAN network with IP address `10.204.0.10` as we requested, and it is communicating with our UPF at `10.202.0.10` as expected.
 
-To follow the UE itself, we can filter by the IMSI.
+To follow the UE itself, we can filter by the IMSI (use the value from [step 6](#6-configure-sd-core)).
 
 ```console
-juju debug-log | grep imsi-001010100007487
+juju debug-log | grep imsi-<IMSI>
 ```
 
 ### Control Plane Logs
