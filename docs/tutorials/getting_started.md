@@ -387,7 +387,9 @@ Navigate to Subscribers and click on Create. Fill in the following:
 - Network Slice: `default`
 - Device Group: `device-group`
 
-Click on the two `Generate` buttons to automatically fill in the IMSI, OPC, Key and Sequence Number. After clicking on the `Submit` button you should see the subscriber created:
+Click on the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number, we are going to use them in the next step.
+
+After clicking on the `Submit` button you should see the subscriber created:
 
 ```{image} ../images/getting_started_subscriber.png
 :alt: NMS Subscriber
@@ -421,6 +423,12 @@ gnbsim  1.4.5    active      1  sdcore-gnbsim-k8s  1.6/edge  638  10.152.183.85 
 
 Unit       Workload  Agent  Address       Ports  Message
 gnbsim/0*  active    idle   10.1.194.239
+```
+
+Set up the subscriber information using the value noted in the previous step:
+
+```
+juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
 ```
 
 Run the simulation:
