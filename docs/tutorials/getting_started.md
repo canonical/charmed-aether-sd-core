@@ -408,7 +408,6 @@ juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-numbe
 Make sure that the `gnbsim` application is in `Active/Idle` state.
 
 ```console
-juju switch ran
 juju status
 ```
 
