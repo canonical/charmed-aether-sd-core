@@ -398,7 +398,7 @@ After clicking on the `Submit` button you should see the subscriber created:
 
 ## 8. Run the 5G simulation
 
-Switch to the `ran` model and set up the subscriber information using the value noted in the previous step:
+Switch to the `ran` model and set up the subscriber information using the values noted in the previous step:
 
 ```console
 juju switch ran
