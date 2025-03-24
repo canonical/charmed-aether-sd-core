@@ -30,4 +30,5 @@ backup_sdcore
 restore_sdcore
 troubleshoot_deployment_issues
 troubleshoot_user_plane_issues
+troubleshoot_user_registration_issues
 ```
