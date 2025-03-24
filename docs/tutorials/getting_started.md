@@ -387,7 +387,9 @@ Navigate to Subscribers and click on Create. Fill in the following:
 - Network Slice: `default`
 - Device Group: `device-group`
 
-Click on the two `Generate` buttons to automatically fill in the IMSI, OPC, Key and Sequence Number. After clicking on the `Submit` button you should see the subscriber created:
+Click on the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number, we are going to use them in the next step.
+
+After clicking on the `Submit` button you should see the subscriber created:
 
 ```{image} ../images/getting_started_subscriber.png
 :alt: NMS Subscriber
@@ -396,10 +398,16 @@ Click on the two `Generate` buttons to automatically fill in the IMSI, OPC, Key 
 
 ## 8. Run the 5G simulation
 
-Switch to the `ran` model and make sure that the `gnbsim` application is in `Active/Idle` state.
+Switch to the `ran` model and set up the subscriber information using the values noted in the previous step:
 
 ```console
 juju switch ran
+juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
+```
+
+Make sure that the `gnbsim` application is in `Active/Idle` state.
+
+```console
 juju status
 ```
 
