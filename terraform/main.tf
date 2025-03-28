@@ -260,6 +260,11 @@ resource "lxd_instance" "user-plane" {
     target_path = "/root/sriov_resources.json"
   }
 
+  file {
+    source_path = "files/user-plane/sriov-cni-daemonset.yaml"
+    target_path = "/root/sriov-cni-daemonset.yaml"
+  }
+
   execs = {
     "00-wait-for-boot" = {
       command = ["systemctl", "is-system-running", "--wait", "--quiet"]
@@ -329,38 +334,34 @@ resource "lxd_instance" "user-plane" {
       command       = ["microk8s", "enable", "sriov-device-plugin", "-r", "/root/sriov_resources.json"]
       trigger       = "once"
     }
-    "14-copy-vfioveth-cni-binary" = {
-      command       = ["wget", "-O", "/opt/cni/bin/vfioveth", "https://raw.githubusercontent.com/opencord/omec-cni/master/vfioveth"]
+    "14-deploy-sriov-cni" = {
+      command       = ["microk8s.kubectl", "create", "-f", "/root/sriov-cni-daemonset.yaml"]
       trigger       = "once"
     }
-    "15-chmod-vfioveth-cni-binary" = {
-      command       = ["chmod", "+x", "/opt/cni/bin/vfioveth"]
-      trigger       = "once"
-    }
-    "16-microk8s-enable-metallb" = {
+    "15-microk8s-enable-metallb" = {
       command       = ["microk8s", "enable", "metallb:10.201.0.200/32"]
       trigger       = "once"
     }
-    "17-microk8s-disable-default-dns" = {
+    "16-microk8s-disable-default-dns" = {
       command       = ["microk8s", "disable", "dns"]
       trigger       = "once"
     }
-    "18-microk8s-enable-custom-dns" = {
+    "17-microk8s-enable-custom-dns" = {
       command       = ["microk8s", "enable", "dns:10.201.0.1"]
       trigger       = "once"
     }
-    "19-add-ubuntu-user-to-snap_microk8s-group" = {
+    "18-add-ubuntu-user-to-snap_microk8s-group" = {
       command       = ["usermod", "-a", "-G", "microk8s", "ubuntu"]
       trigger       = "once"
       fail_on_error = true
     }
-    "20-get-microk8s-config" = {
+    "19-get-microk8s-config" = {
       command       = ["microk8s.config"]
       trigger       = "once"
       fail_on_error = true
       record_output = true
     }
-    "21-reboot" = {
+    "20-reboot" = {
       command       = ["reboot"]
       trigger       = "once"
       fail_on_error = true
@@ -606,7 +607,7 @@ resource "lxd_instance" "juju-controller" {
   }
 
   file {
-    content            = lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout
+    content            = lxd_instance.user-plane.execs["19-get-microk8s-config"].stdout
     target_path        = "/home/ubuntu/user-plane-cluster.yaml"
     uid                = 1000
     gid                = 1000
