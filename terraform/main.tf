@@ -313,7 +313,7 @@ resource "lxd_instance" "user-plane" {
       fail_on_error = true
     }
     "10-microk8s-get-community-addons" = {
-      command       = ["microk8s", "addons", "repo", "add", "community", "https://github.com/Gmerold/microk8s-community-addons", "--reference", "fix-sriov-addon"]
+      command       = ["microk8s", "addons", "repo", "add", "community", "https://github.com/canonical/microk8s-community-addons"]
       trigger       = "once"
       fail_on_error = true
     }
