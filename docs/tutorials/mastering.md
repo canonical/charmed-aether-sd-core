@@ -305,17 +305,17 @@ module "sdcore-user-plane" {
   model = data.juju_model.user-plane.name
 
   upf_config = {
-    cni-type               = "vfioveth"
-    upf-mode              = "dpdk"
-    access-gateway-ip     = "10.202.0.1"
-    access-ip             = "10.202.0.10/24"
-    core-gateway-ip       = "10.203.0.1"
-    core-ip               = "10.203.0.10/24"
-    external-upf-hostname = "upf.mgmt.local"
+    cni-type                     = "vfioveth"
+    upf-mode                     = "dpdk"
+    access-gateway-ip            = "10.202.0.1"
+    access-ip                    = "10.202.0.10/24"
+    core-gateway-ip              = "10.203.0.1"
+    core-ip                      = "10.203.0.10/24"
+    external-upf-hostname        = "upf.mgmt.local"
     access-interface-mac-address = "c2:c8:c7:e9:cc:18" # In this example, its the MAC address of access interface.
-    core-interface-mac-address = "e2:01:8e:95:cb:4d" # In this example, its the MAC address of core interface
+    core-interface-mac-address   = "e2:01:8e:95:cb:4d" # In this example, its the MAC address of core interface
     enable-hw-checksum           = "false"
-    gnb-subnet = "10.204.0.0/24"
+    gnb-subnet                   = "10.204.0.0/24"
   }
 }
 
@@ -471,16 +471,17 @@ juju show-secret NMS_LOGIN --reveal
 ```
 The output looks like this:
 ```
-csurgu7mp25c761k2oe0:
-  revision: 1
+cvn3usfmp25c7bgqqr60:
+  revision: 2
+  checksum: f2933262ee923c949cc0bd12b0456184bb85e5bf41075028893eea447ab40b68
   owner: nms
   label: NMS_LOGIN
-  created: 2024-11-20T10:22:49Z
-  updated: 2024-11-20T10:22:49Z
+  created: 2025-04-03T07:57:40Z
+  updated: 2025-04-03T08:02:15Z
   content:
-    password: ',u7=VEE3XK%t'
-    token: ""
-    username: charm-admin-SOOO
+    password: pkxp9DYCcZG
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDM2NzA5MzMsInVzZXJuYW1lIjoiY2hhcm0tYWRtaW4tVlNMTSIsInJvbGUiOjF9.Qwp0PIn9L07nTz0XooPvMb8v8-egYJT85MXjoOY9nYQ
+    username: charm-admin-VSLM
 ```
 
 Retrieve the NMS address:
@@ -492,7 +493,20 @@ juju run traefik/0 show-proxied-endpoints
 The output should be `https://control-plane-nms.10.201.0.53.nip.io/`.
 Navigate to this address in your browser and use the `username` and `password` to login.
 
-In the Network Management System (NMS), create a network slice with the following attributes:
+### Assign Tracking Area Code (TAC) to the gNodeB
+
+In the Network Management System (NMS) navigate to the `Inventory` tab. Click the `Edit` button next to the integrated gNB name and set `TAC` to `1`:
+
+```{image} ../images/mastering_gnb_tac.png
+:alt: NMS Inventory
+:align: center
+```
+
+Confirm new `TAC` value by clicking the `Submit` button.
+
+### Create a Network Slice
+
+Navigate to the `Network slices` tab and create a network slice with the following attributes:
 
 - Name: `Tutorial`
 - MCC: `001`
@@ -507,7 +521,9 @@ You should see the following network slice created.
 :align: center
 ```
 
-Navigate to Device groups and click on Create. Fill in the following:
+### Create a Device Group
+
+Navigate to the `Device groups` tab and create a device group with the following attributes:
 
 - Name: `device-group`
 - Network Slice: `Tutorial`
@@ -528,12 +544,21 @@ You should see the following device group created:
 :align: center
 ```
 
-Navigate to Subscribers and click on Create. Fill in the following:
+### Create a Subscriber
+
+Navigate to `Subscribers` tab and click the `Create` button. Fill in the following:
 
 - Network Slice: `Tutorial`
 - Device Group: `device-group`
 
-Click on the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number, we are going to use them shortly.
+Click the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number; we are going to use them shortly.
+
+After clicking the `Submit` button you should see the subscriber created:
+
+```{image} ../images/getting_started_subscriber.png
+:alt: NMS Subscriber
+:align: center
+```
 
 ## 7. Integrate SD-Core with the Canonical Observability Stack (COS)
 
