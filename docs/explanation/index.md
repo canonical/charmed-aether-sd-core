@@ -5,6 +5,7 @@ The following explanations provide context and clarification on key-topics relat
 ```{toctree}
 :maxdepth: 1
 
+hardening
 security
 observability
 ```
