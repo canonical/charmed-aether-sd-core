@@ -75,6 +75,7 @@ healthcheck
 hostname
 http
 HTTPS
+hostPath
 hugepages
 HugePages
 init
