@@ -1,6 +1,6 @@
 # Hardening
 
-## Infrastructure and Network Hardening
+## Infrastructure Hardening
 
 ### Operating System Security
 
@@ -8,7 +8,7 @@ To ensure the security of operating systems in the deployment infrastructure (wh
 
 1. Automate OS security patches.
     - Enable automatic security updates to protect against newly discovered vulnerabilities.
-    - Tools for automatic updates such as `unattended-upgrades`.
+    - Use the tools for automatic updates such as `unattended-upgrades`.
     
 2. Enable Secure Boot to ensure that the system boots only trusted software, protecting against unauthorized code during startup.
 
@@ -44,23 +44,23 @@ MicroK8s uses the built-in Pod Security Admission controller to enforce these st
 
 There are three pod security admission profile levels:
 
-privileged:
+Privileged:
 - allowing pods to run with elevated privileges and fewer security restrictions.
 - needed for workloads that require extensive host access such as debugging tools, administrative pods.
 
-baseline:
+Baseline:
    - moderately restrictive profile targeting standard application workloads with very basic security constraints.
    - Cannot run as root by default.
    - Disallows hostPath volumes (which allow Pods to access the host's file system).
    - Prevents the use of certain Linux capabilities or privileged container execution.
 
-restricted:
+Restricted:
   - most restrictive profile ensuring compliance with high-security requirements.
   - requires all containers to drop all unnecessary Linux capabilities.
   - Disallows privileged containers and running as root.
   - Does not allow access to the underlying host's file system or network.
 
-Set `privileged` profile at the namespace level:
+Set `restricted` profile at the namespace level:
 
 ```bash
 kubectl label namespace <namespace> pod-security.kubernetes.io/enforce=restricted
@@ -70,17 +70,11 @@ kubectl label namespace <namespace> pod-security.kubernetes.io/enforce=restricte
 
 ### Monitoring and Alerts
 
-Monitoring and alerting are crucial for ensuring the secure and reliable operation of a 5G Core integrated with the Canonical Observability Stack (COS).
+Monitoring and alerting are crucial for ensuring the secure and reliable operation of a 5G Core integrated with the Canonical Observability Stack (COS). The COS Stack offers a comprehensive set of observability tools such as Prometheus, Loki, Alertmanager, and Grafana to continuously monitor system performance, detect anomalies, and respond to potential security or operational issues.
 
-The COS Stack offers a comprehensive set of observability tools such as Prometheus, Loki, Alertmanager, and Grafana to continuously monitor system performance, detect anomalies, and respond to potential security or operational issues.
+Loki centralizes log data, allowing operators to correlate logs from multiple 5G Core services to quickly identify the root cause of errors, unusual activity, or potential security breaches. Notifications for critical incidents, such as resource exhaustion, node failures or service disruptions are managed and delivered through Alertmanager which is part of Prometheus. 
 
-Loki centralizes log data, allowing operators to correlate logs from multiple 5G Core services to quickly identify the root cause of errors, unusual activity, or potential security breaches.
-
-Notifications for critical incidents, such as resource exhaustion, node failures or service disruptions are managed and delivered through Alertmanager which is part of Prometheus. 
-
-All of these observability features are accessible through Grafana, which provides customizable dashboards with actionable insights into the real-time health of the system.
-
-By integrating COS with Charmed Aether SD-Core, operators can establish a secure and resilient operational environment, proactively address issues and ensure uninterrupted connectivity for end-users. 
+All of these observability features are accessible through Grafana, which provides customizable dashboards with actionable insights into the real-time health of the system. By integrating COS with Charmed Aether SD-Core, operators can establish a secure and resilient operational environment, proactively address issues and ensure uninterrupted connectivity for end-users. 
 
 Please follow [this guide](https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/v1.5/how-to/integrate_sdcore_with_observability/) to integrate with Cos stack.
 
