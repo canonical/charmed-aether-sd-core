@@ -37,28 +37,17 @@ To enhance the security of the deployment infrastructure, firewalls can be confi
 
 ### Enforce Pod Security
 
-Kubernetes offers Pod Security Standards (PSS) as a replacement for the deprecated Pod Security Policies (PSP). 
-MicroK8s uses the built-in Pod Security Admission controller to enforce these standards.
+Kubernetes offers Pod Security Standards (PSS) as a replacement for the deprecated Pod Security Policies (PSP). MicroK8s uses the built-in Pod Security Admission controller to enforce these standards.
 
 1. Set Namespace-Level Pod Security Standards (PSS):
 
 There are three pod security admission profile levels:
 
-Privileged:
-- allowing pods to run with elevated privileges and fewer security restrictions.
-- needed for workloads that require extensive host access such as debugging tools, administrative pods.
+**Privileged** allows pods to run with elevated privileges and fewer security restrictions. It is needed for workloads that require extensive host access such as debugging tools, administrative pods.
 
-Baseline:
-   - moderately restrictive profile targeting standard application workloads with very basic security constraints.
-   - Cannot run as root by default.
-   - Disallows hostPath volumes (which allow Pods to access the host's file system).
-   - Prevents the use of certain Linux capabilities or privileged container execution.
+**Baseline** is moderately restrictive profile targeting standard application workloads with very basic security constraints. It cannot run as root by default and disallows hostPath volumes (which allow Pods to access the host's file system). Besides, it prevents the use of certain Linux capabilities or privileged container execution.
 
-Restricted:
-  - most restrictive profile ensuring compliance with high-security requirements.
-  - requires all containers to drop all unnecessary Linux capabilities.
-  - Disallows privileged containers and running as root.
-  - Does not allow access to the underlying host's file system or network.
+**Restricted** is the most restrictive profile ensuring compliance with high-security requirements. It requires all containers to drop all unnecessary Linux capabilities, disallows privileged containers and running as root. It also does not allow access to the underlying host's file system or network.
 
 Set `restricted` profile at the namespace level:
 
