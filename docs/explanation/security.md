@@ -59,7 +59,7 @@ By adhering to these practices, the platform prevents unintended disclosure of c
 
 ## Secure Dependencies
 
-All libraries and dependencies utilized in Juju charms are continuously monitored, scanned, and updated using Renovate. This automation ensures:
+All libraries and dependencies utilized in Juju charms are continuously monitored, scanned, and updated using **Renovate**. This automation ensures:
 
 - The use of up-to-date libraries and dependencies.
 - Identification and mitigation of vulnerabilities in third-party packages.
