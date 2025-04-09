@@ -45,7 +45,7 @@ This validation applies to inputs used for:
 - Configuring the Network Management System (NMS)
 - Managing and operating charms
 
-By performing through validation and sanitization of inputs in these components, the platform effectively prevents vulnerabilities such as SQL injection, command injection, and other malicious exploitation attempts. This ensures the integrity and security of the platform's underlying systems and protects against unauthorized access or data manipulation.
+By performing thorough validation and sanitization of inputs in these components, the platform effectively prevents vulnerabilities such as SQL injection, command injection, and other malicious exploitation attempts. This ensures the integrity and security of the platform's underlying systems and protects against unauthorized access or data manipulation.
 
 ## Log Confidentiality
 
