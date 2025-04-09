@@ -61,5 +61,5 @@ Loki centralizes log data, allowing operators to correlate logs from multiple 5G
 
 All of these observability features are accessible through Grafana, which provides customizable dashboards with actionable insights into the real-time health of the system. By integrating COS with Charmed Aether SD-Core, operators can establish a secure and resilient operational environment, proactively address issues and ensure uninterrupted connectivity for end-users. 
 
-Please follow [this guide](https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/v1.5/how-to/integrate_sdcore_with_observability/) to integrate with COS stack.
+Please follow [this guide](https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/v1.5/how-to/integrate_sdcore_with_observability) to integrate with COS stack.
 
