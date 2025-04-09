@@ -38,9 +38,7 @@ Access to these databases is tightly controlled by granting different database u
 
 ## Input Validation
 
-Comprehensive input validation is implemented within charms and the Network Management System (NMS) to mitigate the risk of injection attacks and ensure secure handling of user-provided inputs. 
-
-This validation applies to inputs used for:
+Comprehensive input validation is implemented within charms and the Network Management System (NMS) to mitigate the risk of injection attacks and ensure secure handling of user-provided inputs. This validation applies to inputs used for:
 
 - Configuring the Network Management System (NMS)
 - Managing and operating charms
