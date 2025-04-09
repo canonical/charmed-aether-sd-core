@@ -125,6 +125,7 @@ N3
 N4
 N6
 namespace
+namespaces
 netplan
 newgrp
 Nameserver
