@@ -2,30 +2,28 @@
 
 ## Infrastructure Hardening
 
-### Firewall Rules
+1. Deploy the Charmed Aether SD-Core behind a firewall:
+   - Allow only inbound traffic to required ports for the 5G Core.
+   - Enable only outgoing traffic necessary for communication with trusted endpoints like RAN and DN.
 
-Enforcing the firewall rules minimizes the attack surface while preserving the functionality required for operations. To enhance the security of the deployment infrastructure, firewalls can be configured with the following rules:
+2. Restrict protocols to 5G Core essentials:
+   a. Allow:
+      - SCTP: For N2 interface communication (AMF).
+      - UDP: For PFCP (SMF <-> UPF) and GTP-U (UPF <-> RAN).
+      - TCP: For HTTP/HTTPS services like NRF or API communication.
+      - DNS/TLS: For discovery and secure communication.
 
-1. Allow only inbound traffic targeting the required ports for the 5G Core and the outgoing traffic required for communication with trusted endpoints such as RAN and DN.
-2. Allow only essential protocols based on the 5G Core as follows:
-    - SCTP: For N2 interface communication (used by AMF).
-    - UDP: For PFCP (SMF <-> UPF) or GTP-U (UPF <-> RAN).
-    - TCP: For HTTP/HTTPS services like NRF or API communications.
-    - DNS/TLS: For Core service discovery and communication.
+   b. Block other protocols including ICMP, FTP, Telnet, or legacy application protocols unless absolutely necessary.
 
-   All other protocols like ICMP, FTP, Telnet, or legacy application protocols should be dropped unless explicitly needed.
-
-3. Protect public endpoints and Network Management System (NMS):
-    - Restrict access using IP whitelisting to allow only trusted IP ranges.
-    - Optionally, deploy the core system behind a VPN or private network to enhance security for management systems.
+3. Protect public endpoints and management systems:
+   - Use IP whitelisting to allow only trusted IP ranges.
+   - Place the Charmed Aether SD-Core network behind a VPN or private network for additional security.
 
 ## Hardening Containerized Applications
 
-### Enforce Pod Security
-
-To align with Kubernetes security best practices, MicroK8s leverages the Pod Security Admission controller. When setting up namespaces, we recommend applying the `restricted` profile, which enforces the highest security standards required for production workloads.
-
-To apply the `restricted` profile at the namespace level, use the following command:
+1. Enforce Pod Security:
+   - Use the Kubernetes Pod Security Admission controller.
+   - Apply the `restricted` profile to namespaces with the following command:
 
 ```bash
 kubectl label namespace <namespace> pod-security.kubernetes.io/enforce=restricted
@@ -33,8 +31,7 @@ kubectl label namespace <namespace> pod-security.kubernetes.io/enforce=restricte
 
 ## Operational Hardening
 
-### Monitoring and Alerts
-
-Monitoring and alerting are essential for maintaining the secure and reliable operation of Charmed Aether SD-Core. By integrating COS with Charmed Aether SD-Core, operators can proactively address issues, maintain system resilience and ensure uninterrupted connectivity for end-users. For detailed steps, please follow [this guide](https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/integrate_sdcore_with_observability).
-
+1. Integrate with the Canonical Observability Stack:
+   - Set up monitoring and alerts by integrating with the Canonical Observability Stack (COS).
+   - Refer to the [integration guide](https://canonical-charmed-aether-sd-core.readthedocs-hosted.com/en/latest/how-to/integrate_sdcore_with_observability) for steps.
 
