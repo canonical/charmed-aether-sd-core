@@ -92,6 +92,7 @@ iPerf
 jq
 juju
 Juju
+JWT
 kB
 K8s
 Ki
