@@ -2,6 +2,7 @@ accessDstMAC
 addon
 addons
 Aether
+Alertmanager
 AKS
 allocatable
 AMF
@@ -34,6 +35,7 @@ coreDstMAC
 Corefile
 CPUs
 CSR
+customizable
 DDR
 deployable
 deregister
@@ -49,6 +51,7 @@ DNS
 driverctl
 enp
 EKS
+ETCD
 frictionless
 gb
 GCP
@@ -71,6 +74,8 @@ Haswell
 healthcheck
 hostname
 http
+HTTPS
+hostPath
 hugepages
 HugePages
 init
@@ -87,6 +92,7 @@ iPerf
 jq
 juju
 Juju
+JWT
 kB
 K8s
 Ki
@@ -109,6 +115,7 @@ MicroK
 Microk8s
 microservices
 Milenage
+MITM
 MNC
 Mongo
 MSIN
@@ -119,10 +126,12 @@ N3
 N4
 N6
 namespace
+namespaces
 netplan
 newgrp
 Nameserver
 nameservers
+NFs
 NIC
 NGAPP
 nms
@@ -149,6 +158,8 @@ PDU
 PFCP
 Pre
 prometheus
+PSP
+PSS
 QI
 QoS
 Quectel
@@ -158,6 +169,7 @@ requirer
 RDRAND
 Rockcraft
 Ryzen
+sanitization
 SCTP
 sdcore
 sdcore-k8s
@@ -173,6 +185,7 @@ TCP
 tcp
 Terraform
 Terraform's
+TTL
 TLS
 Traefik
 Traefik's
@@ -199,5 +212,7 @@ VLAN
 VM
 VMs
 VM's
+VPN
+VPNs
 Webui
 yaml
