@@ -213,5 +213,6 @@ VM
 VMs
 VM's
 VPN
+VPNs
 Webui
 yaml
