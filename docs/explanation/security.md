@@ -18,11 +18,11 @@ By default, the TLS certificate provider employed is the [self-signed-certificat
 
 ## Access Control and Secure Communication in NMS
 
-The Charmed Aether SD-Core uses JWT-based authentication with role-based permissions to ensure secure access. Admin users have full control over all resources and accounts, while all other users have restricted permissions, limited to managing the resources they create and their own accounts. Authentication tokens expire after one hour, adding an extra layer of security. Furthermore, all HTTP endpoints in the Network Management System (NMS) are secured with HTTPS to ensure encrypted communication and prevent unauthorized interception.
+Charmed Aether SD-Core uses JWT-based authentication with role-based permissions to ensure secure access. Admin users have full control over all resources and accounts, while all other users have restricted permissions, limited to managing the resources they create and their own accounts. Authentication tokens expire after one hour. Furthermore, all HTTP endpoints in the Network Management System (NMS) are secured with HTTPS.
 
 ## Database Security
 
-The Charmed Aether SD-Core ensures security and isolation by keeping network functions, NMS users and subscribers' data in different databases.
+Charmed Aether SD-Core ensures security and isolation by keeping network functions, NMS users and subscribers' data in different databases.
 
 Granular access control restricts each database user's permissions to their respective data store, ensuring isolation, minimizing risks and enforcing the least privilege principle.
 
@@ -37,7 +37,7 @@ By ensuring validation and sanitization of certain inputs, the platform aims to 
 
 ## Log Confidentiality
 
-The Charmed Aether SD-Core adopts enhanced log confidentiality practices to ensure that sensitive or confidential data is excluded from log files.
+Charmed Aether SD-Core adopts enhanced log confidentiality practices to ensure that sensitive or confidential data is excluded from log files.
 
 - Subscriber authentication tokens or identifiers such as location
 - Encryption keys
@@ -47,9 +47,7 @@ By adhering to these practices, the platform prevents unintended disclosure of c
 
 ## Secure Dependencies
 
-All libraries and dependencies utilized in Juju charms are continuously monitored, scanned, and updated using **Renovate**. This automation ensures:
+All libraries and dependencies utilized in Juju charms are continuously monitored, scanned, and updated. This automation ensures:
 
 - The use of up-to-date libraries and dependencies.
 - Identification and mitigation of vulnerabilities in third-party packages.
-
-By leveraging Renovate, the platform ensures that all Juju charms remain secure and aligned with the latest updates, reducing risks associated with outdated or vulnerable code.

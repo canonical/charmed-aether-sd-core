@@ -1,33 +1,32 @@
 # Hardening
 
+This section explains how to harden Charmed Aether SD-Core by securing infrastructure with firewalls, VPNs, traffic restrictions and IP whitelisting, while enhancing operations through monitoring and alerting with the Canonical Observability Stack (COS).
+
 ## Infrastructure Hardening
 
-1. Deploy the Charmed Aether SD-Core behind a firewall:
-   - Allow only inbound traffic to required ports for the 5G Core.
-   - Enable only outgoing traffic necessary for communication with trusted endpoints like RAN and DN.
+1. Deploy Charmed Aether SD-Core behind a firewall:
 
-2. Restrict protocols to 5G Core essentials:
-   a. Allow:
-      - SCTP: For N2 interface communication (AMF).
-      - UDP: For PFCP (SMF <-> UPF) and GTP-U (UPF <-> RAN).
-      - TCP: For HTTP/HTTPS services like NRF or API communication.
-      - DNS/TLS: For discovery and secure communication.
+   a. Allow only inbound traffic to required ports for the 5G Core.
 
-   b. Block other protocols including ICMP, FTP, Telnet, or legacy application protocols unless absolutely necessary.
+         - 2152 (UDP) for UPF (GTP-U traffic)
+         - 38412 (SCTP) for AMF (NGAP from gNBs)
+         - 443 (HTTPS) for NMS (management access)
 
-3. Protect public endpoints and management systems:
-   - Use IP whitelisting to allow only trusted IP ranges.
-   - Place the Charmed Aether SD-Core network behind a VPN or private network for additional security.
+   b. Enable only outgoing traffic necessary for communication with trusted endpoints like RAN and DN.
 
-## Hardening Containerized Applications
+   c. Restrict protocols to 5G Core essentials:
 
-1. Enforce Pod Security:
-   - Use the Kubernetes Pod Security Admission controller.
-   - Apply the `restricted` profile to namespaces with the following command:
+        i. Allow:
+            - SCTP: For N2 interface communication (AMF).
+            - UDP: For PFCP (SMF <-> UPF) and GTP-U (UPF <-> RAN).
+            - TCP: For HTTP/HTTPS services like NRF or API communication.
+            - DNS/TLS: For discovery and secure communication.
 
-```bash
-kubectl label namespace <namespace> pod-security.kubernetes.io/enforce=restricted
-```
+        ii. Block other protocols including ICMP, FTP, Telnet, or legacy application protocols unless absolutely necessary.
+   
+   d. Use IP whitelisting to allow only trusted IP ranges.
+
+2. Place Charmed Aether SD-Core network behind a VPN or private network for additional security.
 
 ## Operational Hardening
 
