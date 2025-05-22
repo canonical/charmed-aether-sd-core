@@ -10,6 +10,7 @@ module "sdcore" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
   model      = juju_model.sdcore.name
+  depends_on = [juju_model.sdcore]
 
   traefik_config = {
     routing_mode = "subdomain"

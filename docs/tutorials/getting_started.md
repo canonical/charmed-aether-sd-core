@@ -3,7 +3,7 @@
 In this tutorial, we will deploy and run an SD-Core 5G core network using Juju and Terraform.
 As part of this tutorial, we will also deploy a gNB Simulator which is a 5G radio and a cellphone simulator.
 
-The gNB Simulator serve only demonstration purposes and shouldn't be part of production deployments.
+The gNB Simulator serves only demonstration purposes and shouldn't be part of production deployments.
 
 To complete this tutorial, you will need a machine which meets the following requirements:
 
