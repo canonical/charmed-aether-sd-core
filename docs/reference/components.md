@@ -15,7 +15,6 @@ Charmed Aether SD-Core `v1.6` is composed of the following components and their 
 | {bdg-link-primary-line}`NRF  <https://charmhub.io/sdcore-nrf-k8s>`                                | 1.6/edge           | 1.6                  |
 | {bdg-link-primary-line}`NSSF  <https://charmhub.io/sdcore-nssf-k8s>`                              | 1.6/edge           | 1.6                  |
 | {bdg-link-primary-line}`PCF  <https://charmhub.io/sdcore-pcf-k8s>`                                | 1.6/edge           | 1.6                  |
-| {bdg-link-primary-line}`Router  <https://charmhub.io/sdcore-router-k8s>`                          | 1.6/edge           | 0.1                  |
 | {bdg-link-primary-line}`SMF  <https://charmhub.io/sdcore-smf-k8s>`                                | 1.6/edge           | 2.0                  |
 | {bdg-link-primary-line}`UDM  <https://charmhub.io/sdcore-udm-k8s>`                                | 1.6/edge           | 1.6                  |
 | {bdg-link-primary-line}`UDR  <https://charmhub.io/sdcore-udr-k8s>`                                | 1.6/edge           | 1.6                  |

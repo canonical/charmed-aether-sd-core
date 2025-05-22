@@ -1,14 +1,9 @@
 # Getting started
 
 In this tutorial, we will deploy and run an SD-Core 5G core network using Juju and Terraform.
-As part of this tutorial, we will also deploy additional components:
+As part of this tutorial, we will also deploy a gNB Simulator which is a 5G radio and a cellphone simulator.
 
-- gNB Simulator: a 5G radio and a cellphone simulator,
-- SD-Core Router: a software router facilitating communication between the core and the Radio
- Access Network (RAN) to simulate usage of this network.
-
-Both gNB Simulator and SD-Core Router serve only demonstration purposes and shouldn't be part
- of production deployments.
+The gNB Simulator serves only demonstration purposes and shouldn't be part of production deployments.
 
 To complete this tutorial, you will need a machine which meets the following requirements:
 
@@ -100,7 +95,7 @@ terraform {
 EOF
 ```
 
-Create a Terraform module containing the SD-Core 5G core network and a router:
+Create a Terraform module containing the SD-Core 5G core network:
 
 ```console
 cat << EOF > core.tf
@@ -108,18 +103,11 @@ resource "juju_model" "sdcore" {
   name = "sdcore"
 }
 
-module "sdcore-router" {
-  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform"
-
-  model      = juju_model.sdcore.name
-  depends_on = [juju_model.sdcore]
-}
-
 module "sdcore" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
   model        = juju_model.sdcore.name
-  depends_on = [module.sdcore-router]
+  depends_on = [juju_model.sdcore]
   
   traefik_config = {
     routing_mode = "subdomain"
@@ -173,8 +161,7 @@ mongodb                            active       1  mongodb-k8s               6/s
 nms                       1.1.0    active       1  sdcore-nms-k8s            1.6/edge       849  10.152.183.42   no       
 nrf                       1.6.2    active       1  sdcore-nrf-k8s            1.6/edge       790  10.152.183.234  no       
 nssf                      1.6.1    active       1  sdcore-nssf-k8s           1.6/edge       669  10.152.183.40   no       
-pcf                       1.6.1    active       1  sdcore-pcf-k8s            1.6/edge       710  10.152.183.129  no       
-router                             active       1  sdcore-router-k8s         1.6/edge       464  10.152.183.176  no       
+pcf                       1.6.1    active       1  sdcore-pcf-k8s            1.6/edge       710  10.152.183.129  no           
 self-signed-certificates           active       1  self-signed-certificates  1/stable       263  10.152.183.71   no       
 smf                       2.0.2    active       1  sdcore-smf-k8s            1.6/edge       801  10.152.183.81   no       
 traefik                   2.11.0   blocked      1  traefik-k8s               latest/stable  234  10.152.183.244  no       "external_hostname" must be set while using routing mode "subdomain"
@@ -190,8 +177,7 @@ mongodb/0*                   active    idle   10.1.194.237         Primary
 nms/0*                       active    idle   10.1.194.255         
 nrf/0*                       active    idle   10.1.194.213         
 nssf/0*                      active    idle   10.1.194.243         
-pcf/0*                       active    idle   10.1.194.250         
-router/0*                    active    idle   10.1.194.210         
+pcf/0*                       active    idle   10.1.194.250                 
 self-signed-certificates/0*  active    idle   10.1.194.239         
 smf/0*                       active    idle   10.1.194.202         
 traefik/0*                   blocked   idle   10.1.194.230         "external_hostname" must be set while using routing mode "subdomain"
@@ -258,7 +244,6 @@ module "gnbsim" {
   source = "git::https://github.com/canonical/sdcore-gnbsim-k8s-operator//terraform"
 
   model      = juju_model.ran-simulator.name
-  depends_on = [module.sdcore-router]
 }
 
 resource "juju_integration" "gnbsim-amf" {
