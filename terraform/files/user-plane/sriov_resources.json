@@ -1,4 +1,0 @@
-{
-  "intel_sriov_vfio_core": ["0000:06:00.0"],
-  "intel_sriov_vfio_access": ["0000:07:00.0"]
-}
