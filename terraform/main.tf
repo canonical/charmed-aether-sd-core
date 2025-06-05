@@ -134,6 +134,7 @@ resource "lxd_instance" "control-plane" {
     "03-k8s-set-load-balancer-cidrs" = {
       command       = ["k8s", "set", "load-balancer.cidrs=10.201.0.52-10.201.0.53"]
       trigger       = "once"
+      fail_on_error = true
     }
     "04-wait-for-k8s" = {
       command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
@@ -332,18 +333,22 @@ resource "lxd_instance" "user-plane" {
     "12-k8s-add-sriov-device-plugin" = {
       command       = ["k8s", "kubectl", "apply", "-f", "https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin/master/deployments/sriovdp-daemonset.yaml"]
       trigger       = "once"
+      fail_on_error = true
     }
     "13-copy-vfioveth-cni-binary" = {
       command       = ["wget", "-O", "/opt/cni/bin/vfioveth", "https://raw.githubusercontent.com/opencord/omec-cni/master/vfioveth"]
       trigger       = "once"
+      fail_on_error = true
     }
     "14-chmod-vfioveth-cni-binary" = {
       command       = ["chmod", "+x", "/opt/cni/bin/vfioveth"]
       trigger       = "once"
+      fail_on_error = true
     }
     "15-k8s-set-load-balancer-cidrs" = {
       command       = ["k8s", "set", "load-balancer.cidrs=10.201.0.200/32"]
       trigger       = "once"
+      fail_on_error = true
     }
     "16-wait-for-k8s" = {
       command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
@@ -635,6 +640,7 @@ resource "lxd_instance" "juju-controller" {
     "03-k8s-set-load-balancer" = {
       command       = ["k8s", "set", "load-balancer.cidrs=10.201.0.50-10.201.0.51"]
       trigger       = "once"
+      fail_on_error = true
     }
     "04-wait-for-k8s" = {
       command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
@@ -656,12 +662,14 @@ resource "lxd_instance" "juju-controller" {
     "07-install-juju" = {
       command       = ["snap", "install", "juju", "--channel=3.6/stable"]
       trigger       = "once"
+      fail_on_error = true
     }
     "08-create-juju-shared-folder" = {
       command       = ["mkdir", "-p", "/home/ubuntu/.local/share/juju"]
       uid           = 1000
       gid           = 1000
       trigger       = "once"
+      fail_on_error = true
     }
     "09-save-k8s-credentials" = {
       command       = ["/bin/sh", "-c", "su ubuntu -c \"sudo k8s config > /home/ubuntu/.local/share/juju/credentials.yaml\""]
