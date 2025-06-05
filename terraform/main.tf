@@ -211,7 +211,7 @@ resource "lxd_instance" "user-plane" {
     properties = {
       pool = "sdcore-pool"
       path = "/"
-      size = "20GB"
+      size = "40GB"
     }
   }
 
@@ -420,7 +420,7 @@ resource "lxd_instance" "gnbsim" {
 
   limits = {
     cpu    = 2
-    memory = "3GB"
+    memory = "4GB"
   }
 
   device {
@@ -430,7 +430,7 @@ resource "lxd_instance" "gnbsim" {
     properties = {
       pool = "sdcore-pool"
       path = "/"
-      size = "20GB"
+      size = "40GB"
     }
   }
 
@@ -571,7 +571,7 @@ resource "lxd_instance" "juju-controller" {
     properties = {
       pool = "sdcore-pool"
       path = "/"
-      size = "40GB"
+      size = "60GB"
     }
   }
 
