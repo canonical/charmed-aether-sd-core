@@ -21,6 +21,14 @@ sudo snap install k8s --classic --channel=1.33-classic/stable
 cat << EOF | sudo k8s bootstrap --file -
 containerd-base-dir: /opt/containerd
 cluster-config:
+  network:
+    enabled: true
+  dns:
+    enabled: true
+  load-balancer:
+    enabled: true
+  local-storage:
+    enabled: true
   annotations:
     k8sd/v1alpha1/cilium/sctp/enabled: true
 EOF
@@ -32,11 +40,9 @@ Add the Multus plugin.
 sudo k8s kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml
 ```
 
-Enable the following K8s addons. We must give load-balancer an address
-range that has at least 3 IP addresses for Charmed Aether SD-Core.
+We must give MetalLB an address range that has at least 3 IP addresses for Charmed Aether SD-Core.
 
 ```console
-sudo k8s enable network dns load-balancer local-storage
 sudo k8s set load-balancer.cidrs="10.0.0.2-10.0.0.4"
 ```
 
