@@ -26,12 +26,12 @@ Validate whether a Juju model already exists with the same name:
 
 ```shell
 $ juju models
-controller: microk8s-localhost
+controller: k8s
 
-Model       Cloud/Region        Type        Status      Units  Access  Last connection
-controller  microk8s/localhost  kubernetes  available   1       admin  just now
-private5g*  microk8s/localhost  kubernetes  destroying  -       admin  6 minutes ago
-sdcore      microk8s/localhost  kubernetes  available   19      admin  2024-10-04
+Model       Cloud/Region  Type        Status      Units  Access  Last connection
+controller  k8s           kubernetes  available   1       admin  just now
+private5g*  k8s           kubernetes  destroying  -       admin  6 minutes ago
+sdcore      k8s           kubernetes  available   19      admin  2024-10-04
 ```
 
 Choose a model name that does not exist in the Juju controller. Read [this guide][Configure SD-Core K8s Deployment] for more information.
@@ -60,19 +60,19 @@ Validate that the Juju controller exists.
 
 First, list the available Juju controllers:
 
-```shell
+```console
 $ juju controllers
 Use --refresh option with this command to see the latest information.
 
-Controller           Model      User   Access     Cloud/Region        Models  Nodes  HA  Version
-microk8s-localhost*  private5g  admin  superuser  microk8s/localhost       9      -   -  3.6.0  
+Controller  Model      User   Access     Cloud/Region  Models  Nodes  HA  Version
+k8s*        private5g  admin  superuser  k8s                9      -   -  3.6.0  
 ```
 
 If your controller does not show up in the list, please follow [this guide][Bootstrap Juju Controller] to create a Juju controller.
 
 Otherwise, follow [this guide][Remove Juju Controller] to remove your broken Juju controller.
 
-Once the controller is removed, please make sure that the controller namespace is not found in your MicroK8s cluster:
+Once the controller is removed, please make sure that the controller namespace is not found in your K8s cluster:
 
 ```shell
 $ kubectl get ns controller-<your-controller-name>

@@ -114,7 +114,7 @@ For each device group, the DNN can be retrieved using:
 
 
 #### Configuration
-Validate the AMF is able to select an AUSF by inspecting logs using `microk8s.kubectl logs -n sdcore amf-0 -c amf -f`. The logs should report:
+Validate the AMF is able to select an AUSF by inspecting logs using `sudo k8s kubectl logs -n sdcore amf-0 -c amf -f`. The logs should report:
 ```console
 INFO	gmm/handler.go:94	Transport 5GSM Message to SMF	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:54", "suci": "suci-0-001-01-0-0-0-0100007487", "supi": "SUPI:imsi-001010100007487"}
 INFO	consumer/sm_context.go:74	Select SMF [snssai: {Sst:1 Sd:102030}, dnn: internet]	{"component": "AMF", "category": "GMM", "amf_ue_ngap_id": "AMF_UE_NGAP_ID:54", "suci": "suci-0-001-01-0-0-0-0100007487", "supi": "SUPI:imsi-001010100007487"}

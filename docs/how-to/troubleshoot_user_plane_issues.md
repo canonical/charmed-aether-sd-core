@@ -17,8 +17,8 @@ juju status
 The UPF charm should be in `Active/Idle` status:
 
 ```shell
-Model      Controller                  Cloud/Region                Version  SLA          Timestamp
-private5g  microk8s-classic-localhost  microk8s-classic/localhost  3.6.0    unsupported  18:56:32Z
+Model      Controller  Cloud/Region  Version  SLA          Timestamp
+private5g  k8s         k8s           3.6.0    unsupported  18:56:32Z
 
 App  Version  Status  Scale  Charm           Channel     Rev  Address         Exposed  Message
 upf  1.5.0    active      1  sdcore-upf-k8s  1.5/stable  622  10.152.183.236  no

@@ -19,7 +19,7 @@ A machine running Ubuntu 22.04 with the following resources:
 The following IP networks will be used to connect and isolate the network functions:
 
 | Name         | Subnet        | Gateway IP |
-| ------------ | ------------- | ---------- |
+|--------------|---------------|------------|
 | `management` | 10.201.0.0/24 | 10.201.0.1 |
 | `access`     | 10.202.0.0/24 | 10.202.0.1 |
 | `core`       | 10.203.0.0/24 | 10.203.0.1 |
@@ -54,7 +54,7 @@ sudo snap install terraform --classic
 To complete this tutorial, you will need four virtual machines with access to the networks as follows:
 
 | Machine                              | CPUs | RAM | Disk | Networks                       |
-| ------------------------------------ | ---- | --- | ---- | ------------------------------ |
+|--------------------------------------|------|-----|------|--------------------------------|
 | Control Plane Kubernetes Cluster     | 4    | 8g  | 40g  | `management`                   |
 | User Plane Kubernetes Cluster        | 4    | 12g | 20g  | `management`, `access`, `core` |
 | Juju Controller + Kubernetes Cluster | 4    | 6g  | 40g  | `management`                   |
@@ -220,7 +220,7 @@ ssh control-plane
 Get LoadBalancer services:
 
 ```console
-microk8s.kubectl get services -A | grep LoadBalancer
+sudo k8s kubectl get services -A | grep LoadBalancer
 ```
 
 This will show output similar to the following:
@@ -379,7 +379,7 @@ First, we will add gNB Simulator to the Terraform module used in the previous st
 We will provide necessary configuration (please see the list of the config options with the description in the table below) for the application and integrate the simulator with the relevant 5G Core Network Functions (AMF, NMS and UPF).
 
 | Config Option           | Descriptions                                                                                                                                  |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | gnb-interface           | The name of the MACVLAN interface to use on the host                                                                                          |
 | gnb-ip-address          | The IP address to use on the gnb interface                                                                                                    |
 | icmp-packet-destination | The target IP address to ping. If there is no egress to the internet on your core network, any IP that is reachable from the UPF should work. |
@@ -789,14 +789,14 @@ juju debug-log | grep imsi-<IMSI>
 You may view the control plane logs by logging into the control plane cluster and using Kubernetes commands as follows:
 
 ```console
-microk8s.kubectl logs -n control-plane -c amf amf-0 --tail 70
-microk8s.kubectl logs -n control-plane -c ausf ausf-0 --tail 70
-microk8s.kubectl logs -n control-plane -c nrf nrf-0 --tail 70
-microk8s.kubectl logs -n control-plane -c nssf nssf-0 --tail 70
-microk8s.kubectl logs -n control-plane -c pcf pcf-0 --tail 70
-microk8s.kubectl logs -n control-plane -c smf smf-0 --tail 70
-microk8s.kubectl logs -n control-plane -c udm udm-0 --tail 70
-microk8s.kubectl logs -n control-plane -c udr udr-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c amf amf-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c ausf ausf-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c nrf nrf-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c nssf nssf-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c pcf pcf-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c smf smf-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c udm udm-0 --tail 70
+sudo k8s kubectl logs -n control-plane -c udr udr-0 --tail 70
 ```
 
 ## Checkpoint 5: View the metrics
