@@ -551,7 +551,7 @@ Navigate to `Subscribers` tab and click the `Create` button. Fill in the followi
 - Network Slice: `Tutorial`
 - Device Group: `device-group`
 
-Click the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number; we are going to use them shortly.
+Click the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, and Key; we are going to use them shortly.
 
 After clicking the `Submit` button you should see the subscriber created:
 
@@ -722,7 +722,7 @@ On the `juju-controller` VM, switch to the `gnbsim` model and set up the subscri
 
 ```console
 juju switch gnbsim
-juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
+juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key>
 
 ```
 Wait for the `gnbsim` status to be `Active/Idle`.

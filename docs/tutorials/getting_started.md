@@ -404,7 +404,7 @@ Navigate to `Subscribers` tab and click the `Create` button. Fill in the followi
 - Network Slice: `default`
 - Device Group: `device-group`
 
-Click the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, Key and Sequence Number; we are going to use them in the next step.
+Click the two `Generate` buttons to automatically fill in the values in the form. Note the IMSI, OPC, and Key; we are going to use them in the next step.
 
 After clicking the `Submit` button you should see the subscriber created:
 
@@ -419,7 +419,7 @@ Switch to the `ran` model and set up the subscriber information using the values
 
 ```console
 juju switch ran
-juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key> usim-sequence-number=<Sequence Number>
+juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key>
 ```
 
 Make sure that the `gnbsim` application is in `Active/Idle` state.
