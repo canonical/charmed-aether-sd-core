@@ -12,34 +12,38 @@ To complete this tutorial, you will need a machine which meets the following req
 - 8GB of RAM
 - 50GB of free disk space
 
-## 1. Install MicroK8s
+## 1. Install Canonical K8s
 
-From your terminal, install MicroK8s:
+From your terminal, install Canonical K8s and bootstrap it:
 
 ```console
-sudo snap install microk8s --channel=1.31-strict/stable
+sudo snap install k8s --classic --channel=1.33-classic/stable
+cat << EOF | sudo k8s bootstrap --file -
+containerd-base-dir: /opt/containerd
+cluster-config:
+  network:
+    enabled: true
+  dns:
+    enabled: true
+  load-balancer:
+    enabled: true
+  local-storage:
+    enabled: true
+  annotations:
+    k8sd/v1alpha1/cilium/sctp/enabled: true
+EOF
 ```
 
-Add your user to the `snap_microk8s` group:
+Add the Multus plugin.
 
 ```console
-sudo usermod -a -G snap_microk8s $USER
-newgrp snap_microk8s
+sudo k8s kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml
 ```
 
-Add the community repository MicroK8s addon:
+We must give MetalLB an address range that has at least 3 IP addresses for Charmed Aether SD-Core.
 
 ```console
-sudo microk8s addons repo add community https://github.com/canonical/microk8s-community-addons --reference feat/strict-fix-multus
-```
-
-Enable the following MicroK8s addons. We must give MetalLB an address
-range that has at least 3 IP addresses for Charmed Aether SD-Core.
-
-```console
-sudo microk8s enable hostpath-storage
-sudo microk8s enable multus
-sudo microk8s enable metallb:10.0.0.2-10.0.0.4
+sudo k8s set load-balancer.cidrs="10.0.0.2-10.0.0.4"
 ```
 
 ## 2. Bootstrap a Juju controller
@@ -50,17 +54,26 @@ From your terminal, install Juju.
 sudo snap install juju --channel=3.6/stable
 ```
 
+Save the K8s credentials to allow bootstrapping Juju controller.
+
+```console
+mkdir -p ~/.kube
+sudo k8s config > ~/.kube/config
+mkdir -p ~/.local/share/juju/
+sudo k8s config > ~/.local/share/juju/credentials.yaml
+```
+
 Bootstrap a Juju controller
 
 ```console
-juju bootstrap microk8s
+juju bootstrap k8s
 ```
 
 ```{note}
 There is a [bug](https://bugs.launchpad.net/juju/+bug/1988355) in Juju that occurs when
 bootstrapping a controller on a new machine. If you encounter it, create the following
 directory:
-`mkdir -p /home/ubuntu/.local/share`
+`mkdir -p ~/.local/share`
 ```
 
 ## 3. Install Terraform
@@ -140,7 +153,7 @@ Monitor the status of the deployment:
 
 ```console
 juju switch sdcore
-watch -n 1 -c juju status --color --relations
+juju status --relations --watch 1s
 ```
 
 The deployment is ready when all the charms are in the `active/idle` state.<br>
@@ -150,8 +163,8 @@ Example:
 
 ```console
 ubuntu@host:~/terraform $ juju status
-Model   Controller          Cloud/Region        Version  SLA          Timestamp
-sdcore  microk8s-localhost  microk8s/localhost  3.6.1    unsupported  11:35:07+02:00
+Model   Controller  Cloud/Region  Version  SLA          Timestamp
+sdcore  k8s         k8s           3.6.6    unsupported  11:35:07+02:00
 
 App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
 amf                       1.6.4    active       1  sdcore-amf-k8s            1.6/edge       908  10.152.183.217  no       
@@ -196,13 +209,13 @@ upf    upf          sdcore-upf-k8s  767  0/0        fiveg_n3        fiveg_n3    
 Get the external IP address of Traefik's `traefik-lb` LoadBalancer service:
 
 ```console
-microk8s.kubectl -n sdcore get svc | grep "traefik-lb"
+sudo k8s kubectl -n sdcore get svc | grep "traefik-lb"
 ```
 
 The output should look similar to below:
 
 ```console
-ubuntu@host:~/terraform $ microk8s.kubectl -n sdcore get svc | grep "traefik-lb"
+ubuntu@host:~/terraform $ sudo k8s kubectl -n sdcore get svc | grep "traefik-lb"
 traefik-lb                           LoadBalancer   10.152.183.83    10.0.0.2      80:30462/TCP,443:30163/TCP    9m4s
 ```
 
@@ -291,7 +304,7 @@ Monitor the status of the deployment:
 
 ```console
 juju switch ran
-watch -n 1 -c juju status --color --relations
+juju status --relations --watch 1s
 ```
 
 The deployment is ready when the `gnbsim` application is in the `Waiting/Idle` state and the message is `Waiting for TAC and PLMNs configuration`.<br>
@@ -300,8 +313,8 @@ Example:
 
 ```console
 ubuntu@host:~/terraform $ juju status
-Model  Controller          Cloud/Region        Version  SLA          Timestamp
-ran    microk8s-localhost  microk8s/localhost  3.6.0    unsupported  12:18:26+02:00
+Model Controller  Cloud/Region  Version  SLA          Timestamp
+ran   k8s         k8s           3.6.6    unsupported  12:18:26+02:00
 
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
@@ -434,8 +447,8 @@ Example:
 
 ```console
 ubuntu@host:~/terraform $ juju status
-Model  Controller          Cloud/Region        Version  SLA          Timestamp
-ran    microk8s-localhost  microk8s/localhost  3.6.0    unsupported  12:18:26+02:00
+Model  Controller  Cloud/Region  Version  SLA          Timestamp
+ran    k8s         k8s           3.6.0    unsupported  12:18:26+02:00
 
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
@@ -483,5 +496,5 @@ and `versions.tf` files.
 Destroy the Juju controller and all its models:
 
 ```console
-juju kill-controller microk8s-localhost
+juju kill-controller k8s
 ```

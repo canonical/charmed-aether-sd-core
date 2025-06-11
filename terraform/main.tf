@@ -108,44 +108,41 @@ resource "lxd_instance" "control-plane" {
     }
   }
 
+  file {
+    source_path        = "files/k8s/bootstrap-config.yml"
+    target_path        = "/home/ubuntu/bootstrap-config.yml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
+  }
+
   execs = {
     "00-wait-for-boot" = {
       command = ["systemctl", "is-system-running", "--wait", "--quiet"]
       trigger = "on_start"
     }
-    "01-install-microk8s" = {
-      command       = ["snap", "install", "microk8s", "--channel=1.31-strict/stable"]
+    "01-install-k8s" = {
+      command       = ["snap", "install", "k8s", "--channel=1.33-classic/stable", "--classic"]
       trigger       = "once"
       fail_on_error = true
     }
-    "02-wait-for-microk8s" = {
-      command       = ["microk8s", "status", "--wait"]
+    "02-bootstrap-k8s" = {
+      command       = ["k8s", "bootstrap", "--file", "/home/ubuntu/bootstrap-config.yml"]
       trigger       = "once"
       fail_on_error = true
     }
-    "03-microk8s-disable-default-dns" = {
-      command       = ["microk8s", "disable", "dns"]
-      trigger       = "once"
-    }
-    "04-microk8s-enable-custom-dns" = {
-      command       = ["microk8s", "enable", "dns:10.201.0.1"]
-      trigger       = "once"
-    }
-    "05-microk8s-enable-hostpath-storage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
-      trigger       = "once"
-    }
-    "06-microk8s-enable-metallb" = {
-      command       = ["microk8s", "enable", "metallb:10.201.0.52-10.201.0.53"]
-      trigger       = "once"
-    }
-    "07-add-ubuntu-user-to-snap_microk8s-group" = {
-      command       = ["usermod", "-a", "-G", "snap_microk8s", "ubuntu"]
+    "03-k8s-set-load-balancer-cidrs" = {
+      command       = ["k8s", "set", "load-balancer.cidrs=10.201.0.52-10.201.0.53"]
       trigger       = "once"
       fail_on_error = true
     }
-    "08-get-microk8s-config" = {
-      command       = ["microk8s.config"]
+    "04-wait-for-k8s" = {
+      command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "05-get-k8s-config" = {
+      command       = ["k8s", "config"]
       trigger       = "once"
       fail_on_error = true
       record_output = true
@@ -215,7 +212,7 @@ resource "lxd_instance" "user-plane" {
     properties = {
       pool = "sdcore-pool"
       path = "/"
-      size = "20GB"
+      size = "40GB"
     }
   }
 
@@ -256,8 +253,19 @@ resource "lxd_instance" "user-plane" {
   }
 
   file {
-    source_path = "files/user-plane/sriov_resources.json"
-    target_path = "/root/sriov_resources.json"
+    source_path = "files/user-plane/sriovdp-config.yml"
+    target_path = "/home/ubuntu/sriovdp-config.yml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
+  }
+
+  file {
+    source_path        = "files/k8s/bootstrap-config.yml"
+    target_path        = "/home/ubuntu/bootstrap-config.yml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
   }
 
   execs = {
@@ -302,65 +310,58 @@ resource "lxd_instance" "user-plane" {
       trigger       = "on_start"
       fail_on_error = true
     }
-    "08-install-microk8s" = {
-      command       = ["snap", "install", "microk8s", "--channel=1.31/stable", "--classic"]
+    "08-install-k8s" = {
+      command       = ["snap", "install", "k8s", "--channel=1.33-classic/stable", "--classic"]
       trigger       = "once"
       fail_on_error = true
     }
-    "09-wait-for-microk8s" = {
-      command       = ["microk8s", "status", "--wait"]
+    "09-bootstrap-k8s" = {
+      command       = ["k8s", "bootstrap", "--file", "/home/ubuntu/bootstrap-config.yml"]
       trigger       = "once"
       fail_on_error = true
     }
-    "10-microk8s-get-community-addons" = {
-      command       = ["microk8s", "addons", "repo", "add", "community", "https://github.com/canonical/microk8s-community-addons"]
+    "10-k8s-add-multus" = {
+      command       = ["k8s", "kubectl", "apply", "-f", "https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml"]
       trigger       = "once"
       fail_on_error = true
     }
-    "11-microk8s-enable-hostpath-storage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
+    "11-k8s-set-sriov-config" = {
+      command       = ["k8s", "kubectl", "apply", "-f", "/home/ubuntu/sriovdp-config.yml"]
       trigger       = "once"
+      fail_on_error = true
     }
-    "12-microk8s-enable-multus" = {
-      command       = ["microk8s", "enable", "multus"]
+    "12-k8s-add-sriov-device-plugin" = {
+      command       = ["k8s", "kubectl", "apply", "-f", "https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin/master/deployments/sriovdp-daemonset.yaml"]
       trigger       = "once"
+      fail_on_error = true
     }
-    "13-microk8s-enable-sriov-device-plugin" = {
-      command       = ["microk8s", "enable", "sriov-device-plugin", "-r", "/root/sriov_resources.json"]
-      trigger       = "once"
-    }
-    "14-copy-vfioveth-cni-binary" = {
+    "13-copy-vfioveth-cni-binary" = {
       command       = ["wget", "-O", "/opt/cni/bin/vfioveth", "https://raw.githubusercontent.com/opencord/omec-cni/master/vfioveth"]
       trigger       = "once"
+      fail_on_error = true
     }
-    "15-chmod-vfioveth-cni-binary" = {
+    "14-chmod-vfioveth-cni-binary" = {
       command       = ["chmod", "+x", "/opt/cni/bin/vfioveth"]
-      trigger       = "once"
-    }
-    "16-microk8s-enable-metallb" = {
-      command       = ["microk8s", "enable", "metallb:10.201.0.200/32"]
-      trigger       = "once"
-    }
-    "17-microk8s-disable-default-dns" = {
-      command       = ["microk8s", "disable", "dns"]
-      trigger       = "once"
-    }
-    "18-microk8s-enable-custom-dns" = {
-      command       = ["microk8s", "enable", "dns:10.201.0.1"]
-      trigger       = "once"
-    }
-    "19-add-ubuntu-user-to-snap_microk8s-group" = {
-      command       = ["usermod", "-a", "-G", "microk8s", "ubuntu"]
       trigger       = "once"
       fail_on_error = true
     }
-    "20-get-microk8s-config" = {
-      command       = ["microk8s.config"]
+    "15-k8s-set-load-balancer-cidrs" = {
+      command       = ["k8s", "set", "load-balancer.cidrs=10.201.0.200/32"]
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "16-wait-for-k8s" = {
+      command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "17-get-k8s-config" = {
+      command       = ["k8s", "config"]
       trigger       = "once"
       fail_on_error = true
       record_output = true
     }
-    "21-reboot" = {
+    "18-reboot" = {
       command       = ["reboot"]
       trigger       = "once"
       fail_on_error = true
@@ -424,7 +425,7 @@ resource "lxd_instance" "gnbsim" {
 
   limits = {
     cpu    = 2
-    memory = "3GB"
+    memory = "4GB"
   }
 
   device {
@@ -434,7 +435,7 @@ resource "lxd_instance" "gnbsim" {
     properties = {
       pool = "sdcore-pool"
       path = "/"
-      size = "20GB"
+      size = "40GB"
     }
   }
 
@@ -463,54 +464,46 @@ resource "lxd_instance" "gnbsim" {
     target_path = "/etc/rc.local"
   }
 
+  file {
+    source_path        = "files/k8s/bootstrap-config.yml"
+    target_path        = "/home/ubuntu/bootstrap-config.yml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
+  }
+
   execs = {
     "00-wait-for-boot" = {
       command = ["systemctl", "is-system-running", "--wait", "--quiet"]
       trigger = "on_start"
     }
-    "01-install-microk8s" = {
-      command       = ["snap", "install", "microk8s", "--channel=1.31-strict/stable"]
+    "01-install-k8s" = {
+      command       = ["snap", "install", "k8s", "--channel=1.33-classic/stable", "--classic"]
       trigger       = "once"
       fail_on_error = true
     }
-    "02-wait-for-microk8s" = {
-      command       = ["microk8s", "status", "--wait"]
+    "02-boostrap-k8s" = {
+      command       = ["k8s", "bootstrap", "--file", "/home/ubuntu/bootstrap-config.yml"]
       trigger       = "once"
       fail_on_error = true
     }
-    "03-microk8s-get-community-addons" = {
-      command       = ["microk8s", "addons", "repo", "add", "community", "https://github.com/canonical/microk8s-community-addons", "--reference", "feat/strict-fix-multus"]
+    "03-k8s-add-multus" = {
+      command       = ["k8s", "kubectl", "apply", "-f", "https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml"]
       trigger       = "once"
       fail_on_error = true
     }
-    "04-microk8s-enable-hostpath-storeage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
-      trigger       = "once"
-    }
-    "05-microk8s-enable-multus" = {
-      command       = ["microk8s", "enable", "multus"]
-      trigger       = "once"
-    }
-    "06-microk8s-disable-default-dns" = {
-      command       = ["microk8s", "disable", "dns"]
-      trigger       = "once"
-    }
-    "07-microk8s-enable-custom-dns" = {
-      command       = ["microk8s", "enable", "dns:10.201.0.1"]
-      trigger       = "once"
-    }
-    "08-add-ubuntu-user-to-snap_microk8s-group" = {
-      command       = ["usermod", "-a", "-G", "snap_microk8s", "ubuntu"]
+    "04-wait-for-k8s" = {
+      command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
       trigger       = "once"
       fail_on_error = true
     }
-    "09-get-microk8s-config" = {
-      command       = ["microk8s.config"]
+    "05-get-k8s-config" = {
+      command       = ["k8s", "config"]
       trigger       = "once"
       fail_on_error = true
       record_output = true
     }
-    "10-run-rc.local" = {
+    "06-run-rc.local" = {
       command       = ["/etc/rc.local"]
       trigger       = "on_start"
       fail_on_error = true
@@ -583,7 +576,7 @@ resource "lxd_instance" "juju-controller" {
     properties = {
       pool = "sdcore-pool"
       path = "/"
-      size = "40GB"
+      size = "60GB"
     }
   }
 
@@ -598,7 +591,7 @@ resource "lxd_instance" "juju-controller" {
   }
 
   file {
-    content            = lxd_instance.control-plane.execs["08-get-microk8s-config"].stdout
+    content            = lxd_instance.control-plane.execs["05-get-k8s-config"].stdout
     target_path        = "/home/ubuntu/control-plane-cluster.yaml"
     uid                = 1000
     gid                = 1000
@@ -606,7 +599,7 @@ resource "lxd_instance" "juju-controller" {
   }
 
   file {
-    content            = lxd_instance.user-plane.execs["20-get-microk8s-config"].stdout
+    content            = lxd_instance.user-plane.execs["17-get-k8s-config"].stdout
     target_path        = "/home/ubuntu/user-plane-cluster.yaml"
     uid                = 1000
     gid                = 1000
@@ -614,8 +607,16 @@ resource "lxd_instance" "juju-controller" {
   }
 
   file {
-    content            = lxd_instance.gnbsim.execs["09-get-microk8s-config"].stdout
+    content            = lxd_instance.gnbsim.execs["05-get-k8s-config"].stdout
     target_path        = "/home/ubuntu/gnb-cluster.yaml"
+    uid                = 1000
+    gid                = 1000
+    create_directories = true
+  }
+
+  file {
+    source_path        = "files/k8s/bootstrap-config.yml"
+    target_path        = "/home/ubuntu/bootstrap-config.yml"
     uid                = 1000
     gid                = 1000
     create_directories = true
@@ -626,49 +627,57 @@ resource "lxd_instance" "juju-controller" {
       command = ["systemctl", "is-system-running", "--wait", "--quiet"]
       trigger = "on_start"
     }
-    "01-install-microk8s" = {
-      command       = ["snap", "install", "microk8s", "--channel=1.31-strict/stable"]
+    "01-install-k8s" = {
+      command       = ["snap", "install", "k8s", "--channel=1.33-classic/stable", "--classic"]
       trigger       = "once"
       fail_on_error = true
     }
-    "02-wait-for-microk8s" = {
-      command       = ["microk8s", "status", "--wait"]
+    "02-bootstrap-k8s" = {
+      command       = ["k8s", "bootstrap", "--file", "/home/ubuntu/bootstrap-config.yml"]
       trigger       = "once"
       fail_on_error = true
     }
-    "03-microk8s-disable-default-dns" = {
-      command       = ["microk8s", "disable", "dns"]
-      trigger       = "once"
-    }
-    "04-microk8s-enable-custom-dns" = {
-      command       = ["microk8s", "enable", "dns:10.201.0.1"]
-      trigger       = "once"
-    }
-    "05-microk8s-enable-hostpath-storeage" = {
-      command       = ["microk8s", "enable", "hostpath-storage"]
-      trigger       = "once"
-    }
-    "06-microk8s-enable-metallb" = {
-      command       = ["microk8s", "enable", "metallb:10.201.0.50-10.201.0.51"]
-      trigger       = "once"
-    }
-    "07-add-ubuntu-user-to-snap_microk8s-group" = {
-      command       = ["usermod", "-a", "-G", "snap_microk8s", "ubuntu"]
+    "03-k8s-set-load-balancer" = {
+      command       = ["k8s", "set", "load-balancer.cidrs=10.201.0.50-10.201.0.51"]
       trigger       = "once"
       fail_on_error = true
     }
-    "08-install-juju" = {
+    "04-wait-for-k8s" = {
+      command       = ["k8s", "status", "--wait-ready", "--timeout", "5m"]
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "05-create-k8s-config-folder" = {
+      command       = ["mkdir", "-p", "/home/ubuntu/.kube"]
+      uid           = 1000
+      gid           = 1000
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "06-save-k8s-config" = {
+      command       = ["/bin/sh", "-c", "su ubuntu -c \"sudo k8s config > /home/ubuntu/.kube/config\""]
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "07-install-juju" = {
       command       = ["snap", "install", "juju", "--channel=3.6/stable"]
       trigger       = "once"
+      fail_on_error = true
     }
-    "09-create-juju-shared-folder" = {
+    "08-create-juju-shared-folder" = {
       command       = ["mkdir", "-p", "/home/ubuntu/.local/share/juju"]
       uid           = 1000
       gid           = 1000
       trigger       = "once"
+      fail_on_error = true
     }
-    "10-bootstrap-juju" = {
-      command       = ["/bin/sh", "-c", "su ubuntu -c \"juju bootstrap microk8s --config controller-service-type=loadbalancer sdcore\""]
+    "09-bootstrap-juju" = {
+      command       = ["/bin/sh", "-c", "su ubuntu -c \"juju bootstrap k8s --config controller-service-type=loadbalancer sdcore\""]
+      trigger       = "once"
+      fail_on_error = true
+    }
+    "10-remove-local-k8s-config" = {
+      command       = ["rm", "-rf", "/home/ubuntu/.kube/config"]
       trigger       = "once"
       fail_on_error = true
     }

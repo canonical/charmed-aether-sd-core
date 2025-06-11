@@ -1,0 +1,14 @@
+containerd-base-dir: /opt/containerd
+cluster-config:
+  network:
+    enabled: true
+  dns:
+    enabled: true
+    upstream-nameservers:
+    - 10.201.0.1
+  load-balancer:
+    enabled: true
+  local-storage:
+    enabled: true
+  annotations:
+    k8sd/v1alpha1/cilium/sctp/enabled: true
