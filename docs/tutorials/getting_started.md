@@ -169,7 +169,7 @@ sdcore  k8s         k8s           3.6.6    unsupported  11:35:07+02:00
 App                       Version  Status   Scale  Charm                     Channel        Rev  Address         Exposed  Message
 amf                       1.6.4    active       1  sdcore-amf-k8s            1.6/edge       908  10.152.183.217  no       
 ausf                      1.6.2    active       1  sdcore-ausf-k8s           1.6/edge       713  10.152.183.19   no       
-grafana-agent             0.40.4   blocked      1  grafana-agent-k8s         latest/stable  111  10.152.183.102  no       Missing ['grafana-cloud-config']|['logging-consumer'] for logging-provider; ['grafana-cloud-config']|['send-remote-wr...
+grafana-agent             0.40.4   blocked      1  grafana-agent-k8s         1/stable       111  10.152.183.102  no       Missing ['grafana-cloud-config']|['logging-consumer'] for logging-provider; ['grafana-cloud-config']|['send-remote-wr...
 mongodb                            active       1  mongodb-k8s               6/stable        61  10.152.183.18   no       
 nms                       1.1.0    active       1  sdcore-nms-k8s            1.6/edge       849  10.152.183.42   no       
 nrf                       1.6.2    active       1  sdcore-nrf-k8s            1.6/edge       790  10.152.183.234  no       
