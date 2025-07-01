@@ -101,7 +101,7 @@ terraform {
   required_providers {
     juju = {
       source  = "juju/juju"
-      version = ">= 0.12.0"
+      version = ">= 0.20.0"
     }
   }
 }
@@ -116,12 +116,19 @@ resource "juju_model" "sdcore" {
   name = "sdcore"
 }
 
+module "sdcore-router" {
+  source = "git::https://github.com/canonical/sdcore-router-k8s-operator//terraform"
+
+  model      = juju_model.sdcore.name
+  depends_on = [juju_model.sdcore]
+}
+
 module "sdcore" {
   source = "git::https://github.com/canonical/terraform-juju-sdcore//modules/sdcore-k8s"
 
-  model        = juju_model.sdcore.name
-  depends_on = [juju_model.sdcore]
-  
+  model      = juju_model.sdcore.name
+  depends_on = [module.sdcore-router]
+
   traefik_config = {
     routing_mode = "subdomain"
   }
@@ -314,14 +321,14 @@ Example:
 ```console
 ubuntu@host:~/terraform $ juju status
 Model Controller  Cloud/Region  Version  SLA          Timestamp
-ran   k8s         k8s           3.6.6    unsupported  12:18:26+02:00
+ran   k8s         k8s           3.6.7    unsupported  12:18:26+02:00
 
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
 nms   active  local  admin/sdcore.nms
 
 App     Version  Status   Scale  Charm              Channel   Rev  Address        Exposed  Message
-gnbsim  1.4.5    waiting      1  sdcore-gnbsim-k8s  1.6/edge  638  10.152.183.85  no       installing agent
+gnbsim  1.6.1    waiting      1  sdcore-gnbsim-k8s  1.6/edge  697  10.152.183.85  no       installing agent
 
 Unit       Workload  Agent  Address       Ports  Message
 gnbsim/0*  waiting   idle   10.1.194.239         Waiting for TAC and PLMNs configuration
@@ -335,7 +342,9 @@ Retrieve the NMS credentials (`username` and `password`):
 juju switch sdcore
 juju show-secret NMS_LOGIN --reveal
 ```
+
 The output looks like this:
+
 ```
 cvn3usfmp25c7bgqqr60:
   revision: 2
@@ -448,14 +457,14 @@ Example:
 ```console
 ubuntu@host:~/terraform $ juju status
 Model  Controller  Cloud/Region  Version  SLA          Timestamp
-ran    k8s         k8s           3.6.0    unsupported  12:18:26+02:00
+ran    k8s         k8s           3.6.7    unsupported  12:18:26+02:00
 
 SAAS  Status  Store  URL
 amf   active  local  admin/sdcore.amf
 nms   active  local  admin/sdcore.nms
 
 App     Version  Status  Scale  Charm              Channel   Rev  Address        Exposed  Message
-gnbsim  1.4.5    active      1  sdcore-gnbsim-k8s  1.6/edge  638  10.152.183.85  no       
+gnbsim  1.6.1    active      1  sdcore-gnbsim-k8s  1.6/edge  697  10.152.183.85  no       
 
 Unit       Workload  Agent  Address       Ports  Message
 gnbsim/0*  active    idle   10.1.194.239
