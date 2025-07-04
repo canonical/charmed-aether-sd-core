@@ -716,14 +716,37 @@ Keep this page open, we will revisit it shortly.
 It may take up to 5 minutes for the relevant metrics to be available in Prometheus.
 ```
 
+### Set up the subscriber information using Terraform module
+
+From the `juju-controller` VM, add a config block to the `gnbsim` module in your `main.tf` file to configure gnbsim with the subscriber information. 
+
+Replace the placeholders with the values noted in [step 6](#6-configure-sd-core).
+
+```
+:caption: main.tf
+module "gnbsim" {
+  # ...
+  config = {
+    (...)
+    imsi      = "<IMSI>"
+    usim-opc  = "<OPC>"
+    usim-key  = "<Key>"
+  }
+  # ...
+```
+
+Apply the updated configuration:
+
+```console
+terraform apply -auto-approve
+```
+
 ## 8. Run the 5G simulation
 
-On the `juju-controller` VM, switch to the `gnbsim` model and set up the subscriber information using the values noted in [step 6](#6-configure-sd-core).
+Switch to the `gnbsim` model:
 
 ```console
 juju switch gnbsim
-juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key>
-
 ```
 Wait for the `gnbsim` status to be `Active/Idle`.
 
