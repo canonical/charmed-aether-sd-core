@@ -435,13 +435,36 @@ After clicking the `Submit` button you should see the subscriber created:
 :align: center
 ```
 
+### Set up the subscriber information using Terraform module
+
+To configure gnbsim with the subscriber information, add a config block to the gnbsim module in your `ran.tf` file. 
+
+Replace the placeholders with the values you noted earlier:
+
+```
+:caption: ran.tf
+module "gnbsim" {
+  # ...
+  config = {
+    imsi      = "<IMSI>"
+    usim-opc  = "<OPC>"
+    usim-key  = "<Key>"
+  }
+  # ...
+```
+
+Apply the updated configuration:
+
+```console
+terraform apply -auto-approve
+```
+
 ## 8. Run the 5G simulation
 
-Switch to the `ran` model and set up the subscriber information using the values noted in the previous step:
+Switch to the `ran` model:
 
 ```console
 juju switch ran
-juju config gnbsim imsi=<IMSI> usim-opc=<OPC> usim-key=<Key>
 ```
 
 Make sure that the `gnbsim` application is in `Active/Idle` state.
