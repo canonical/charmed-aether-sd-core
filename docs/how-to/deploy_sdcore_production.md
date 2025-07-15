@@ -26,7 +26,7 @@ This guide covers how to install a SD-Core 5G core network on a single node for 
 
 ## Prepare production node
 
-There steps need to be run on the production node itself.
+These steps need to be run on the production node itself.
 
 Install driverctl:
 
