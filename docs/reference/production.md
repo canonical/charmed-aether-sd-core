@@ -43,3 +43,11 @@ Ubuntu Server 24.04
 ## Kubernetes
 
 Canonical Kubernetes 1.33
+
+## Networking diagram
+
+```{image} ../images/single_node_production.svg
+:alt: SD-Core Network Diagram
+:height: 500px
+:align: center
+```
