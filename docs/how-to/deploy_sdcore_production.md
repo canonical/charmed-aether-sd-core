@@ -8,12 +8,12 @@ This guide covers how to install a SD-Core 5G core network on a single node for 
   - 16 cores server CPU, supporting AVX2 and RDRAND and PDPE1GB instructions
   - 64 GB of RAM
   - 1 1Gb NIC (with 1 static IPv4 address configured, with internet access)
-  - 2 10Gb NIC or faster (connected to access and core networks, but unconfigured)
+  - 2 10Gb NIC or faster (connected to access and core networks, but not configured)
   - Ubuntu Server 24.04 installed and up to date
 
 - Static IP addresses
   - 1 management IP address configured on the 1Gb NIC
-  - 4 IP addresses reserved on the management subnet, unconfigured
+  - 4 IP addresses reserved on the management subnet, not configured
   - 1 access IP address, on a subnet with a router to the gNodeB subnet
   - 1 core IP address, on a subnet with a router to the Internet
 
@@ -88,7 +88,7 @@ sudo k8s kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg
 
 ```{note}
 There is an known issue with Multus that can sometimes need more memory than allowed in the DaemonSet, especially when starting many
-containers concurrently. If this impacts you, edit the memory limit in the Mutlus DaemonSet to 500Mi:
+containers concurrently. If this impacts you, edit the memory limit in the Multus DaemonSet to 500Mi:
 sudo k8s kubectl edit daemonset -n kube-system kube-multus-ds
 ```
 
@@ -139,7 +139,7 @@ sudo chmod +x /opt/cni/bin/vfioveth
 ```
 
 Create the `ipaddresspools.yaml` manifest for the static IP address pools for MetalLB,
-using the 4 unconfigured static IP address from the management network, to update the
+using the 4 not configured static IP address from the management network, to update the
 following content:
 
 ```yaml

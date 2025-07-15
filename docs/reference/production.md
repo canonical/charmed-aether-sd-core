@@ -22,7 +22,7 @@ externally.
 A management network is required to be connected to the 1Gb NIC.
 
 - 1 static IPv4 address configured, with internet access
-- 4 static IPv4 addresses in the same subnet reserved, but unconfigured
+- 4 static IPv4 addresses in the same subnet reserved, but not configured
 
 ### Core network
 
