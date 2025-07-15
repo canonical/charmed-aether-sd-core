@@ -26,13 +26,13 @@ A management network is required to be connected to the 1Gb NIC.
 
 ### Core network
 
-A routable network for internet access from the UEs.
+A network for internet access from the UEs.
 
 - 1 static IPv4 address reserved
 
 ### Access network
 
-A routable network for gNodeBs connectivity.
+A network for gNodeBs connectivity.
 
 - 1 static IPv4 address reserved
 

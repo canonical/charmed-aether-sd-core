@@ -36,6 +36,7 @@ Corefile
 CPUs
 CSR
 customizable
+DaemonSet
 DDR
 deployable
 deregister
@@ -68,6 +69,7 @@ gNodeB
 gNodeBs
 GPP
 Grafana
+Grafana's
 GTP
 hardcoded
 Haswell
@@ -80,6 +82,7 @@ hugepages
 HugePages
 init
 ip
+IPv
 IPs
 icmp
 ICMP
@@ -179,6 +182,7 @@ SMF
 sub-module
 subnet
 subnets
+sudo
 systemd
 TAC
 TCP

@@ -14,8 +14,8 @@ This guide covers how to install a SD-Core 5G core network on a single node for 
 - Static IP addresses
   - 1 management IP address configured on the 1Gb NIC
   - 4 IP addresses reserved on the management subnet, unconfigured
-  - 1 access IP address, routable to gNodeB subnet
-  - 1 core IP address, routable to the Internet
+  - 1 access IP address, on a subnet with a router to the gNodeB subnet
+  - 1 core IP address, on a subnet with a router to the Internet
 
 ## Requirements for machine used for installation
 
