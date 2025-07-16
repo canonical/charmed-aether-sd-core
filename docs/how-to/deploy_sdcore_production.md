@@ -2,27 +2,7 @@
 
 This guide covers how to install a SD-Core 5G core network on a single node for production.
 
-## Requirements for production node
-
-- 1 physical server
-  - 16 cores server CPU, supporting AVX2 and RDRAND and PDPE1GB instructions
-  - 64 GB of RAM
-  - 1 1Gb NIC (with 1 static IPv4 address configured, with internet access)
-  - 2 10Gb NIC or faster (connected to access and core networks, but not configured)
-  - Ubuntu Server 24.04 installed and up to date
-
-- Static IP addresses
-  - 1 management IP address configured on the 1Gb NIC
-  - 4 IP addresses reserved on the management subnet, not configured
-  - 1 access IP address, on a subnet with a router to the gNodeB subnet
-  - 1 core IP address, on a subnet with a router to the Internet
-
-## Requirements for machine used for installation
-
-- Juju >= 3.6
-- Kubectl 1.33
-- Git
-- Terraform
+see also: [production deployment reference](../reference/production.md)
 
 ## Prepare production node
 
@@ -40,6 +20,15 @@ Configure two 1G huge pages:
 ```console
 sudo sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX='default_hugepagesz=1G hugepages=2'/" /etc/default/grub
 sudo update-grub
+```
+
+Record the MAC address of the access and core network interfaces, they will be required later:
+
+```console
+export ACCESS_NIC=enp4s0f0
+export CORE_NIC=enp4s0f1
+ip link show $ACCESS_NIC
+ip link show $CORE_NIC
 ```
 
 Record the PCI addresses of the access and core network interfaces, updating the interface names to match your setup:
@@ -88,7 +77,8 @@ sudo k8s kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg
 
 ```{note}
 There is an known issue with Multus that can sometimes need more memory than allowed in the DaemonSet, especially when starting many
-containers concurrently. If this impacts you, edit the memory limit in the Multus DaemonSet to 500Mi:
+containers concurrently. Symptoms of this issue are many pods not able to start, Multus in `CrashLoopBackoff` and lines with `OOM` in
+`dmesg`. If this impacts you, edit the memory limit in the Multus DaemonSet to 500Mi:
 sudo k8s kubectl edit daemonset -n kube-system kube-multus-ds
 ```
 
@@ -220,7 +210,7 @@ sudo k8s config > sdcore_k8s_config
 
 Transfer the resulting file to the machine used for installation.
 
-Reboot:
+Reboot the production node:
 
 ```console
 sudo reboot
@@ -267,6 +257,12 @@ module "sdcore-production" {
   upf_enable_nat = "false"
   upf_hostname = "upf.example.com"
 }
+```
+
+```{note}
+All hostnames listed in the `main.tf` should be configured in your DNS server, pointing to the
+selected static IPs. Specific instructions on how to do this is out of scope for this document.
+Consult your DNS server's documentation.
 ```
 
 Initialize the provider and run the deployment:
