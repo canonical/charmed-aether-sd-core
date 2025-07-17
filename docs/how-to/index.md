@@ -13,6 +13,7 @@ deploy_sdcore_standalone
 deploy_sdcore_cups
 deploy_sdcore_gnbsim
 deploy_sdcore_user_plane_in_dpdk_mode
+deploy_sdcore_production
 integrate_sdcore_with_external_gnb
 integrate_sdcore_with_observability
 add_inventory
