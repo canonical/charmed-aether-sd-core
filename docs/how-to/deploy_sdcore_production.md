@@ -27,8 +27,8 @@ Record the MAC address of the access and core network interfaces, they will be r
 ```console
 export ACCESS_NIC=enp4s0f0
 export CORE_NIC=enp4s0f1
-ip link show $ACCESS_NIC
-ip link show $CORE_NIC
+cat /sys/class/net/$ACCESS_NIC/address
+cat /sys/class/net/$CORE_NIC/address
 ```
 
 Record the PCI addresses of the access and core network interfaces, updating the interface names to match your setup:
@@ -36,8 +36,8 @@ Record the PCI addresses of the access and core network interfaces, updating the
 ```console
 export ACCESS_NIC=enp4s0f0
 export CORE_NIC=enp4s0f1
-cat /sys/class/net/$ACCESS_NIC/address
-cat /sys/class/net/$CORE_NIC/address
+readlink -f /sys/class/net/$ACCESS_NIC/device | xargs basename
+readlink -f /sys/class/net/$CORE_NIC/device | xargs basename
 ```
 
 Create the `/etc/rc.local` with the following content, replacing the PCI addresses with the ones from the previous step:
@@ -241,7 +241,7 @@ Create a `main.tf` file with the following content, updating the values for your
 
 ```terraform
 module "sdcore-production" {
-  source = "git::https://github.com/canonical/charmed-aether-sd-core//production?ref=feat-prod-deployment"
+  source = "git::https://github.com/canonical/charmed-aether-sd-core//production"
 
   amf_ip = "10.201.0.12"
   amf_hostname = "amf.example.com"
