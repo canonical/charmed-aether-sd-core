@@ -1,5 +1,9 @@
 # Charmed Aether SD-Core
 
+> **:warning: Deprecation Notice!**
+>
+> This project is deprecated and will not receive further updates. Please refer to the upstream [Aether](https://aetherproject.org/) project to continue using Aether.
+
 Aether SD-Core is an open source 5G core network distributed by the Linux Foundation as part of its Aether directed fund project. SD-Core (Software-Defined Core) was previously distributed by the Open Networking Foundation (ONF).
 
 Aether SD-Core addresses the need for a cost-effective open source 5G core network, as opposed to traditionally costly mobile networking software. It supports various functionalities, including user authentication, IP address assignment, data traffic policy management, quality of service assurance, and network slice management.
