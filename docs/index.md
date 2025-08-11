@@ -1,6 +1,6 @@
 # Charmed Aether SD-Core
 
-> **:warning: Deprecation Notice!**
+> **⚠️ Deprecation Notice!**
 >
 > This project is deprecated and will not receive further updates. Please refer to the upstream [Aether](https://aetherproject.org/) project to continue using Aether.
 
